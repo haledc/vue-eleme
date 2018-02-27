@@ -1,0 +1,466 @@
+<template>
+  <div>
+    <div class="shopcart">
+      <!--购物车折叠列表-->
+      <div class="content" @click="toggleList">
+        <div class="content-left">
+          <div class="logo-wrapper">
+            <div class="logo" :class="{'highlight': totalCount>0}">
+              <i class="icon-shopping_cart" :class="{'highlight': totalCount>0}"></i>
+            </div>
+            <div class="num" v-show="totalCount>0">{{totalCount}}</div>
+          </div>
+          <div class="price" :class="{'highlight': totalPrice>0}">￥{{totalPrice}}</div>
+          <div class="desc">另需配送费￥{{deliveryPrice}}元</div>
+        </div>
+        <div class="content-right" @click.stop.prevent="pay">
+          <div class="pay" :class="payClass">{{payDesc}}</div>
+        </div>
+      </div>
+      <!--购物车小球控制层-->
+      <div class="ball-container">
+        <div v-for="ball in balls">
+          <transition name="drop" @before-enter="beforeDrop" @enter="dropping" @after-enter="afterDrop">
+            <div v-show="ball.show" class="ball">
+              <div class="inner inner-hook"></div>
+            </div>
+          </transition>
+        </div>
+      </div>
+      <transition name="fold">
+        <!--购物车展开列表-->
+        <div class="shopcart-list" v-show="listShow">
+          <div class="list-header">
+            <h1 class="title">购物车</h1>
+            <span class="empty" @click="empty">清空</span>
+          </div>
+          <div class="list-content" ref="listContent">
+            <ul>
+              <li class="food" v-for="food in selectFoods">
+                <span class="name">{{food.name}}</span>
+                <div class="price">
+                  <span>￥{{food.price*food.count}}</span>
+                </div>
+                <div class="cartcontrol-wrapper">
+                  <cartcontrol @add="addFood" :food="food"></cartcontrol>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </transition>
+    </div>
+    <transition name="fade">
+      <!--购物车展开列表背景层-->
+      <div class="list-mask" v-show="listShow" @click="hideList"></div>
+    </transition>
+  </div>
+</template>
+
+<script type="text/ecmascript-6">
+  import BScroll from 'better-scroll'
+  import Cartcontrol from 'components/cartcontrol/cartcontrol'
+
+  export default {
+    props: {
+      selectFoods: {
+        type: Array,
+        default() {
+          return [
+            {
+              price: 10,
+              count: 1
+            }
+          ]
+        }
+      },
+      deliveryPrice: {
+        type: Number,
+        default: 0
+      },
+      minPrice: {
+        type: Number,
+        default: 0
+      }
+    },
+    data() {
+      return {
+        balls: [  // 小球集合
+          {
+            show: false
+          },
+          {
+            show: false
+          },
+          {
+            show: false
+          },
+          {
+            show: false
+          },
+          {
+            show: false
+          }
+        ],
+        dropBalls: [], // 下落小球集合
+        fold: true // 折叠列表，默认是true
+      }
+    },
+    computed: {
+      /**
+       * 计算购买总额
+       * @returns {number}
+       */
+      totalPrice() {
+        let total = 0
+        this.selectFoods.forEach((food) => {
+          total += food.price * food.count
+        })
+        return total
+      },
+      /**
+       * 计算购买总数
+       * @returns {number}
+       */
+      totalCount() {
+        let count = 0
+        this.selectFoods.forEach((food) => {
+          count += food.count
+        })
+        return count
+      },
+      /**
+       * 起送价格，计算起送差价，价格够了显示去结算
+       * @returns {string}
+       */
+      payDesc() {
+        if (this.totalPrice === 0) {
+          return `￥${this.minPrice}元起送`
+        } else if (this.totalPrice < this.minPrice) {
+          let diff = this.minPrice - this.totalPrice
+          return `还差￥${diff}元起送`
+        } else {
+          return '去结算'
+        }
+      },
+      /**
+       * 根据购买总额切换结算处样式
+       * @returns {string}
+       */
+      payClass() {
+        if (this.totalPrice < this.minPrice) {
+          return 'not-enough'
+        } else {
+          return 'enough'
+        }
+      },
+      /**
+       * 购物车展开列表伸缩控制
+       */
+      listShow() {
+        if (!this.totalCount) {
+          this.fold = true
+          return false
+        }
+        let show = !this.fold
+        /**
+         * 内容初始化滚动，并且设置可以点击 ★
+         */
+        if (show) {
+          this.$nextTick(() => {
+            if (!this.scroll) {
+              this.scroll = new BScroll(this.$refs.listContent, {
+                click: true
+              })
+            } else {
+              this.scroll.refresh()
+            }
+          })
+        }
+        return show
+      }
+    },
+    methods: {
+      /**
+       * 小球抛落方法
+       * @param el 即 target
+       */
+      drop(el) {
+        for (let i = 0; i < this.balls.length; i++) {
+          let ball = this.balls[i]
+          if (!ball.show) {
+            ball.show = true
+            ball.el = el
+            this.dropBalls.push(ball)
+            return
+          }
+        }
+      },
+      /**
+       * 来回折叠列表
+       */
+      toggleList() {
+        if (!this.totalCount) {
+          return
+        }
+        this.fold = !this.fold // 取反
+      },
+      /**
+       * 清空列表商品
+       */
+      empty() {
+        this.selectFoods.forEach((food) => {
+          food.count = 0
+        })
+      },
+      /**
+       * 折叠列表
+       */
+      hideList() {
+        this.fold = true
+      },
+      pay() {
+        if (this.totalPrice < this.minPrice) {
+          return
+        }
+        window.alert(`支付${this.totalPrice + 4}元`)
+      },
+      addFood(target) {
+        this.drop(target)
+      },
+      /**
+       * 小球抛落前
+       * @param el
+       */
+      beforeDrop(el) {
+        let count = this.balls.length
+        while (count--) {
+          let ball = this.balls[count]
+          if (ball.show) {
+            let rect = ball.el.getBoundingClientRect()  // 矩形对象
+            let x = rect.left - 32   // x轴差值 = 加号DOM和左边屏幕的距离 - 小球左侧偏移（落点位置）
+            let y = -(window.innerHeight - rect.top - 22) // y轴差值（负值） = 屏幕高度 - 加号DOM和页面顶部的距离 - 小球底部偏移（落点位置）
+            el.style.display = ''
+            el.style.webkitTransform = `translate3d(0, ${y}px, 0)` // y轴移动的距离 纵向动画
+            el.style.transform = `translate3d(0, ${y}px, 0)`
+            let inner = el.getElementsByClassName('inner-hook')[0]
+            inner.style.webkitTransform = `translate3d(${x}px, 0, 0)` // x轴移动的距离 横向动画
+            inner.style.transform = `translate3d(${x}px, 0, 0)`
+          }
+        }
+      },
+      /**
+       * 小球抛落过程  重置成原始状态
+       * @param el
+       * @param done
+       */
+      dropping(el, done) {
+        /* eslint-disable no-unused-vars */
+        let rf = el.offsetHeight  // 浏览器重绘
+
+        this.$nextTick(() => {
+          el.style.webkitTransform = 'translate3d(0, 0, 0)'
+          el.style.transform = 'translate3d(0, 0, 0)'
+          let inner = el.getElementsByClassName('inner-hook')[0]
+          inner.style.webkitTransform = 'translate3d(0, 0, 0)'
+          inner.style.transform = 'translate3d(0, 0, 0)'
+          el.addEventListener('transitionend', done)
+        })
+      },
+      /**
+       * 小球抛落后 把抛落的小球的show重新设置为false，并且隐藏掉
+       * @param el
+       */
+      afterDrop(el) {
+        let ball = this.dropBalls.shift()
+        if (ball) {
+          ball.show = false
+          el.style.display = 'none'
+        }
+      }
+    },
+    components: {
+      Cartcontrol
+    }
+  }
+</script>
+
+<style lang="stylus" type="text/stylus" rel="stylesheet/stylus">
+  @import "~common/stylus/mixin"
+
+  /*购物车*/
+  .shopcart
+    position fixed
+    left 0
+    bottom 0
+    z-index 50
+    width 100%
+    height 48px
+    /*购物车折叠列表*/
+    .content
+      display flex
+      background #141d27
+      font-size 0
+      color rgba(255, 255, 255, 0.4)
+      .content-left
+        flex 1
+        .logo-wrapper
+          display inline-block
+          vertical-align top
+          position relative
+          top -10px
+          margin 0 12px
+          padding 6px
+          width 56px
+          height 56px
+          box-sizing border-box
+          border-radius 50%
+          background #141d27
+          .logo
+            width 100%
+            height 100%
+            border-radius 50%
+            text-align center
+            background #2b343c
+            &.highlight
+              background rgb(0, 160, 220)
+            .icon-shopping_cart
+              line-height 44px
+              font-size 24px
+              color #80858a
+              &.highlight
+                color #fff
+          .num
+            position absolute
+            top 0
+            right 0
+            width 24px
+            height 16px
+            line-height 16px
+            text-align center
+            border-radius 16px
+            font-size 9px
+            font-weight 700
+            color #fff
+            background rgb(240, 20, 20)
+            box-shadow 0 4px 8px 0 rgba(0, 0, 0, 0.4)
+        .price
+          display inline-block
+          vertical-align top
+          margin-top 12px
+          line-height 24px
+          padding-right 12px
+          box-sizing border-box
+          border-right 1px solid rgba(255, 255, 255, 0.1)
+          font-size 16px
+          font-weight 700
+          &.highlight
+            color #fff
+
+        .desc
+          display inline-block
+          vertical-align: top
+          margin: 12px 0 0 12px
+          line-height: 24px
+          font-size: 10px
+      .content-right
+        flex 0 0 105px
+        width 105px
+        .pay
+          height 48px
+          line-height 48px
+          text-align center
+          font-size 12px
+          font-weight 700
+          &.not-enough
+            background #2b333b
+          &.enough
+            background #00b43c
+            color #fff
+    /*小球*/
+    .ball-container
+      // 小球落点位置
+      .ball
+        position fixed
+        left 32px
+        bottom 22px
+        z-index 200
+        transition all 0.4s cubic-bezier(0.49, -0.29, 0.75, 0.41) // 贝塞尔曲线
+        .inner
+          width 16px
+          height 16px
+          border-radius 50%
+          background rgb(0, 160, 220)
+          transition all 0.4s linear
+
+    /*购物车展开列表*/
+    .shopcart-list
+      position absolute
+      left 0
+      top 0
+      z-index -1
+      width 100%
+      transform translate3d(0, -100%, 0) // y轴向上移动100%
+      &.fold-enter-active, &.fold-leave-active
+        transition all 0.5s
+      &.fold-enter, &.fold-leave-to
+        transform translate3d(0, 0, 0)
+      .list-header
+        height 40px
+        line-height 40px
+        padding 0 18px
+        background #f3f5f7
+        border-bottom 1px solid rgba(7, 17, 27, 0.1)
+        .title
+          float left
+          font-size 14px
+          color rgb(7, 17, 27)
+        .empty
+          float right
+          font-size 12px
+          color rgb(0, 160, 220)
+
+      .list-content
+        padding 0 18px
+        max-height 217px
+        overflow hidden
+        background #fff
+        .food
+          position relative
+          padding 12px 0
+          box-sizing border-box
+          border-1px(rgba(7, 17, 27, 0.1))
+          .name
+            line-height 24px
+            font-size 14px
+            color rgb(7, 17, 27)
+          .price
+            position absolute
+            right 90px
+            bottom 12px
+            line-height 24px
+            font-size 14px
+            font-weight 700
+            color rgb(240, 20, 20)
+          .cartcontrol-wrapper
+            position absolute
+            right 0
+            bottom 6px
+
+  /*购物车展开列表背景层*/
+  .list-mask
+    position fixed
+    top 0
+    left 0
+    width 100%
+    height 100%
+    z-index 40
+    backdrop-filter blur(10px) // 模糊 iphone手机可看到效果
+    opacity 1
+    background rgba(7, 17, 27, 0.6)
+    &.fade-enter-active, &.fade-leave-active
+      transition all 0.5s
+    &.fade-enter, &.fade-leave-to
+      opacity 0
+      background rgba(7, 17, 27, 0)
+</style>

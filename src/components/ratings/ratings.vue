@@ -124,8 +124,8 @@
       /**
        * 获得后端ratings数据，并异步设置滚动
        */
-      this.$http.get('api/ratings').then((response) => {
-        response = response.body
+      this.$axios.get('api/ratings').then((response) => {
+        response = response.data
         if (response.errno === ERR_OK) {
           this.ratings = response.data
           this.$nextTick(() => {   // 滚动
@@ -134,6 +134,8 @@
             })
           })
         }
+      }).catch((e) => {
+        console.log(e)
       })
     },
     filters: {

@@ -112,8 +112,8 @@
       /**
        * 获取后端goods的数据
        */
-      this.$http.get('/api/goods').then((response) => {
-        response = response.body
+      this.$axios.get('/api/goods').then((response) => {
+        response = response.data
         if (response.errno === ERR_OK) {
           this.goods = response.data
           this.$nextTick(() => {
@@ -121,6 +121,8 @@
             this._calculateHeight()
           })
         }
+      }).catch((e) => {
+        console.log(e)
       })
     },
     methods: {

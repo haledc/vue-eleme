@@ -18,8 +18,6 @@ npm run dev
 # build for production with minification
 npm run build
 
-# build for production and view the bundle analyzer report
-npm run build --report
 ```
 
 声明：项目资源来源于[慕课网-Vue.js 高仿饿了么外卖APP](https://coding.imooc.com/class/74.html)，慕课网项目教学用的`vue 1.0`；

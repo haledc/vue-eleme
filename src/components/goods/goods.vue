@@ -153,7 +153,7 @@
        * @private
        */
       _initScroll() {
-        this.menuScroll = new BScroll(this.$refs.menuWrapper, {  // new BScroll(dom, obj)
+        this.menuScroll = new BScroll(this.$refs.menuWrapper, {  // new BScroll(dom, options)
           click: true // 激活点击事件
         })
         this.foodsScroll = new BScroll(this.$refs.foodsWrapper, {

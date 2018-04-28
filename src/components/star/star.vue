@@ -34,6 +34,7 @@
         if (hasDecimal) {
           result.push(CLS_HALF)
         }
+        // 条件循环
         while (result.length < LENGTH) {
           result.push(CLS_OFF)
         }

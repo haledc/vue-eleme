@@ -81,20 +81,28 @@
   export default {
     props: {
       seller: {
-        type: Object
+        type: Object,
+        default: {}
       }
     },
     data() {
       return {
-        detailShow: false
+        detailShow: false,
+        classMap: []
       }
     },
     methods: {
+      /**
+       * 弹出弹层
+       */
       showDetail() {
-        this.detailShow = true  // 打开
+        this.detailShow = true
       },
+      /**
+       * 关闭弹层
+       */
       hideDetail() {
-        this.detailShow = false  // 关闭
+        this.detailShow = false
       }
     },
     created() {
@@ -228,7 +236,7 @@
       height 100%
       z-index -1
       filter blur(10px)
-    // 滤镜：模糊（像素）
+    /* 滤镜：模糊（像素） */
     /*详情弹层*/
     .detail
       position fixed // fixed布局

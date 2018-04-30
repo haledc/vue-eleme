@@ -15,12 +15,12 @@
       <!--食物栏-->
       <div class="foods-wrapper" ref="foodsWrapper">
         <ul>
-          <li v-for="item in goods" class="food-list" ref="foodList">
+          <li v-for="item in goods" class="food-list border-1px" ref="foodList">
             <!--食物菜单-->
             <h1 class="title">{{item.name}}</h1>
             <!--食物条目-->
             <ul>
-              <li v-for="food in item.foods" class="food-item border-1px" @click="selectFood(food, $event)">
+              <li v-for="food in item.foods" class="food-item" @click="selectFood(food, $event)">
                 <div class="icon">
                   <img width="57" height="57" :src="food.icon">
                 </div>
@@ -72,12 +72,13 @@
         goods: [], // goods数据初始值
         listHeight: [], // 列表高度
         scrollY: 0,    // 滚动初始位置
-        selectedFood: {}  // 选中的食物
+        selectedFood: {},  // 选中的食物
+        classMap: []
       }
     },
     computed: {
       /**
-       * 当前索引计算属性
+       * 当前索引（菜单索引，食物索引）
        * @returns {number}
        */
       currentIndex() {
@@ -109,13 +110,12 @@
     },
     created() {
       this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee']
-      /**
-       * 获取后端goods的数据
-       */
+
       this.$axios.get('/api/goods').then((response) => {
         response = response.data
         if (response.errno === ERR_OK) {
           this.goods = response.data
+          // DOM更新之后再实例化BScroll对象
           this.$nextTick(() => {
             this._initScroll()
             this._calculateHeight()
@@ -133,7 +133,7 @@
         }
         let foodList = this.$refs.foodList
         let el = foodList[index]
-        this.foodsScroll.scrollToElement(el, 300) // scrollToElement(Dom, time(ms)) BScroll API
+        this.foodsScroll.scrollToElement(el, 300)
       },
       addFood(target) {
         this._drop(target) // target为子组件的传过来的dom对象
@@ -153,22 +153,22 @@
        * @private
        */
       _initScroll() {
-        this.menuScroll = new BScroll(this.$refs.menuWrapper, {  // new BScroll(dom, options)
+        this.menuScroll = new BScroll(this.$refs.menuWrapper, {
           click: true // 激活点击事件
         })
         this.foodsScroll = new BScroll(this.$refs.foodsWrapper, {
           click: true,  // 激活点击事件
-          probeType: 3 // 实时滚动位置
+          probeType: 3 // 激活实时滚动位置
         })
-        // 监听食物栏滚动,并得到滚动的y轴数值
-        this.foodsScroll.on('scroll', (pos) => {  // on BScroll API
+        // 监听食物栏滚动事件, 并得到滚动时y轴的实时数值
+        this.foodsScroll.on('scroll', (pos) => {
           if (pos.y <= 0) {
             this.scrollY = Math.abs(Math.round(pos.y))
           }
         })
       },
       /**
-       * 计算高度
+       * 食品栏高度集合
        * @private
        */
       _calculateHeight() {
@@ -191,8 +191,14 @@
           return
         }
         this.selectedFood = food
+        // 调用子组件方法
         this.$refs.food.show()
       },
+      /**
+       * 滚动到指定菜单
+       * @param index
+       * @private
+       */
       _followScroll(index) {
         let menuList = this.$refs.menuList
         let el = menuList[index]

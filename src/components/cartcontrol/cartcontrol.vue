@@ -1,8 +1,8 @@
 <template>
   <div class="cartcontrol">
+    <!--过渡-透明和平移层-->
     <transition name="move">
       <!--减少购买数量-->
-      <!--过渡-透明和平移层-->
       <div class="cart-decrease" @click.stop.prevent="decreaseCart" v-show="food.count>0">
         <!--过渡-滚动层-->
         <span class="inner icon-remove_circle_outline"></span>

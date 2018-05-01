@@ -21,7 +21,9 @@
       <div class="ball-container">
         <div v-for="ball in balls">
           <transition name="drop" @before-enter="beforeDrop" @enter="dropping" @after-enter="afterDrop">
+            <!--Y轴方向-->
             <div v-show="ball.show" class="ball">
+              <!--X轴方向-->
               <div class="inner inner-hook"></div>
             </div>
           </transition>
@@ -80,7 +82,8 @@
     },
     data() {
       return {
-        balls: [  // 小球集合
+        // 小球集合
+        balls: [
           {
             show: false
           },
@@ -97,8 +100,10 @@
             show: false
           }
         ],
-        dropBalls: [], // 下落小球集合
-        fold: true // 折叠列表，默认是true
+        // 下落小球集合
+        dropBalls: [],
+        // 购物车折叠状态，默认是true
+        fold: true
       }
     },
     computed: {
@@ -139,7 +144,7 @@
         }
       },
       /**
-       * 根据购买总额切换结算处样式
+       * 根据购买金额切换结算处样式
        * @returns {string}
        */
       payClass() {
@@ -150,7 +155,7 @@
         }
       },
       /**
-       * 购物车展开列表伸缩控制
+       * 购物车折叠列表控制，和fold联动
        */
       listShow() {
         if (!this.totalCount) {
@@ -159,7 +164,7 @@
         }
         let show = !this.fold
         /**
-         * 内容初始化滚动，并且设置可以点击 ★
+         * 当列表展开时，实例化BScroll对象或者刷新对象
          */
         if (show) {
           this.$nextTick(() => {
@@ -178,7 +183,7 @@
     methods: {
       /**
        * 小球抛落方法
-       * @param el 即 target
+       * @param el
        */
       drop(el) {
         for (let i = 0; i < this.balls.length; i++) {
@@ -198,7 +203,8 @@
         if (!this.totalCount) {
           return
         }
-        this.fold = !this.fold // 取反
+        // 取反
+        this.fold = !this.fold
       },
       /**
        * 清空列表商品
@@ -232,26 +238,32 @@
         while (count--) {
           let ball = this.balls[count]
           if (ball.show) {
-            let rect = ball.el.getBoundingClientRect()  // 矩形对象
-            let x = rect.left - 32   // x轴差值 = 加号DOM和左边屏幕的距离 - 小球左侧偏移（落点位置）
-            let y = -(window.innerHeight - rect.top - 22) // y轴差值（负值） = 屏幕高度 - 加号DOM和页面顶部的距离 - 小球底部偏移（落点位置）
+            // 获取加号DOM矩形对象
+            let rect = ball.el.getBoundingClientRect()
+            // 加号和购物车x轴差值 = 加号DOM和左边屏幕的距离 - 小球左侧偏移（落点位置）
+            let x = rect.left - 32
+            // 加号和购物车y轴差值（负值） = 屏幕高度 - 加号DOM和页面顶部的距离 - 小球底部偏移（落点位置）
+            let y = -(window.innerHeight - rect.top - 22)
             el.style.display = ''
-            el.style.webkitTransform = `translate3d(0, ${y}px, 0)` // y轴移动的距离 纵向动画
+            // y轴移动的距离 纵向动画
+            el.style.webkitTransform = `translate3d(0, ${y}px, 0)`
             el.style.transform = `translate3d(0, ${y}px, 0)`
+            // x轴移动的距离 横向动画
             let inner = el.getElementsByClassName('inner-hook')[0]
-            inner.style.webkitTransform = `translate3d(${x}px, 0, 0)` // x轴移动的距离 横向动画
+            inner.style.webkitTransform = `translate3d(${x}px, 0, 0)`
             inner.style.transform = `translate3d(${x}px, 0, 0)`
           }
         }
       },
       /**
-       * 小球抛落过程  重置成原始状态
+       * 小球抛落过程 抛落前状态 -> 原始状态（重置回来）
        * @param el
        * @param done
        */
       dropping(el, done) {
+        // 主动触发浏览器重绘 ★
         /* eslint-disable no-unused-vars */
-        let rf = el.offsetHeight  // 浏览器重绘
+        let rf = el.offsetHeight
 
         this.$nextTick(() => {
           el.style.webkitTransform = 'translate3d(0, 0, 0)'
@@ -263,7 +275,7 @@
         })
       },
       /**
-       * 小球抛落后 把抛落的小球的show重新设置为false，并且隐藏掉
+       * 小球抛落后 把抛落的小球的取出来，并把show重新设置为false，然后隐藏DOM
        * @param el
        */
       afterDrop(el) {
@@ -380,7 +392,8 @@
         left 32px
         bottom 22px
         z-index 200
-        transition all 0.4s cubic-bezier(0.49, -0.29, 0.75, 0.41) // 贝塞尔曲线
+        // 贝塞尔曲线
+        transition all 0.4s cubic-bezier(0.49, -0.29, 0.75, 0.41)
         .inner
           width 16px
           height 16px
@@ -395,7 +408,8 @@
       top 0
       z-index -1
       width 100%
-      transform translate3d(0, -100%, 0) // y轴向上移动100%
+      // y轴向上移动100%（自身）
+      transform translate3d(0, -100%, 0)
       &.fold-enter-active, &.fold-leave-active
         transition all 0.5s
       &.fold-enter, &.fold-leave-to

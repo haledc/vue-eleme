@@ -1,8 +1,8 @@
 <template>
   <div class="cartcontrol">
-    <!--过渡-透明和平移层-->
+    <!--减少购买数量-->
     <transition name="move">
-      <!--减少购买数量-->
+      <!--过渡-透明和平移层-->
       <div class="cart-decrease" @click.stop.prevent="decreaseCart" v-show="food.count>0">
         <!--过渡-滚动层-->
         <span class="inner icon-remove_circle_outline"></span>
@@ -34,11 +34,14 @@
           return
         }
         if (!this.food.count) {
-          Vue.set(this.food, 'count', 1)   // 新增或者删除，需要调用Vue全局set接口
+          // 新增属性，需要调用Vue全局set API
+          Vue.set(this.food, 'count', 1)
         } else {
           this.food.count++
         }
-        this.$emit('add', event.target) // 给父组件派发事件，传入dom对象
+
+        // 给父组件派发事件，传入DOM对象
+        this.$emit('add', event.target)
       },
       /**
        * 减少购买数量
@@ -61,25 +64,32 @@
     font-size 0
     .cart-decrease
       display inline-block
-      padding 6px // 增加点击区域范围
-      opacity 1 // 动画后的状态 不透明
-      transform translate3d(0, 0, 0) // 3d移动后的状态 初始值0,0,0
+      // 增加点击区域范围
+      padding 6px
+      // 动画后的状态 不透明
+      opacity 1
+      // 3d移动后的状态 初始值0, 0, 0
+      transform translate3d(0, 0, 0)
       .inner
         display inline-block
         line-height 24px
         font-size 24px
         color rgb(0, 160, 220)
         transition all 0.4s linear
+        // 动画后的状态 0度
         transform rotate(0)
-      // 旋转后的状态 0度
-      &.move-enter-active, &.move-leave-active // 进来阶段，离开阶段（时间一样可写一起）
+      // 进来阶段，离开阶段（时间一样可写一起）
+      &.move-enter-active, &.move-leave-active
         transition all 0.4s linear
-      &.move-enter, &.move-leave-to // 进来开始，离开结束（初始和结束）
-        opacity 0 // 透明
-        transform translate3d(24px, 0, 0) // 3d x轴移动，硬件加速
+      // 进来开始，离开结束（初始和结束）
+      &.move-enter, &.move-leave-to
+        // 透明状态
+        opacity 0
+        // x轴移动前位置， 3d硬件加速
+        transform translate3d(24px, 0, 0)
         .inner
+          // 角度
           transform rotate(180deg)
-    // 旋转180度
     .cart-count
       display inline-block
       vertical-align top
@@ -91,7 +101,8 @@
       color rgb(147, 153, 159)
     .cart-add
       display inline-block
-      padding 6px // 增加点击区域范围
+      // 增加点击区域范围
+      padding 6px
       line-height 24px
       font-size 24px
       color rgb(0, 160, 220)

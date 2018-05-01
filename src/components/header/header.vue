@@ -106,7 +106,8 @@
       }
     },
     created() {
-      this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee'] // 一一对应type
+      // 一一对应type
+      this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee']
     },
     components: {
       Star
@@ -141,7 +142,8 @@
           margin 2px 0 8px 0
           .brand
             display inline-block
-            vertical-align top // 顶部对齐
+            // 竖直方向顶部对齐
+            vertical-align top
             width 30px
             height 18px
             bg-image('brand')
@@ -159,7 +161,8 @@
         .support
           .icon
             display inline-block
-            vertical-align top // 顶部对齐
+            // 顶部对齐
+            vertical-align top
             width 12px
             height 12px
             margin-right 4px
@@ -204,9 +207,12 @@
       height 24px
       line-height 28px
       padding 0 22px 0 12px
-      white-space nowrap // 文本不换行
-      overflow hidden // 溢出隐藏
-      text-overflow ellipsis // 文字溢出显示省略号
+      // 文本不换行
+      white-space nowrap
+      // 溢出隐藏
+      overflow hidden
+      // 文字溢出显示省略号
+      text-overflow ellipsis
       background rgba(7, 17, 27, 0.2)
       .bulletin-title
         display inline-block
@@ -239,14 +245,16 @@
     /* 滤镜：模糊（像素） */
     /*详情弹层*/
     .detail
-      position fixed // fixed布局
+      // fixed布局
+      position fixed
       top 0
       left 0
       z-index 100
       width 100%
       height 100%
       overflow auto
-      backdrop-filter blur(10px) // 模糊 （苹果手机才能看到效果）
+      // 模糊 （苹果手机才能看到效果）
+      backdrop-filter blur(10px)
       opacity 1
       background rgba(7, 17, 27, 0.8)
       &.fade-enter-active, &.fade-leave-active
@@ -259,7 +267,8 @@
         width 100%
         .detail-main
           margin-top 64px
-          padding-bottom 64px // 用padding不会盖住最下面的X
+          // 用padding不会盖住最下面的X
+          padding-bottom 64px
           .name
             line-height 16px
             text-align center
@@ -269,7 +278,8 @@
             margin-top 18px
             padding 2px 0
             text-align center
-          .title // flex布局
+          .title
+            // flex布局
             display flex
             width 80%
             margin 28px auto 24px

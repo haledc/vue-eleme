@@ -31,6 +31,7 @@
       text-align center
       font-size 14px
       color rgb(77, 85, 93)
-      &.router-link-active // router-link 内置的活动class
+      // router-link 内置的默认活动class
+      &.router-link-active
         color rgb(240, 20, 20)
 </style>

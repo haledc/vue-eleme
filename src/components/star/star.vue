@@ -5,7 +5,9 @@
 </template>
 
 <script type="text/ecmascript-6">
-  const LENGTH = 5   // 星星长度
+  // 星星长度
+  const LENGTH = 5
+  // 星星状态
   const CLS_ON = 'on'
   const CLS_HALF = 'half'
   const CLS_OFF = 'off'
@@ -25,9 +27,12 @@
       },
       itemClasses() {
         let result = []
-        let score = Math.floor(this.score * 2) / 2    // floor向下取整
-        let hasDecimal = score % 1 !== 0    // 是否有小数
-        let integer = Math.floor(score)     // 整数
+        // floor向下取整
+        let score = Math.floor(this.score * 2) / 2
+        // 是否有小数
+        let hasDecimal = score % 1 !== 0
+        // 整数
+        let integer = Math.floor(score)
         for (let i = 0; i < integer; i++) {
           result.push(CLS_ON)
         }
@@ -57,9 +62,11 @@
       .star-item
         width 20px
         height 20px
-        margin-right 22px // 每颗星星的间距
+        // 每颗星星的间距
+        margin-right 22px
         background-size 20px 20px
-        &:last-child // 最后一颗星星没有右间距
+        // 最后一颗星星没有右间距
+        &:last-child
           margin-right 0
         &.on
           bg-image('star48_on')
@@ -71,7 +78,8 @@
       .star-item
         width 15px
         height 15px
-        margin-right 6px // 每颗星星的间距
+        // 每颗星星的间距
+        margin-right 6px
         background-size 15px 15px
         &:last-child
           margin-right 0
@@ -85,7 +93,8 @@
       .star-item
         width 10px
         height 10px
-        margin-right 3px // 每颗星星的间距
+        // 每颗星星的间距
+        margin-right 3px
         background-size 10px 10px
         &:last-child
           margin-right 0

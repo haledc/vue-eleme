@@ -136,7 +136,7 @@
         Vue.set(this.food, 'count', 1)
       },
       /**
-       * 显示评论内容， 通过类型和内容来确定是否显示该条评论
+       * 显示评论内容， 通过评论类型和评论内容来确定是否显示该条评论
        * @param type 关联类型
        * @param text 关联内容
        * @return {boolean}

@@ -52,7 +52,7 @@
                   <span class="name">{{rating.username}}</span>
                   <img class="avatar" width="12" height="12" :src="rating.avatar"/>
                 </div>
-                <div class="time">{{rating.rateTime | formatDate}}</div>
+                <div class="time">{{rating.rateTime | formatRatingDate}}</div>
                 <p class="text">
                   <span :class="{'icon-thumb_up':rating.rateType===0,
                   'icon-thumb_down':rating.rateType===1}"></span>{{rating.text}}
@@ -75,7 +75,8 @@
   import ratingselect from 'components/ratingselect/ratingselect'
   import {formatDate} from 'common/js/date'
 
-  const ALL = 2 // 默认是全部评价
+  // 默认是全部评价
+  const ALL = 2
 
   export default {
     props: {
@@ -100,10 +101,12 @@
        * 显示
        */
       show() {
+        // 初始化状态
         this.showFlag = true
-        this.selectType = ALL  // 初始化
-        this.onlyContent = true  // 初始化
-        this.$nextTick(() => {   // 滚动
+        this.selectType = ALL
+        this.onlyContent = true
+        // DOM更新后实例化BScroll对象
+        this.$nextTick(() => {
           if (!this.scroll) {
             this.scroll = new BScroll(this.$refs.food, {
               click: true
@@ -127,13 +130,15 @@
         if (!event._constructed) {
           return
         }
-        this.$emit('add', event.target)   // 给父组件派发add事件，传入target参数
-        Vue.set(this.food, 'count', 1)  // Vue 全局set API
+        // 给父组件派发add事件，传入target参数
+        this.$emit('add', event.target)
+        // Vue 全局set API
+        Vue.set(this.food, 'count', 1)
       },
       /**
-       * 显示评论内容
-       * @param type
-       * @param text
+       * 显示评论内容， 通过类型和内容来确定是否显示该条评论
+       * @param type 关联类型
+       * @param text 关联内容
        * @return {boolean}
        */
       needShow(type, text) {
@@ -143,7 +148,8 @@
         if (this.selectType === ALL) {
           return true
         } else {
-          return type === this.selectType // 判断评论的类型是否和选定的类型 一致，一致为true即显示,否则为false即不显示
+          // 判断评论的类型是否和选定的类型一致，一致为true即显示,否则为false即不显示
+          return type === this.selectType
         }
       },
       addFood(target) {
@@ -155,7 +161,8 @@
        */
       selectRating(type) {
         this.selectType = type
-        this.$nextTick(() => {   // 异步刷新scroll
+        // 异步刷新scroll
+        this.$nextTick(() => {
           this.scroll.refresh()
         })
       },
@@ -164,7 +171,8 @@
        */
       toggleContent() {
         this.onlyContent = !this.onlyContent
-        this.$nextTick(() => {  // 异步刷新scroll
+        // 异步刷新scroll
+        this.$nextTick(() => {
           this.scroll.refresh()
         })
       }
@@ -175,8 +183,9 @@
        * @param time
        * @return {*}
        */
-      formatDate(time) {
+      formatRatingDate(time) {
         let date = new Date(time)
+        console.log(date)
         return formatDate(date, 'yyyy-MM-dd hh:mm')
       }
     },
@@ -208,8 +217,10 @@
     .image-header
       position relative
       width 100%
+      // 高度设为0
       height 0
-      padding-top 100% // 设置和宽度一样100% 宽高相等
+      // 设置和宽度一样100% 宽高相等
+      padding-top 100%
       img
         position absolute
         top 0

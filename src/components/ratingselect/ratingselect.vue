@@ -14,16 +14,19 @@
     </div>
     <!--切换（是否只看有内容的评价）-->
     <div class="switch" :class="{'on':onlyContent}" @click="toggleContent">
-      <span class=" icon-check_circle"></span>
+      <span class="icon-check_circle"></span>
       <span class="text">只看有内容的评价</span>
     </div>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-  const POSITIVE = 0  // 正面评价
-  const NEGATIVE = 1  // 负面评价
-  const ALL = 2       // 全部评价
+  // 正面评价
+  const POSITIVE = 0
+  // 负面评价
+  const NEGATIVE = 1
+  // 全部评价
+  const ALL = 2
 
   export default {
     props: {
@@ -38,7 +41,8 @@
        */
       selectType: {
         type: Number,
-        default: ALL  // 默认是全部
+        // 默认是全部
+        default: ALL
       },
       /**
        * 是否只看有内容的评价
@@ -71,7 +75,8 @@
         if (!event._constructed) {
           return
         }
-        this.$emit('select', type) // 给引用的父组件派发select事件，传入类型参数
+        // 给引用的父组件派发select事件，传入类型参数
+        this.$emit('select', type)
       },
       /**
        * 切换
@@ -81,17 +86,20 @@
         if (!event._constructed) {
           return
         }
-        this.$emit('toggle') // 给引用的父组件派发toggle事件
+        // 给引用的父组件派发toggle事件
+        this.$emit('toggle')
       }
     },
     computed: {
       positives() {
-        return this.ratings.filter((rating) => {  // 筛选推荐评价
+        // 筛选推荐评价
+        return this.ratings.filter((rating) => {
           return rating.rateType === POSITIVE
         })
       },
       negatives() {
-        return this.ratings.filter((rating) => {  // 筛选吐槽评价
+        // 筛选吐槽评价
+        return this.ratings.filter((rating) => {
           return rating.rateType === NEGATIVE
         })
       }
@@ -104,7 +112,8 @@
 
   .ratingselect
     .rating-type
-      padding 18px 0 // 左右间隙需要用margin，不然会影响下边框线
+      // 左右间隙需要用margin，不然会影响下边框线
+      padding 18px 0
       margin 0 18px
       border-1px(rgba(7, 17, 27, 0.1))
       font-size 0

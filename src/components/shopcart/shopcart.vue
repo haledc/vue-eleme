@@ -44,7 +44,7 @@
                   <span>￥{{food.price*food.count}}</span>
                 </div>
                 <div class="cartcontrol-wrapper">
-                  <cartcontrol @add="addFood" :food="food"></cartcontrol>
+                  <cart-control @add="addFood" :food="food"/>
                 </div>
               </li>
             </ul>
@@ -61,7 +61,7 @@
 
 <script type="text/ecmascript-6">
   import BScroll from 'better-scroll'
-  import Cartcontrol from 'components/cartcontrol/cartcontrol'
+  import CartControl from 'components/cart-control/cart-control'
 
   export default {
     props: {
@@ -287,7 +287,7 @@
       }
     },
     components: {
-      Cartcontrol
+      CartControl
     }
   }
 </script>

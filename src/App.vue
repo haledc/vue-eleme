@@ -1,9 +1,9 @@
 <template>
   <div>
-    <v-header :seller="seller"></v-header>
-    <tab></tab>
+    <v-header :seller="seller"/>
+    <tab/>
     <keep-alive>
-      <router-view :seller="seller"></router-view>
+      <router-view :seller="seller"/>
     </keep-alive>
   </div>
 </template>

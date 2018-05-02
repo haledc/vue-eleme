@@ -20,7 +20,7 @@
             <span class="now">￥{{food.price}}</span><span class="old" v-show="food.oldPrice">￥{{food.oldPrice}}</span>
           </div>
           <div class="cartcontrol-wrapper">
-            <cartcontrol @add="addFood" :food="food"></cartcontrol>
+            <cart-control @add="addFood" :food="food"/>
           </div>
           <transition name="fade">
             <div class="buy" v-show="!food.count || food.count===0" @click.stop.prevent="addFirst">
@@ -29,20 +29,20 @@
           </transition>
         </div>
         <!--分割线组件-->
-        <split v-show="food.info"></split>
+        <split v-show="food.info"/>
         <!--商品信息-->
         <div class="info" v-show="food.info">
           <div class="title">商品信息</div>
           <div class="text">{{food.info}}</div>
         </div>
         <!--分割线组件-->
-        <split></split>
+        <split/>
         <!--商品评价-->
         <div class="rating">
           <h1 class="title">商品评价</h1>
-          <ratingselect @select="selectRating" @toggle="toggleContent"
+          <rating-select @select="selectRating" @toggle="toggleContent"
                         :selectType="selectType" :onlyContent="onlyContent"
-                        :desc="desc" :ratings="food.ratings"></ratingselect>
+                        :desc="desc" :ratings="food.ratings"/>
           <!--商品评价列表-->
           <div class="rating-wrapper">
             <ul v-show="food.ratings && food.ratings.length">
@@ -69,10 +69,10 @@
 
 <script type="text/ecmascript-6">
   import BScroll from 'better-scroll'
-  import Cartcontrol from 'components/cartcontrol/cartcontrol'
+  import CartControl from 'components/cart-control/cart-control'
   import Vue from 'vue'
   import Split from 'components/split/split'
-  import Ratingselect from 'components/ratingselect/ratingselect'
+  import RatingSelect from 'components/rating-select/rating-select'
   import {formatDate} from 'common/js/date'
 
   // 默认是全部评价
@@ -190,9 +190,9 @@
       }
     },
     components: {
-      Cartcontrol,
+      CartControl,
       Split,
-      Ratingselect
+      RatingSelect
     }
   }
 </script>

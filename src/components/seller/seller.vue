@@ -5,7 +5,7 @@
       <div class="overview">
         <h1 class="title">{{seller.name}}</h1>
         <div class="desc border-1px">
-          <star :size="36" :score="seller.score"></star>
+          <star :size="36" :score="seller.score"/>
           <span class="text">({{seller.ratingCount}})</span>
           <span class="text">月售{{seller.sellCount}}单</span>
         </div>
@@ -35,7 +35,7 @@
           <span class="text">{{favoriteText}}</span>
         </div>
       </div>
-      <split></split>
+      <split/>
       <!--公告和活动-->
       <div class="bulletin">
         <h1 class="title">公告与活动</h1>
@@ -49,7 +49,7 @@
           </li>
         </ul>
       </div>
-      <split></split>
+      <split/>
       <!--商家实景-->
       <div class="pics">
         <h1 class="title">商家实景</h1>
@@ -61,7 +61,7 @@
           </ul>
         </div>
       </div>
-      <split></split>
+      <split/>
       <!--商家信息-->
       <div class="info border-1px">
         <h1 class="title">商家信息</h1>
@@ -75,8 +75,8 @@
 
 <script type="text/ecmascript-6">
   import BScroll from 'better-scroll'
-  import star from 'components/star/star'
-  import split from 'components/split/split'
+  import Star from 'components/star/star'
+  import Split from 'components/split/split'
   import {saveToLocal, loadFromLocal} from 'common/js/store'
 
   export default {
@@ -167,8 +167,8 @@
 
     },
     components: {
-      star,
-      split
+      Star,
+      Split
     }
   }
 </script>

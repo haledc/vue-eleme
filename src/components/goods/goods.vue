@@ -36,7 +36,7 @@
                   </div>
                   <!--购物车加减控件-->
                   <div class="cartcontrol-wrapper">
-                    <cartcontrol @add="addFood" :food="food"></cartcontrol>
+                    <cart-control @add="addFood" :food="food"/>
                   </div>
                 </div>
               </li>
@@ -46,17 +46,17 @@
       </div>
       <!--购物车-->
       <shopcart :selectFoods="selectFoods" :deliveryPrice="seller.deliveryPrice"
-                :minPrice="seller.minPrice" ref="shopcart"></shopcart>
+                :minPrice="seller.minPrice" ref="shopcart"/>
     </div>
     <!--食物详情页-->
-    <food @add="addFood" :food="selectedFood" ref="food"></food>
+    <food @add="addFood" :food="selectedFood" ref="food"/>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
   import BScroll from 'better-scroll'
   import Shopcart from 'components/shopcart/shopcart'
-  import Cartcontrol from 'components/cartcontrol/cartcontrol'
+  import CartControl from 'components/cart-control/cart-control'
   import Food from 'components/food/food'
 
   const ERR_OK = 0
@@ -213,7 +213,7 @@
     },
     components: {
       Shopcart,
-      Cartcontrol,
+      CartControl,
       Food
     }
   }

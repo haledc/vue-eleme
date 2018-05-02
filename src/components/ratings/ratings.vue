@@ -13,12 +13,12 @@
         <div class="overview-right">
           <div class="score-wrapper">
             <span class="title">服务态度</span>
-            <star :size="36" :score="seller.serviceScore"></star>
+            <star :size="36" :score="seller.serviceScore"/>
             <span class="score">{{seller.serviceScore}}</span>
           </div>
           <div class="score-wrapper">
             <span class="title">商品评分</span>
-            <star :size="36" :score="seller.foodScore"></star>
+            <star :size="36" :score="seller.foodScore"/>
             <span class="score">{{seller.foodScore}}</span>
           </div>
           <div class="delivery-wrapper">
@@ -28,11 +28,11 @@
         </div>
       </div>
       <!--分割-->
-      <split></split>
+      <split/>
       <!--评论类型条-->
-      <ratingselect @select="selectRating" @toggle="toggleContent"
+      <rating-select @select="selectRating" @toggle="toggleContent"
                     :selectType="selectType" :onlyContent="onlyContent"
-                    :ratings="ratings"></ratingselect>
+                    :ratings="ratings"/>
       <!--评论内容列表-->
       <div class="ratings-wrapper">
         <ul>
@@ -43,7 +43,7 @@
             <div class="content">
               <h1 class="name">{{rating.username}}</h1>
               <div class="star-wrapper">
-                <star :size="24" :score="rating.score"></star>
+                <star :size="24" :score="rating.score"/>
                 <span class="delivery" v-show="rating.deliveryTime">{{rating.deliveryTime}}分钟送达</span>
               </div>
               <p class="text">{{rating.text}}</p>
@@ -63,7 +63,7 @@
 <script type="text/ecmascript-6">
   import BScroll from 'better-scroll'
   import Star from 'components/star/star'
-  import RatingSelect from 'components/ratingselect/ratingselect'
+  import RatingSelect from 'components/rating-select/rating-select'
   import Split from 'components/split/split'
   import {formatDate} from 'common/js/date'
 

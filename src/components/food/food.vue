@@ -69,10 +69,10 @@
 
 <script type="text/ecmascript-6">
   import BScroll from 'better-scroll'
-  import cartcontrol from 'components/cartcontrol/cartcontrol'
+  import Cartcontrol from 'components/cartcontrol/cartcontrol'
   import Vue from 'vue'
-  import split from 'components/split/split'
-  import ratingselect from 'components/ratingselect/ratingselect'
+  import Split from 'components/split/split'
+  import Ratingselect from 'components/ratingselect/ratingselect'
   import {formatDate} from 'common/js/date'
 
   // 默认是全部评价
@@ -190,9 +190,9 @@
       }
     },
     components: {
-      cartcontrol,
-      split,
-      ratingselect
+      Cartcontrol,
+      Split,
+      Ratingselect
     }
   }
 </script>

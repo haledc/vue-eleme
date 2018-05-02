@@ -69,10 +69,13 @@
     },
     data() {
       return {
-        goods: [], // goods数据初始值
-        listHeight: [], // 列表高度
-        scrollY: 0,    // 滚动初始位置
-        selectedFood: {},  // 选中的食物
+        goods: [],
+        // 食物栏DOM高度集合
+        listHeight: [],
+        // 食物栏滚动初始Y轴位置
+        scrollY: 0,
+        // 选中的食物
+        selectedFood: {},
         classMap: []
       }
     },
@@ -136,7 +139,8 @@
         this.foodsScroll.scrollToElement(el, 300)
       },
       addFood(target) {
-        this._drop(target) // target为子组件的传过来的dom对象
+        // target为子组件的传过来的dom对象
+        this._drop(target)
       },
       /**
        * 调用子组件的抛落方法
@@ -154,11 +158,13 @@
        */
       _initScroll() {
         this.menuScroll = new BScroll(this.$refs.menuWrapper, {
-          click: true // 激活点击事件
+          click: true
         })
         this.foodsScroll = new BScroll(this.$refs.foodsWrapper, {
-          click: true,  // 激活点击事件
-          probeType: 3 // 激活实时滚动位置
+          // 激活点击事件
+          click: true,
+          // 激活实时滚动位置
+          probeType: 3
         })
         // 监听食物栏滚动事件, 并得到滚动时y轴的实时数值
         this.foodsScroll.on('scroll', (pos) => {
@@ -191,7 +197,7 @@
           return
         }
         this.selectedFood = food
-        // 调用子组件方法
+        // 调用子组件方法，使得food组件显示出来
         this.$refs.food.show()
       },
       /**
@@ -225,16 +231,20 @@
     overflow hidden
     /*菜单栏*/
     .menu-wrapper
-      flex 0 0 80px // 等分 缩放 占位空间
+      // 等分 缩放 占位空间
+      flex 0 0 80px
       width 80px
       background #f3f5f7
       .menu-item
-        display table // 表格布局
+        // 表格布局
+        display table
         height 54px
         width 56px
-        padding 0 12px // 水平居中
+        // 水平居中
+        padding 0 12px
         line-height 14px
-        &.current // 活动样式
+        // 活动样式
+        &.current
           position relative
           z-index 10
           margin-top -1px

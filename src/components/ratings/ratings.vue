@@ -31,8 +31,8 @@
       <split/>
       <!--评论类型条-->
       <rating-select @select="selectRating" @toggle="toggleContent"
-                    :selectType="selectType" :onlyContent="onlyContent"
-                    :ratings="ratings"/>
+                     :selectType="selectType" :onlyContent="onlyContent"
+                     :ratings="ratings"/>
       <!--评论内容列表-->
       <div class="ratings-wrapper">
         <ul>
@@ -47,11 +47,12 @@
                 <span class="delivery" v-show="rating.deliveryTime">{{rating.deliveryTime}}分钟送达</span>
               </div>
               <p class="text">{{rating.text}}</p>
+              <!--推荐标签-->
               <div class="recommend" v-show="rating.recommend &&　rating.recommend.length">
                 <span class="icon-thumb_up"></span>
                 <span class="item" v-for="item in rating.recommend">{{item}}</span>
               </div>
-              <div class="time">{{rating.rateTime | formatDate}}</div>
+              <div class="time">{{rating.rateTime | formatRatingDate}}</div>
             </div>
           </li>
         </ul>
@@ -82,6 +83,24 @@
         selectType: ALL,
         onlyContent: true
       }
+    },
+    created() {
+      /**
+       * 获得后端ratings数据，并在dom更新后实例化BScroll对象
+       */
+      this.$axios.get('api/ratings').then((response) => {
+        response = response.data
+        if (response.errno === ERR_OK) {
+          this.ratings = response.data
+          this.$nextTick(() => {
+            this.scroll = new BScroll(this.$refs.ratings, {
+              click: true
+            })
+          })
+        }
+      }).catch((e) => {
+        console.log(e)
+      })
     },
     methods: {
       /**
@@ -120,31 +139,13 @@
         })
       }
     },
-    created() {
-      /**
-       * 获得后端ratings数据，并异步设置滚动
-       */
-      this.$axios.get('api/ratings').then((response) => {
-        response = response.data
-        if (response.errno === ERR_OK) {
-          this.ratings = response.data
-          this.$nextTick(() => {   // 滚动
-            this.scroll = new BScroll(this.$refs.ratings, {
-              click: true
-            })
-          })
-        }
-      }).catch((e) => {
-        console.log(e)
-      })
-    },
     filters: {
       /**
        * 评论时间格式化
        * @param time
        * @return {*}
        */
-      formatDate(time) {
+      formatRatingDate(time) {
         let date = new Date(time)
         return formatDate(date, 'yyyy-MM-dd hh:mm')
       }
@@ -173,13 +174,14 @@
       padding 18px 0
       .overview-left
         flex 0 0 137px
-        padding 6px 0
         width 137px
+        padding 6px 0
         border-right 1px solid rgba(7, 17, 27, 0.1)
         text-align center
-        @media only screen and (max-width 320px)  // 适配iphone5等小屏机，下同
-          flex 0 0 120px
-          width 120px
+        // 适配iphone5等小屏机，下同
+        @media only screen and (max-width 320px)
+          flex 0 0 110px
+          width 110px
         .score
           margin-bottom 6px
           line-height 28px

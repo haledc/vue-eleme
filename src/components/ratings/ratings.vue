@@ -62,9 +62,9 @@
 
 <script type="text/ecmascript-6">
   import BScroll from 'better-scroll'
-  import star from 'components/star/star'
-  import ratingselect from 'components/ratingselect/ratingselect'
-  import split from 'components/split/split'
+  import Star from 'components/star/star'
+  import RatingSelect from 'components/ratingselect/ratingselect'
+  import Split from 'components/split/split'
   import {formatDate} from 'common/js/date'
 
   const ALL = 2
@@ -150,9 +150,9 @@
       }
     },
     components: {
-      star,
-      ratingselect,
-      split
+      Star,
+      RatingSelect,
+      Split
     }
   }
 </script>

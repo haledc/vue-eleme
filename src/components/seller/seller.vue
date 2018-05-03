@@ -42,12 +42,7 @@
         <div class="content-wrapper border-1px">
           <p class="content">{{seller.bulletin}}</p>
         </div>
-        <ul v-if="seller.supports" class="supports">
-          <li class="support-item border-1px" v-for="(item,index) in seller.supports">
-            <span class="icon" :class="classMap[seller.supports[index].type]"></span>
-            <span class="text">{{seller.supports[index].description}}</span>
-          </li>
-        </ul>
+        <supports :size="4" :supports="seller.supports"/>
       </div>
       <split/>
       <!--商家实景-->
@@ -77,6 +72,7 @@
   import BScroll from 'better-scroll'
   import Star from 'components/star/star'
   import Split from 'components/split/split'
+  import Supports from 'components/supports/supports'
   import {saveToLocal, loadFromLocal} from 'common/js/store'
 
   export default {
@@ -94,7 +90,6 @@
       }
     },
     created() {
-      this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee']
       this.$nextTick(() => {
         this._initScroll()
         this._initPics()
@@ -172,7 +167,8 @@
     },
     components: {
       Star,
-      Split
+      Split,
+      Supports
     }
   }
 </script>
@@ -267,35 +263,7 @@
           line-height 24px
           font-size 12px
           color rgb(240, 20, 20)
-      .supports
-        .support-item
-          padding 16px 12px
-          border-1px(rgba(7, 17, 27, 0.1))
-          font-size 0
-          &:last-child
-            border-none()
-          .icon
-            display inline-block
-            width 16px
-            height 16px
-            vertical-align top
-            margin-right 6px
-            background-size 16px 16px
-            background-repeat no-repeat
-            &.decrease
-              bg-image('decrease_4')
-            &.discount
-              bg-image('discount_4')
-            &.guarantee
-              bg-image('guarantee_4')
-            &.invoice
-              bg-image('invoice_4')
-            &.special
-              bg-image('special_4')
-          .text
-            line-height 16px
-            font-size: 12px
-            color: rgb(7, 17, 27)
+
     /*商家实景*/
     .pics
       padding 18px

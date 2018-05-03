@@ -100,6 +100,17 @@
         this._initPics()
       })
     },
+    watch: {
+      /**
+       * 监听seller的变化
+       */
+      'seller'() {
+        this.$nextTick(() => {
+          this._initScroll()
+          this._initPics()
+        })
+      }
+    },
     computed: {
       favoriteText() {
         return this.favorite ? '已收藏' : '收藏'

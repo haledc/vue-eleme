@@ -19,9 +19,10 @@
     data() {
       return {
         seller: {
+          // 立即执行函数获取id
           id: (() => {
-            let queryParam = urlParse()
-            return queryParam.id
+            let queryParamObj = urlParse()
+            return queryParamObj.id
           })()
         }
       }
@@ -30,6 +31,7 @@
       this.$axios.get('api/seller?id=' + this.seller.id).then((response) => {
         response = response.data
         if (response.errno === ERR_OK) {
+          // 属性合并
           this.seller = Object.assign({}, this.seller, response.data)
         }
       }).catch((e) => {

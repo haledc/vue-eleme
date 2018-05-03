@@ -87,18 +87,24 @@
     },
     data() {
       return {
+        //  立即执行函数获取缓存， 收藏默认为false
         favorite: (() => {
-          return loadFromLocal(this.seller.id, 'favorite', false)  // 默认是false
+          return loadFromLocal(this.seller.id, 'favorite', false)
         })()
-      }
-    },
-    computed: {
-      favoriteText() {
-        return this.favorite ? '已收藏' : '收藏'
       }
     },
     created() {
       this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee']
+      this.$nextTick(() => {
+        this._initScroll()
+        this._initPics()
+      })
+    },
+    mounted() {
+      // this.$nextTick(() => {
+      //   this._initScroll()
+      //   this._initPics()
+      // })
     },
     watch: {
       /**
@@ -111,11 +117,10 @@
         })
       }
     },
-    mounted() {
-      this.$nextTick(() => {
-        this._initScroll()
-        this._initPics()
-      })
+    computed: {
+      favoriteText() {
+        return this.favorite ? '已收藏' : '收藏'
+      }
     },
     methods: {
       /**
@@ -150,13 +155,17 @@
         if (this.seller.pics) {
           let picWidth = 120
           let margin = 6
-          let width = (picWidth + margin) * this.seller.pics.length - margin  // 计算图片总宽度
-          this.$refs.picList.style.width = width + 'px'  // 动态设置图片总宽度
+          // 计算图片list的总宽度
+          let width = (picWidth + margin) * this.seller.pics.length - margin
+          // 设置图片list宽度（list的宽度大于wrapper的宽度才能滚动）
+          this.$refs.picList.style.width = width + 'px'
           this.$nextTick(() => {
             if (!this.picSroll) {
               this.picSroll = new BScroll(this.$refs.picWrapper, {
-                scrollX: true,   // 刷新滚动
-                eventPassthrough: 'vertical' // 同时设置忽略纵向滚动
+                // 开启横向滚动，默认是false
+                scrollX: true,
+                // 设置在横向滚动时保留原生的纵向滚动
+                eventPassthrough: 'vertical'
               })
             } else {
               this.picScroll.refresh()
@@ -211,7 +220,8 @@
         display: flex
         padding-top: 18px
         .block
-          flex: 1 // flex 3等分
+          // flex 3等分
+          flex: 1
           text-align: center
           border-right: 1px solid rgba(7, 17, 27, 0.1)
           &:last-child
@@ -229,7 +239,8 @@
               font-size: 24px
       .favorite
         position absolute
-        width 50px  // 限定宽度 切换时空间不变
+        // 限定宽度 切换时空间不变
+        width 50px
         right 11px
         top 18px
         text-align center
@@ -301,7 +312,8 @@
       .pic-wrapper
         width 100%
         overflow hidden
-        white-space nowrap // 文本不会换行
+        // 文本不会换行
+        white-space nowrap
         .pic-list
           font-size 0
           .pic-item

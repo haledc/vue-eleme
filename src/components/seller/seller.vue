@@ -126,6 +126,7 @@
           return
         }
         this.favorite = !this.favorite
+        // 把结果保存到缓存中
         saveToLocal(this.seller.id, 'favorite', this.favorite)
       },
       /**

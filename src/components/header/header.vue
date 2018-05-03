@@ -15,10 +15,7 @@
         <div class="description">
           {{seller.description}}/{{seller.deliveryTime}}分钟送达
         </div>
-        <div v-if="seller.supports" class="support">
-          <span class="icon" :class="classMap[seller.supports[0].type]"></span>
-          <span class="text">{{seller.supports[0].description}}</span>
-        </div>
+        <supports v-if="seller.supports" :size="1" :supports="supportsFirst"/>
       </div>
       <!--优惠信息数-->
       <div v-if="seller.supports" class="support-count" @click="showDetail">
@@ -50,12 +47,7 @@
               <div class="text">优惠信息</div>
               <div class="line"></div>
             </div>
-            <ul v-if="seller.supports" class="supports">
-              <li class="support-item" v-for="(item,index) in seller.supports">
-                <span class="icon" :class="classMap[seller.supports[index].type]"></span>
-                <span class="text">{{seller.supports[index].description}}</span>
-              </li>
-            </ul>
+            <supports :size="2" :supports="seller.supports"/>
             <div class="title">
               <div class="line"></div>
               <div class="text">商家公告</div>
@@ -77,6 +69,7 @@
 
 <script type="text/ecmascript-6">
   import Star from 'components/star/star'
+  import Supports from 'components/supports/supports'
 
   export default {
     props: {
@@ -89,6 +82,11 @@
       return {
         detailShow: false,
         classMap: []
+      }
+    },
+    computed: {
+      supportsFirst() {
+        return this.seller.supports.slice(0, 1)
       }
     },
     methods: {
@@ -105,12 +103,9 @@
         this.detailShow = false
       }
     },
-    created() {
-      // 一一对应type
-      this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee']
-    },
     components: {
-      Star
+      Star,
+      Supports
     }
   }
 </script>
@@ -158,29 +153,6 @@
           margin-bottom 10px
           line-height 12px
           font-size 12px
-        .support
-          .icon
-            display inline-block
-            // 顶部对齐
-            vertical-align top
-            width 12px
-            height 12px
-            margin-right 4px
-            background-size 12px 12px
-            background-repeat no-repeat
-            &.decrease
-              bg-image('decrease_1')
-            &.discount
-              bg-image('discount_1')
-            &.guarantee
-              bg-image('guarantee_1')
-            &.invoice
-              bg-image('invoice_1')
-            &.special
-              bg-image('special_1')
-          .text
-            line-height 12px
-            font-size 10px
 
       /*优惠信息数*/
       .support-count
@@ -293,36 +265,6 @@
               font-weight 700
               font-size 14px
 
-          .supports
-            width 80%
-            margin 0 auto
-            .support-item
-              padding 0 12px
-              margin-bottom 12px
-              font-size 0
-              &:last-child
-                margin-bottom 0
-              .icon
-                display inline-block
-                width 16px
-                height 16px
-                vertical-align top
-                margin-right 6px
-                background-size 16px 16px
-                background-repeat no-repeat
-                &.decrease
-                  bg-image('decrease_2')
-                &.discount
-                  bg-image('discount_2')
-                &.guarantee
-                  bg-image('guarantee_2')
-                &.invoice
-                  bg-image('invoice_2')
-                &.special
-                  bg-image('special_2')
-              .text
-                line-height 16px
-                font-size 12px
           .bulletin
             width 80%
             margin 0 auto

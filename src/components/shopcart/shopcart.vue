@@ -465,7 +465,6 @@
     height 100%
     z-index 40
     backdrop-filter blur(10px) // 模糊 iphone手机可看到效果
-    opacity 1
     background rgba(7, 17, 27, 0.6)
     &.fade-enter-active, &.fade-leave-active
       transition all 0.5s

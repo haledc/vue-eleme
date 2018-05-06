@@ -72,7 +72,6 @@
         font-size 24px
         color rgb(0, 160, 220)
         transition all 0.4s linear
-        // 动画后的状态 0度
       // 进来阶段，离开阶段（时间一样可写一起）
       &.move-enter-active, &.move-leave-active
         transition all 0.4s linear

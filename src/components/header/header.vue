@@ -227,7 +227,6 @@
       overflow auto
       // 模糊 （苹果手机才能看到效果）
       backdrop-filter blur(10px)
-      opacity 1
       background rgba(7, 17, 27, 0.8)
       &.fade-enter-active, &.fade-leave-active
         transition all 0.5s

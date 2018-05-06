@@ -207,7 +207,6 @@
     z-index 30
     width 100%
     background #fff
-    transform translate3d(0, 0, 0)
     &.move-enter-active, &.move-leave-active
       transition all 0.2s linear
     &.move-enter, &.move-leave-to

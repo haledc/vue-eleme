@@ -66,10 +66,6 @@
       display inline-block
       // 增加点击区域范围
       padding 6px
-      // 动画后的状态 不透明
-      opacity 1
-      // 3d移动后的状态 初始值0, 0, 0
-      transform translate3d(0, 0, 0)
       .inner
         display inline-block
         line-height 24px
@@ -77,7 +73,6 @@
         color rgb(0, 160, 220)
         transition all 0.4s linear
         // 动画后的状态 0度
-        transform rotate(0)
       // 进来阶段，离开阶段（时间一样可写一起）
       &.move-enter-active, &.move-leave-active
         transition all 0.4s linear

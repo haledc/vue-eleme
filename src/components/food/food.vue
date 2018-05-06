@@ -282,7 +282,6 @@
         font-size 10px
         color #fff
         background rgb(0, 160, 220)
-        opacity 1
         &.fade-enter-active, &.fade-leave-active
           transition all 0.2s
         &.fade-enter, &.fade-leave-to

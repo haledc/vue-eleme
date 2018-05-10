@@ -271,6 +271,7 @@
           let inner = el.getElementsByClassName('inner-hook')[0]
           inner.style.webkitTransform = 'translate3d(0, 0, 0)'
           inner.style.transform = 'translate3d(0, 0, 0)'
+          // 监听过渡完成事件，调用done函数跳转到afterDrop中去
           el.addEventListener('transitionend', done)
         })
       },

@@ -1,7 +1,7 @@
 // 1px 下边框配置
 border-1px($color)
   position relative
-  &:after
+  &::after
     display block
     position absolute
     left 0
@@ -12,7 +12,7 @@ border-1px($color)
 
 // 取消1px下边框配置
 border-none()
-  &:after
+  &::after
     display none
 
 // 图片2x 和 3x 全局配置

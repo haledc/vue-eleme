@@ -36,7 +36,7 @@
       <!--评论内容列表-->
       <div class="ratings-wrapper">
         <ul>
-          <li v-for="rating in ratings" class="rating-item" v-show="needShow(rating.rateType, rating.text)">
+          <li v-for="rating in ratings" class="rating-item border-1px" v-show="needShow(rating.rateType, rating.text)">
             <div class="avatar">
               <img width="28" height="28" :src="rating.avatar">
             </div>

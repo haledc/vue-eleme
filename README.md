@@ -1,4 +1,4 @@
-# sell-elm
+# vue-elm
 
 > A  Vue.js project
 

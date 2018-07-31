@@ -1,54 +1,46 @@
-let express = require('express')
-let config = require('./config/index')
-
-const port = process.env.PORT || config.build.port
-
-let app = express()
-let router = express.Router()
-
-router.get('/', function (req, res, next) {
-  req.url = '/index.html'
-  next()
-})
-
-app.use(router)
+const Koa = require('koa')
+const serve = require('koa-static')
+const Router = require('koa-router')
+const path = require('path')
 
 const appData = require('./data.json')
 const seller = appData.seller
 const goods = appData.goods
 const ratings = appData.ratings
 
-let apiRoutes = express.Router()
 
-apiRoutes.get('/seller', function (req, res) {
-  res.json({
-    errno: 0,
-    data: seller
-  })
+const router = new Router({
+  prefix: '/api'
 })
 
-apiRoutes.get('/goods', function (req, res) {
-  res.json({
-    errno: 0,
-    data: goods
+router
+  .get('/seller', async ctx => {
+    ctx.body = {
+      errno: 0,
+      data: seller
+    }
   })
-})
-
-apiRoutes.get('/ratings', function (req, res) {
-  res.json({
-    errno: 0,
-    data: ratings
+  .get('/goods', async ctx => {
+    ctx.body = {
+      errno: 0,
+      data: goods
+    }
   })
-})
+  .get('/ratings', async ctx => {
+    ctx.body = {
+      errno: 0,
+      data: ratings
+    }
+  })
 
-app.use('/api', apiRoutes)
+const app = new Koa()
 
-app.use(express.static('./dist'))
+app.use(serve(path.join(__dirname, './dist')))
 
-module.exports = app.listen(port, function (err) {
-  if (err) {
-    console.log(err)
-    return
-  }
-  console.log('Listening at http:// localhost:' + port + '\n')
+app.use(router.routes()).use(router.allowedMethods())
+
+const PORT = process.env.PORT || 9094
+
+app.listen(PORT, () => {
+  console.log(`Server started at port:${PORT}!`)
 })

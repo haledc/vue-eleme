@@ -141,28 +141,28 @@
        * 初始化实景图片 横向滚动
        * @private
        */
-      _initPics() {
-        if (this.seller.pics) {
-          let picWidth = 120
-          let margin = 6
-          // 计算图片list的总宽度
-          let width = (picWidth + margin) * this.seller.pics.length - margin
-          // 设置图片list宽度（list的宽度大于wrapper的宽度才能滚动）
-          this.$refs.picList.style.width = width + 'px'
-          this.$nextTick(() => {
-            if (!this.picSroll) {
-              this.picSroll = new BScroll(this.$refs.picWrapper, {
-                // 开启横向滚动，默认是false
-                scrollX: true,
-                // 设置在横向滚动时保留原生的纵向滚动
-                eventPassthrough: 'vertical'
-              })
-            } else {
-              this.picScroll.refresh()
-            }
-          })
+        _initPics() {
+          if (this.seller.pics) {
+            let picWidth = 120
+            let margin = 6
+            // 计算图片list的总宽度
+            let width = (picWidth + margin) * this.seller.pics.length - margin
+            // 设置图片list宽度（list的宽度大于wrapper的宽度才能滚动）
+            this.$refs.picList.style.width = width + 'px'
+            this.$nextTick(() => {
+              if (!this.picScroll) {
+                this.picScroll = new BScroll(this.$refs.picWrapper, {
+                  // 开启横向滚动，默认是false
+                  scrollX: true,
+                  // 设置在横向滚动时保留原生的纵向滚动
+                  eventPassthrough: 'vertical'
+                })
+              } else {
+                this.picScroll.refresh()
+              }
+            })
+          }
         }
-      }
 
     },
     components: {

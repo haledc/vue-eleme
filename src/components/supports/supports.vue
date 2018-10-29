@@ -1,13 +1,13 @@
 <template>
   <ul v-if="supports" :class="classType">
-    <li class="support-item border-1px" v-for="(item,index) in supports">
+    <li class="support-item border-1px" v-for="(item,index) in supports" :key="index">
       <span class="icon" :class="classMap[supports[index].type]"></span>
       <span class="text">{{supports[index].description}}</span>
     </li>
   </ul>
 </template>
 
-<script type="text/ecmascript-6">
+<script>
   export default {
     props: {
       supports: {
@@ -28,7 +28,7 @@
   }
 </script>
 
-<style scoped lang="stylus" type="text/stylus" rel="stylesheet/stylus">
+<style lang="stylus" scoped>
   @import "~common/stylus/mixin"
 
   .supports-4

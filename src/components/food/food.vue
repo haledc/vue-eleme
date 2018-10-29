@@ -19,7 +19,7 @@
           <div class="price">
             <span class="now">￥{{food.price}}</span><span class="old" v-show="food.oldPrice">￥{{food.oldPrice}}</span>
           </div>
-          <div class="cartcontrol-wrapper">
+          <div class="cart-control-wrapper">
             <cart-control @add="addFood" :food="food"/>
           </div>
           <transition name="fade">
@@ -41,8 +41,8 @@
         <div class="rating">
           <h1 class="title">商品评价</h1>
           <rating-select @select="selectRating" @toggle="toggleContent"
-                        :selectType="selectType" :onlyContent="onlyContent"
-                        :desc="desc" :ratings="food.ratings"/>
+                         :selectType="selectType" :onlyContent="onlyContent"
+                         :desc="desc" :ratings="food.ratings"/>
           <!--商品评价列表-->
           <div class="rating-wrapper">
             <ul v-show="food.ratings && food.ratings.length">
@@ -67,13 +67,13 @@
   </transition>
 </template>
 
-<script type="text/ecmascript-6">
+<script>
   import BScroll from 'better-scroll'
   import CartControl from 'components/cart-control/cart-control'
   import Vue from 'vue'
   import Split from 'components/split/split'
   import RatingSelect from 'components/rating-select/rating-select'
-  import {formatDate} from 'common/js/date'
+  import { formatDate } from 'common/js/date'
 
   // 默认是全部评价
   const ALL = 2
@@ -127,9 +127,7 @@
        * @param event
        */
       addFirst(event) {
-        if (!event._constructed) {
-          return
-        }
+        if (!event._constructed) return
         // 给父组件派发add事件，传入target参数
         this.$emit('add', event.target)
         // Vue 全局set API
@@ -196,7 +194,7 @@
   }
 </script>
 
-<style lang="stylus" type="text/stylus" rel="stylesheet/stylus">
+<style lang="stylus" scoped>
   @import "~common/stylus/mixin"
 
   .food
@@ -265,7 +263,7 @@
           text-decoration line-through
           font-size 10px
           color rgb(147, 153, 159)
-      .cartcontrol-wrapper
+      .cart-control-wrapper
         position absolute
         right 12px
         bottom 12px

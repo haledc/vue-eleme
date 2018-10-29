@@ -2,11 +2,11 @@
   <div class="split"></div>
 </template>
 
-<script type="text/ecmascript-6">
+<script>
   export default {}
 </script>
 
-<style lang="stylus" type="text/stylus" rel="stylesheet/stylus">
+<style lang="stylus" scoped>
   .split
     width 100%
     height 16px

@@ -1,5 +1,5 @@
 <template>
-  <div class="cartcontrol">
+  <div class="cart-control">
     <!--减少购买数量-->
     <transition name="move">
       <!--过渡-透明和平移层-->
@@ -15,7 +15,7 @@
   </div>
 </template>
 
-<script type="text/ecmascript-6">
+<script>
   import Vue from 'vue'
 
   export default {
@@ -30,9 +30,7 @@
        * @param event
        */
       addCart(event) {
-        if (!event._constructed) {
-          return
-        }
+        if (!event._constructed) return
         if (!this.food.count) {
           // 新增属性，需要调用Vue全局set API
           Vue.set(this.food, 'count', 1)
@@ -48,9 +46,7 @@
        * @param event
        */
       decreaseCart(event) {
-        if (!event._constructed) {
-          return
-        }
+        if (!event._constructed) return
         if (this.food.count) {
           this.food.count--
         }
@@ -60,7 +56,7 @@
 </script>
 
 <style lang="stylus" type="text/stylus" rel="stylesheet/stylus">
-  .cartcontrol
+  .cart-control
     font-size 0
     .cart-decrease
       display inline-block

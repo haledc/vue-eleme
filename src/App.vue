@@ -8,10 +8,10 @@
   </div>
 </template>
 
-<script type="text/ecmascript-6">
+<script>
   import VHeader from 'components/header/header'
   import Tab from 'components/tab/tab'
-  import {urlParse} from 'common/js/util'
+  import { urlParse } from 'common/js/util'
 
   const ERR_OK = 0
 
@@ -28,15 +28,15 @@
       }
     },
     created() {
-      this.$axios.get('api/seller?id=' + this.seller.id).then((response) => {
-        response = response.data
-        if (response.errno === ERR_OK) {
-          // 属性合并
-          this.seller = Object.assign({}, this.seller, response.data)
-        }
-      }).catch((e) => {
-        console.log(e)
-      })
+      this.$axios.get('api/seller?id=' + this.seller.id)
+        .then(res => {
+          res = res.data
+          if (res.errno === ERR_OK) {
+            // 属性合并
+            this.seller = Object.assign({}, this.seller, res.data)
+          }
+        })
+        .catch(e => console.log(e))
     },
     components: {
       VHeader,
@@ -45,5 +45,5 @@
   }
 </script>
 
-<style lang="stylus" type="text/stylus" rel="stylesheet/stylus">
+<style lang="stylus" scoped>
 </style>

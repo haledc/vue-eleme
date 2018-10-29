@@ -67,7 +67,7 @@
   </div>
 </template>
 
-<script type="text/ecmascript-6">
+<script>
   import Star from 'components/star/star'
   import Supports from 'components/supports/supports'
 
@@ -110,7 +110,7 @@
   }
 </script>
 
-<style lang="stylus" type="text/stylus" rel="stylesheet/stylus">
+<style lang="stylus" scoped>
   @import "~common/stylus/mixin"
 
   .header

@@ -61,12 +61,12 @@
   </div>
 </template>
 
-<script type="text/ecmascript-6">
+<script>
   import BScroll from 'better-scroll'
   import Star from 'components/star/star'
   import RatingSelect from 'components/rating-select/rating-select'
   import Split from 'components/split/split'
-  import {formatDate} from 'common/js/date'
+  import { formatDate } from 'common/js/date'
 
   const ALL = 2
   const ERR_OK = 0
@@ -88,19 +88,17 @@
       /**
        * 获得后端ratings数据，并在dom更新后实例化BScroll对象
        */
-      this.$axios.get('api/ratings').then((response) => {
-        response = response.data
-        if (response.errno === ERR_OK) {
-          this.ratings = response.data
+      this.$axios.get('api/ratings').then(res => {
+        res = res.data
+        if (res.errno === ERR_OK) {
+          this.ratings = res.data
           this.$nextTick(() => {
             this.scroll = new BScroll(this.$refs.ratings, {
               click: true
             })
           })
         }
-      }).catch((e) => {
-        console.log(e)
-      })
+      }).catch(e => console.log(e))
     },
     methods: {
       /**
@@ -158,7 +156,7 @@
   }
 </script>
 
-<style lang="stylus" type="text/stylus" rel="stylesheet/stylus">
+<style lang="stylus" scoped>
   @import "~common/stylus/mixin"
 
   .ratings

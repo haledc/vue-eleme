@@ -4,7 +4,7 @@
   </div>
 </template>
 
-<script type="text/ecmascript-6">
+<script>
   // 星星长度
   const LENGTH = 5
   // 星星状态
@@ -49,7 +49,7 @@
   }
 </script>
 
-<style lang="stylus" type="text/stylus" rel="stylesheet/stylus">
+<style lang="stylus" scoped>
   @import "~common/stylus/mixin"
 
   .star

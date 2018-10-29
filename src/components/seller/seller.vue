@@ -68,12 +68,12 @@
   </div>
 </template>
 
-<script type="text/ecmascript-6">
+<script>
   import BScroll from 'better-scroll'
   import Star from 'components/star/star'
   import Split from 'components/split/split'
   import Supports from 'components/supports/supports'
-  import {saveToLocal, loadFromLocal} from 'common/js/store'
+  import { saveToLocal, loadFromLocal } from 'common/js/store'
 
   export default {
     props: {
@@ -117,9 +117,7 @@
        * @param event
        */
       toggleFavorite(event) {
-        if (!event._constructed) {
-          return
-        }
+        if (!event._constructed) return
         this.favorite = !this.favorite
         // 把结果保存到缓存中
         saveToLocal(this.seller.id, 'favorite', this.favorite)
@@ -141,28 +139,28 @@
        * 初始化实景图片 横向滚动
        * @private
        */
-        _initPics() {
-          if (this.seller.pics) {
-            let picWidth = 120
-            let margin = 6
-            // 计算图片list的总宽度
-            let width = (picWidth + margin) * this.seller.pics.length - margin
-            // 设置图片list宽度（list的宽度大于wrapper的宽度才能滚动）
-            this.$refs.picList.style.width = width + 'px'
-            this.$nextTick(() => {
-              if (!this.picScroll) {
-                this.picScroll = new BScroll(this.$refs.picWrapper, {
-                  // 开启横向滚动，默认是false
-                  scrollX: true,
-                  // 设置在横向滚动时保留原生的纵向滚动
-                  eventPassthrough: 'vertical'
-                })
-              } else {
-                this.picScroll.refresh()
-              }
-            })
-          }
+      _initPics() {
+        if (this.seller.pics) {
+          let picWidth = 120
+          let margin = 6
+          // 计算图片list的总宽度
+          let width = (picWidth + margin) * this.seller.pics.length - margin
+          // 设置图片list宽度（list的宽度大于wrapper的宽度才能滚动）
+          this.$refs.picList.style.width = width + 'px'
+          this.$nextTick(() => {
+            if (!this.picScroll) {
+              this.picScroll = new BScroll(this.$refs.picWrapper, {
+                // 开启横向滚动，默认是false
+                scrollX: true,
+                // 设置在横向滚动时保留原生的纵向滚动
+                eventPassthrough: 'vertical'
+              })
+            } else {
+              this.picScroll.refresh()
+            }
+          })
         }
+      }
 
     },
     components: {
@@ -173,7 +171,7 @@
   }
 </script>
 
-<style lang="stylus" type="text/stylus" rel="stylesheet/stylus">
+<style lang="stylus" scoped>
   @import "~common/stylus/mixin"
 
   .seller

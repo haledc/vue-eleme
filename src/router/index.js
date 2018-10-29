@@ -5,9 +5,9 @@ import Router from 'vue-router'
 // import seller from 'components/seller/seller'
 
 // 懒路由
-const Goods = () => import('components/goods/goods')
-const Ratings = () => import('components/ratings/ratings')
-const Seller = () => import('components/seller/seller')
+// const Goods = () => import('components/goods/goods')
+// const Ratings = () => import('components/ratings/ratings')
+// const Seller = () => import('components/seller/seller')
 
 Vue.use(Router)     // 使用router
 
@@ -18,15 +18,15 @@ const routes = [
   },
   {
     path: '/goods',
-    component: Goods
+    component: () => import(/* webpackChunkName: "goods" */'components/goods/goods')
   },
   {
     path: '/ratings',
-    component: Ratings
+    component: () => import(/* webpackChunkName: "ratings" */'components/ratings/ratings')
   },
   {
     path: '/seller',
-    component: Seller
+    component: () => import(/* webpackChunkName: "seller" */'components/seller/seller')
   }
 ]
 

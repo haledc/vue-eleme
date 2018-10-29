@@ -53,7 +53,7 @@
   </div>
 </template>
 
-<script type="text/ecmascript-6">
+<script>
   import BScroll from 'better-scroll'
   import Shopcart from 'components/shopcart/shopcart'
   import CartControl from 'components/cart-control/cart-control'
@@ -101,8 +101,8 @@
        */
       selectFoods() {
         let foods = []
-        this.goods.forEach((good) => {
-          good.foods.forEach((food) => {
+        this.goods.forEach(good => {
+          good.foods.forEach(food => {
             if (food.count) {
               foods.push(food)
             }
@@ -114,26 +114,24 @@
     created() {
       this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee']
 
-      this.$axios.get('/api/goods').then((response) => {
-        response = response.data
-        if (response.errno === ERR_OK) {
-          this.goods = response.data
-          // DOM更新之后再实例化BScroll对象
-          this.$nextTick(() => {
-            this._initScroll()
-            this._calculateHeight()
-          })
-        }
-      }).catch((e) => {
-        console.log(e)
-      })
+      this.$axios.get('/api/goods')
+        .then(res => {
+          res = res.data
+          if (res.errno === ERR_OK) {
+            this.goods = res.data
+            // DOM更新之后再实例化BScroll对象
+            this.$nextTick(() => {
+              this._initScroll()
+              this._calculateHeight()
+            })
+          }
+        })
+        .catch(e => console.log(e))
     },
     methods: {
       selectMenu(index, event) {
         // 取消pc端的点击事件，不会导致连点2次，下同
-        if (!event._constructed) {
-          return
-        }
+        if (!event._constructed) return
         let foodList = this.$refs.foodList
         let el = foodList[index]
         this.foodsScroll.scrollToElement(el, 300)
@@ -167,7 +165,7 @@
           probeType: 3
         })
         // 监听食物栏滚动事件, 并得到滚动时y轴的实时数值
-        this.foodsScroll.on('scroll', (pos) => {
+        this.foodsScroll.on('scroll', pos => {
           if (pos.y <= 0) {
             this.scrollY = Math.abs(Math.round(pos.y))
           }
@@ -193,9 +191,7 @@
        * @param event
        */
       selectFood(food, event) {
-        if (!event._constructed) {
-          return
-        }
+        if (!event._constructed) return
         this.selectedFood = food
         // 调用子组件方法，使得food组件显示出来
         this.$refs.food.show()
@@ -219,7 +215,7 @@
   }
 </script>
 
-<style lang="stylus" type="text/stylus" rel="stylesheet/stylus">
+<style lang="stylus" scoped>
   @import "~common/stylus/mixin"
 
   .goods

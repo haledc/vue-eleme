@@ -5,7 +5,7 @@
       <div class="menu-wrapper" ref="menuWrapper">
         <ul>
           <li v-for="(item,index) in goods" class="menu-item" :class="{'current': currentIndex===index}"
-              @click="selectMenu(index, $event)" ref="menuList">
+              @click="selectMenu(index)" ref="menuList">
             <span class="text border-1px">
               <span v-show="item.type>0" class="icon" :class="classMap[item.type]"></span>{{item.name}}
             </span>
@@ -20,7 +20,7 @@
             <h1 class="title">{{item.name}}</h1>
             <!--食物条目-->
             <ul>
-              <li v-for="food in item.foods" class="food-item border-1px" @click="selectFood(food, $event)">
+              <li v-for="food in item.foods" class="food-item border-1px" @click="selectFood(food)">
                 <div class="icon">
                   <img width="57" height="57" :src="food.icon">
                 </div>
@@ -129,9 +129,8 @@
         .catch(e => console.log(e))
     },
     methods: {
-      selectMenu(index, event) {
-        // 取消pc端的点击事件，不会导致连点2次，下同
-        if (!event._constructed) return
+      selectMenu(index) {
+        console.log(index)
         let foodList = this.$refs.foodList
         let el = foodList[index]
         this.foodsScroll.scrollToElement(el, 300)
@@ -191,7 +190,6 @@
        * @param event
        */
       selectFood(food, event) {
-        if (!event._constructed) return
         this.selectedFood = food
         // 调用子组件方法，使得food组件显示出来
         this.$refs.food.show()

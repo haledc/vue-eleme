@@ -30,7 +30,6 @@
        * @param event
        */
       addCart(event) {
-        if (!event._constructed) return
         if (!this.food.count) {
           // 新增属性，需要调用Vue全局set API
           Vue.set(this.food, 'count', 1)
@@ -46,7 +45,6 @@
        * @param event
        */
       decreaseCart(event) {
-        if (!event._constructed) return
         if (this.food.count) {
           this.food.count--
         }

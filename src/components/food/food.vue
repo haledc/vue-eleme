@@ -127,7 +127,6 @@
        * @param event
        */
       addFirst(event) {
-        if (!event._constructed) return
         // 给父组件派发add事件，传入target参数
         this.$emit('add', event.target)
         // Vue 全局set API

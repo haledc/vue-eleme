@@ -53,7 +53,7 @@
   }
 </script>
 
-<style lang="stylus" type="text/stylus" rel="stylesheet/stylus">
+<style lang="stylus" scoped>
   .cart-control
     font-size 0
     .cart-decrease

@@ -1,49 +1,44 @@
 <template>
-  <div>
-    <v-header :seller="seller"/>
-    <tab/>
-    <keep-alive>
-      <router-view :seller="seller"/>
-    </keep-alive>
+  <div id="app">
+    <Header :seller="seller" />
+    <Tab />
+    <KeepAlive>
+      <RouterView :seller="seller" />
+    </KeepAlive>
   </div>
 </template>
 
 <script>
-  import VHeader from 'components/header/header'
-  import Tab from 'components/tab/tab'
-  import { urlParse } from 'common/js/util'
+import Header from './components/Header'
+import Tab from './components/Tab'
+import { urlParse } from './assets/utils'
 
-  const ERR_OK = 0
+const ERR_OK = 0
 
-  export default {
-    data() {
-      return {
-        seller: {
-          // 立即执行函数获取id
-          id: (() => {
-            let queryParamObj = urlParse()
-            return queryParamObj.id
-          })()
-        }
+export default {
+  components: {
+    Header,
+    Tab
+  },
+  data () {
+    return {
+      seller: {
+        id: (() => {
+          let queryParamObj = urlParse()
+          return queryParamObj.id
+        })()
       }
-    },
-    created() {
-      this.$axios.get('api/seller?id=' + this.seller.id)
-        .then(res => {
-          res = res.data
-          if (res.errno === ERR_OK) {
-            // 属性合并
-            this.seller = Object.assign({}, this.seller, res.data)
-          }
-        })
-        .catch(e => console.log(e))
-    },
-    components: {
-      VHeader,
-      Tab
     }
+  },
+  created () {
+    this.$axios.get(`/api/seller?id=${this.seller.id}`)
+      .then(res => {
+        const { data } = res
+        if (data.errno === ERR_OK) {
+          this.seller = Object.assign({}, this.seller, data.data)
+        }
+      })
+      .catch(err => console.log(err))
   }
+}
 </script>
-
-<style lang="stylus" scoped>
-</style>

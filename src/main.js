@@ -1,17 +1,15 @@
 import Vue from 'vue'
-import App from './App'
-// import VueResource from 'vue-resource'
 import axios from 'axios'
-import router from './router/index'
 
-import 'common/stylus/index.styl'
+import App from './App.vue'
+import router from './router'
+import './registerServiceWorker'
+import './assets/styles/index.styl'
 
-// Vue.use(VueResource)
+Vue.config.productionTip = false
 Vue.prototype.$axios = axios
 
-/* eslint-disable no-new */
 new Vue({
-  el: '#app',
   router,
   render: h => h(App)
-})
+}).$mount('#app')

@@ -1,46 +1,24 @@
-const Koa = require('koa')
-const serve = require('koa-static')
-const Router = require('koa-router')
+const express = require('express')
+const history = require('connect-history-api-fallback')
 const path = require('path')
 
-const appData = require('./data.json')
-const seller = appData.seller
-const goods = appData.goods
-const ratings = appData.ratings
+const data = require('./public/muck/data')
 
+const { goods, ratings, seller } = data
 
-const router = new Router({
-  prefix: '/api'
-})
+const app = express()
+const router = express.Router()
 
-router
-  .get('/seller', async ctx => {
-    ctx.body = {
-      errno: 0,
-      data: seller
-    }
-  })
-  .get('/goods', async ctx => {
-    ctx.body = {
-      errno: 0,
-      data: goods
-    }
-  })
-  .get('/ratings', async ctx => {
-    ctx.body = {
-      errno: 0,
-      data: ratings
-    }
-  })
+router.get('/goods', (req, res) => res.json({ errno: 0, data: goods }))
+router.get('/ratings', (req, res) => res.json({ errno: 0, data: ratings }))
+router.get('/seller', (req, res) => res.json({ errno: 0, data: seller }))
 
-const app = new Koa()
-
-app.use(serve(path.join(__dirname, './dist')))
-
-app.use(router.routes()).use(router.allowedMethods())
+app.use(history())
+app.use(express.static(path.join(__dirname, './dist')))
+app.use('/api', router)
 
 const PORT = process.env.PORT || 9094
 
 app.listen(PORT, () => {
-  console.log(`Server started at port:${PORT}!`)
+  console.log(`Server running at http://127.0.0.1:${PORT}`)
 })

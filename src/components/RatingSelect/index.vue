@@ -93,14 +93,18 @@ export default {
     }
   },
   computed: {
+    /**
+     * 筛选推荐评价
+     */
     positives () {
-      // 筛选推荐评价
       return this.ratings.filter(rating => {
         return rating.rateType === POSITIVE
       })
     },
+    /**
+     * 筛选吐槽评价
+     */
     negatives () {
-      // 筛选吐槽评价
       return this.ratings.filter(rating => {
         return rating.rateType === NEGATIVE
       })

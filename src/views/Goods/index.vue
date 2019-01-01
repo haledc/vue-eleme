@@ -152,7 +152,7 @@ export default {
         let height1 = this.listHeight[i]
         let height2 = this.listHeight[i + 1]
         if (!height2 || (this.scrollY >= height1 && this.scrollY < height2)) {
-          this._followScroll(i)
+          // this._followScroll(i)
           return i
         }
       }
@@ -174,23 +174,34 @@ export default {
       return foods
     }
   },
+  watch: {
+    'currentIndex' (newVal) {
+      this._followScroll(newVal)
+    }
+  },
   created () {
     this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee']
-    this.$axios.get('/api/goods')
-      .then(res => {
-        const { data } = res
-        if (data.errno === ERR_OK) {
-          this.goods = data.data
-          // DOM更新之后再实例化BScroll对象
-          this.$nextTick(() => {
-            this._initScroll()
-            this._calculateHeight()
-          })
-        }
-      })
-      .catch(e => console.log(e))
+    this.getGoods()
   },
   methods: {
+    /**
+     * 获取goods数据
+     */
+    getGoods () {
+      this.$axios.get('/api/goods')
+        .then(res => {
+          const { data } = res
+          if (data.errno === ERR_OK) {
+            this.goods = data.data
+            // DOM更新之后再实例化BScroll对象
+            this.$nextTick(() => {
+              this._initScroll()
+              this._calculateHeight()
+            })
+          }
+        })
+        .catch(e => console.log(e))
+    },
     selectMenu (index) {
       let foodList = this.$refs.foodList
       let el = foodList[index]
@@ -265,6 +276,7 @@ export default {
     _followScroll (index) {
       let menuList = this.$refs.menuList
       let el = menuList[index]
+      console.log(el)
       this.menuScroll.scrollToElement(el, 300, 0, -100)
     }
   }

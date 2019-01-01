@@ -31,14 +31,22 @@ export default {
     }
   },
   created () {
-    this.$axios.get(`/api/seller?id=${this.seller.id}`)
-      .then(res => {
-        const { data } = res
-        if (data.errno === ERR_OK) {
-          this.seller = Object.assign({}, this.seller, data.data)
-        }
-      })
-      .catch(err => console.log(err))
+    this.getSeller()
+  },
+  methods: {
+    /**
+     * 获取seller数据
+     */
+    getSeller () {
+      this.$axios.get(`/api/seller?id=${this.seller.id}`)
+        .then(res => {
+          const { data } = res
+          if (data.errno === ERR_OK) {
+            this.seller = Object.assign({}, this.seller, data.data)
+          }
+        })
+        .catch(err => console.log(err))
+    }
   }
 }
 </script>

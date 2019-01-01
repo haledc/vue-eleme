@@ -163,19 +163,19 @@ export default {
      * 监听seller的变化
      */
     'seller' () {
+      this.init()
+    }
+  },
+  created () {
+    this.init()
+  },
+  methods: {
+    init () {
       this.$nextTick(() => {
         this._initScroll()
         this._initPics()
       })
-    }
-  },
-  created () {
-    this.$nextTick(() => {
-      this._initScroll()
-      this._initPics()
-    })
-  },
-  methods: {
+    },
     /**
      * 切换收藏
      * @param event

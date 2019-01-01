@@ -165,24 +165,27 @@ export default {
     }
   },
   created () {
-    /**
-     * 获得后端ratings数据，并在dom更新后实例化BScroll对象
-     */
-    this.$axios.get('/api/ratings')
-      .then(res => {
-        const { data } = res
-        if (data.errno === ERR_OK) {
-          this.ratings = data.data
-          this.$nextTick(() => {
-            this.scroll = new BScroll(this.$refs.ratings, {
-              click: true
-            })
-          })
-        }
-      })
-      .catch(err => console.log(err))
+    this.getRatings()
   },
   methods: {
+    /**
+     * 获取ratings数据
+     */
+    getRatings () {
+      this.$axios.get('/api/ratings')
+        .then(res => {
+          const { data } = res
+          if (data.errno === ERR_OK) {
+            this.ratings = data.data
+            this.$nextTick(() => {
+              this.scroll = new BScroll(this.$refs.ratings, {
+                click: true
+              })
+            })
+          }
+        })
+        .catch(err => console.log(err))
+    },
     /**
      * 显示评论内容
      * @param type

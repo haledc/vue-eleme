@@ -6,7 +6,7 @@ const localVue = createLocalVue()
 localVue.prototype.$axios = axios
 
 describe('Ratings.vue', () => {
-  it('测试Props', () => {
+  test('测试Props', () => {
     const wrapper = shallowMount(Ratings, {
       propsData: {
         seller: { a: 'b' }
@@ -16,7 +16,7 @@ describe('Ratings.vue', () => {
     expect(wrapper.vm.seller).toEqual({ a: 'b' })
   })
 
-  it('测试方法：needShow', () => {
+  test('测试方法：needShow', () => {
     const wrapper = shallowMount(Ratings, {
       propsData: {
         seller: { a: 'b' }
@@ -26,6 +26,6 @@ describe('Ratings.vue', () => {
     wrapper.setData({ selectType: 2 })
     const type = 2
     const text = ''
-    expect(wrapper.vm.needShow(type, text)).not.toBeTruthy()
+    expect(wrapper.vm.needShow(type, text)).toBeFalsy()
   })
 })

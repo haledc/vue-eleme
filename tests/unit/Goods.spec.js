@@ -6,7 +6,7 @@ const localVue = createLocalVue()
 localVue.prototype.$axios = axios
 
 describe('Goods.vue', () => {
-  it('测试Props', () => {
+  test('测试Props', () => {
     const wrapper = shallowMount(Goods, {
       propsData: {
         seller: { a: 'b' }
@@ -16,7 +16,7 @@ describe('Goods.vue', () => {
     expect(wrapper.vm.seller).toEqual({ a: 'b' })
   })
 
-  it('测试计算属性', () => {
+  test('测试计算属性', () => {
     const wrapper = shallowMount(Goods, {
       propsData: {
         seller: {}
@@ -31,7 +31,11 @@ describe('Goods.vue', () => {
         { foods: [{ count: 2 }] }
       ]
     })
-    expect(wrapper.vm.currentIndex).toEqual(1)
-    expect(wrapper.vm.selectFoods).toEqual([{ count: 1 }, { count: 10 }, { count: 2 }])
+    expect(wrapper.vm.currentIndex).toBe(1)
+    expect(wrapper.vm.selectFoods).toEqual([
+      { count: 1 },
+      { count: 10 },
+      { count: 2 }
+    ])
   })
 })

@@ -2,7 +2,7 @@ import { shallowMount } from '@vue/test-utils'
 import CartControl from '../../src/components/CartControl'
 
 describe('CartControl.vue', () => {
-  it('测试Props', () => {
+  test('测试Props', () => {
     const wrapper = shallowMount(CartControl, {
       propsData: {
         food: { test: 'testData' }
@@ -11,7 +11,7 @@ describe('CartControl.vue', () => {
     expect(wrapper.vm.food).toEqual({ test: 'testData' })
   })
 
-  it('测试方法：addCart-1', () => {
+  test('测试方法：addCart，数量增加', () => {
     const wrapper = shallowMount(CartControl, {
       propsData: {
         food: {
@@ -20,20 +20,20 @@ describe('CartControl.vue', () => {
       }
     })
     wrapper.find('.cart-add').trigger('click')
-    expect(wrapper.vm.food.count).toEqual(2)
+    expect(wrapper.vm.food.count).toBe(2)
   })
 
-  it('测试方法：addCart-2', () => {
+  test('测试方法：addCart，数量由无变成1', () => {
     const wrapper = shallowMount(CartControl, {
       propsData: {
         food: {}
       }
     })
     wrapper.find('.cart-add').trigger('click')
-    expect(wrapper.vm.food.count).toEqual(1)
+    expect(wrapper.vm.food.count).toBe(1)
   })
 
-  it('测试方法：decreaseCart', () => {
+  test('测试方法：decreaseCart，数量减少', () => {
     const wrapper = shallowMount(CartControl, {
       propsData: {
         food: {
@@ -42,6 +42,6 @@ describe('CartControl.vue', () => {
       }
     })
     wrapper.find('.cart-decrease').trigger('click')
-    expect(wrapper.vm.food.count).toEqual(9)
+    expect(wrapper.vm.food.count).toBe(9)
   })
 })

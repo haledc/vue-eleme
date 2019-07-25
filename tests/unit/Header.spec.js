@@ -2,12 +2,12 @@ import { shallowMount } from '@vue/test-utils'
 import Header from '../../src/components/Header'
 
 describe('Header.vue', () => {
-  it('测试组件是否生效', () => {
+  test('测试组件是否生效', () => {
     const wrapper = shallowMount(Header)
     expect(wrapper.contains('div')).toBeTruthy()
   })
 
-  it('测试props属性', () => {
+  test('测试props属性', () => {
     const wrapper = shallowMount(Header, {
       propsData: {
         seller: { test: 'testData' }
@@ -16,7 +16,7 @@ describe('Header.vue', () => {
     expect(wrapper.vm.seller).toEqual({ test: 'testData' })
   })
 
-  it('测试计算属性：supportsFirst', () => {
+  test('测试计算属性：supportsFirst', () => {
     const wrapper = shallowMount(Header, {
       propsData: {
         seller: {
@@ -27,15 +27,15 @@ describe('Header.vue', () => {
     expect(wrapper.vm.supportsFirst).toEqual(['a'])
   })
 
-  it('测试method :showDetail', () => {
+  test('测试method: showDetail', () => {
     const wrapper = shallowMount(Header)
     wrapper.find('.bulletin-wrapper .bulletin-title').trigger('click')
-    expect(wrapper.vm.detailShow).toEqual(true)
+    expect(wrapper.vm.detailShow).toBeTruthy()
   })
 
-  it('测试method :hideDetail', () => {
+  test('测试method: hideDetail', () => {
     const wrapper = shallowMount(Header)
     wrapper.find('.detail-close').trigger('click')
-    expect(wrapper.vm.detailShow).toEqual(false)
+    expect(wrapper.vm.detailShow).toBeFalsy()
   })
 })

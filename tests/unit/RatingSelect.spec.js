@@ -2,7 +2,7 @@ import { shallowMount } from '@vue/test-utils'
 import RatingSelect from '../../src/components/RatingSelect'
 
 describe('RatingSelect.vue', () => {
-  it('测试Props', () => {
+  test('测试Props', () => {
     const wrapper = shallowMount(RatingSelect, {
       propsData: {
         ratings: [1, 2, 3, 4, 5],
@@ -12,12 +12,12 @@ describe('RatingSelect.vue', () => {
       }
     })
     expect(wrapper.vm.ratings).toEqual([1, 2, 3, 4, 5])
-    expect(wrapper.vm.selectType).toEqual(2)
+    expect(wrapper.vm.selectType).toBe(2)
     expect(wrapper.vm.onlyContent).toBeTruthy()
     expect(wrapper.vm.desc).toEqual({ a: 'b' })
   })
 
-  it('测试计算属性', () => {
+  test('测试计算属性', () => {
     const wrapper = shallowMount(RatingSelect, {
       propsData: {
         ratings: [

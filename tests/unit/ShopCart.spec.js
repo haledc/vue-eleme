@@ -2,20 +2,26 @@ import { shallowMount } from '@vue/test-utils'
 import ShopCart from '../../src/components/ShopCart'
 
 describe('ShopCart.vue', () => {
-  it('测试Props', () => {
+  test('测试Props', () => {
     const wrapper = shallowMount(ShopCart, {
       propsData: {
-        selectFoods: [1, 2, 3, 4, 5],
+        selectFoods: [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }],
         deliveryPrice: 10,
         minPrice: 20
       }
     })
-    expect(wrapper.vm.selectFoods).toEqual([1, 2, 3, 4, 5])
-    expect(wrapper.vm.deliveryPrice).toEqual(10)
-    expect(wrapper.vm.minPrice).toEqual(20)
+    expect(wrapper.vm.selectFoods).toEqual([
+      { id: 1 },
+      { id: 2 },
+      { id: 3 },
+      { id: 4 },
+      { id: 5 }
+    ])
+    expect(wrapper.vm.deliveryPrice).toBe(10)
+    expect(wrapper.vm.minPrice).toBe(20)
   })
 
-  it('测试计算属性', () => {
+  test('测试计算属性', () => {
     const wrapper = shallowMount(ShopCart, {
       propsData: {
         selectFoods: [
@@ -33,9 +39,9 @@ describe('ShopCart.vue', () => {
       }
     })
     wrapper.setData({ fold: false })
-    expect(wrapper.vm.totalPrice).toEqual(60)
-    expect(wrapper.vm.totalCount).toEqual(5)
-    expect(wrapper.vm.payDesc).toEqual('去结算')
-    expect(wrapper.vm.listShow).toBe(true)
+    expect(wrapper.vm.totalPrice).toBe(60)
+    expect(wrapper.vm.totalCount).toBe(5)
+    expect(wrapper.vm.payDesc).toBe('去结算')
+    expect(wrapper.vm.listShow).toBeTruthy()
   })
 })

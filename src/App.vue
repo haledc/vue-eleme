@@ -20,7 +20,7 @@ export default {
     Header,
     Tab
   },
-  data () {
+  data() {
     return {
       seller: {
         id: (() => {
@@ -30,22 +30,21 @@ export default {
       }
     }
   },
-  created () {
+  created() {
     this.getSeller()
   },
   methods: {
-    /**
-     * 获取seller数据
-     */
-    getSeller () {
-      this.$axios.get(`/api/seller?id=${this.seller.id}`)
+    // 获取 seller 数据
+    getSeller() {
+      this.$axios
+        .get(`/api/seller?id=${this.seller.id}`)
         .then(res => {
           const { data } = res
           if (data.errno === ERR_OK) {
             this.seller = Object.assign({}, this.seller, data.data)
           }
         })
-        .catch(err => console.log(err))
+        .catch(error => console.log(error))
     }
   }
 }

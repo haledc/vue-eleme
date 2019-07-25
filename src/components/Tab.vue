@@ -16,7 +16,7 @@
 
 <script>
 export default {
-  data () {
+  data() {
     return {
       routerContent: [
         { to: '/goods', text: '商品' },
@@ -29,21 +29,22 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-  @import "../../assets/styles/mixin.styl"
-  .tab
-    display flex
-    width 100%
-    height 40px
-    line-height 40px
-    border-1px(rgba(7, 17, 27, 0.1))
+@import '../assets/styles/mixin.styl'
 
-    .tab-item
-      flex 1
-      text-align center
-      font-size 14px
-      color rgb(77, 85, 93)
-      // router-link 内置的默认活动class
+.tab
+  display: flex
+  width: 100%
+  height: 40px
+  line-height: 40px
+  border-1px(rgba(7, 17, 27, 0.1))
 
-      &.router-link-active
-        color rgb(240, 20, 20)
+  .tab-item
+    flex: 1
+    text-align: center
+    font-size: 14px
+    color: rgb(77, 85, 93)
+
+    // router-link 内置的默认活动class
+    &.router-link-active
+      color: rgb(240, 20, 20)
 </style>

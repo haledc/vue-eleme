@@ -2,22 +2,19 @@
   <div>
     <div class="goods">
       <!--菜单栏-->
-      <div
-        ref="menuWrapper"
-        class="menu-wrapper"
-      >
+      <div ref="menuWrapper" class="menu-wrapper">
         <ul>
           <li
             v-for="(item, index) in goods"
             :key="index"
             ref="menuList"
             class="menu-item"
-            :class="{'current': currentIndex === index}"
+            :class="{ current: currentIndex === index }"
             @click="selectMenu(index)"
           >
             <span class="text border-1px">
               <span
-                v-show="item.type>0"
+                v-show="item.type > 0"
                 class="icon"
                 :class="classMap[item.type]"
               />
@@ -26,11 +23,9 @@
           </li>
         </ul>
       </div>
+
       <!--食物栏-->
-      <div
-        ref="foodsWrapper"
-        class="foods-wrapper"
-      >
+      <div ref="foodsWrapper" class="foods-wrapper">
         <ul>
           <li
             v-for="item in goods"
@@ -42,6 +37,7 @@
             <h1 class="title">
               {{ item.name }}
             </h1>
+
             <!--食物条目-->
             <ul>
               <li
@@ -51,12 +47,7 @@
                 @click="selectFood(food)"
               >
                 <div class="icon">
-                  <img
-                    width="57"
-                    height="57"
-                    :src="food.icon"
-                    alt="icon"
-                  >
+                  <img width="57" height="57" :src="food.icon" alt="icon" />
                 </div>
                 <div class="content">
                   <h2 class="name">
@@ -66,29 +57,19 @@
                     {{ food.description }}
                   </p>
                   <div class="extra">
-                    <span class="count">
-                      月售{{ food.sellCount }}份
-                    </span><span>
-                      好评率{{ food.rating }}%
-                    </span>
+                    <span class="count"> 月售{{ food.sellCount }}份 </span
+                    ><span> 好评率{{ food.rating }}% </span>
                   </div>
                   <div class="price">
-                    <span class="now">
-                      ￥{{ food.price }}
-                    </span>
-                    <span
-                      v-show="food.oldPrice"
-                      class="old"
-                    >
+                    <span class="now"> ￥{{ food.price }} </span>
+                    <span v-show="food.oldPrice" class="old">
                       ￥{{ food.oldPrice }}
                     </span>
                   </div>
+
                   <!--购物车加减控件-->
                   <div class="cart-control-wrapper">
-                    <CartControl
-                      :food="food"
-                      @add="addFood"
-                    />
+                    <CartControl :food="food" @add="addFood" />
                   </div>
                 </div>
               </li>
@@ -96,6 +77,7 @@
           </li>
         </ul>
       </div>
+
       <!--购物车-->
       <ShopCart
         ref="shopCart"
@@ -104,12 +86,9 @@
         :min-price="seller.minPrice"
       />
     </div>
+
     <!--食物详情页-->
-    <Food
-      ref="food"
-      :food="selectedFood"
-      @add="addFood"
-    />
+    <Food ref="food" :food="selectedFood" @add="addFood" />
   </div>
 </template>
 
@@ -133,7 +112,7 @@ export default {
       required: true
     }
   },
-  data () {
+  data() {
     return {
       goods: [],
       listHeight: [],
@@ -143,26 +122,20 @@ export default {
     }
   },
   computed: {
-    /**
-     * 当前索引（菜单索引，食物索引）
-     * @returns {number}
-     */
-    currentIndex () {
+    // 当前索引（菜单索引，食物索引）
+    currentIndex() {
       for (let i = 0; i < this.listHeight.length; i++) {
         let height1 = this.listHeight[i]
         let height2 = this.listHeight[i + 1]
         if (!height2 || (this.scrollY >= height1 && this.scrollY < height2)) {
-          // this._followScroll(i)
           return i
         }
       }
       return 0
     },
-    /**
-     * 选中具体食物对象计算属性，并传递给购物车组件
-     * @returns {Array}
-     */
-    selectFoods () {
+
+    // 选中具体食物对象计算属性，并传递给购物车组件
+    selectFoods() {
       let foods = []
       this.goods.forEach(good => {
         good.foods.forEach(food => {
@@ -174,58 +147,51 @@ export default {
       return foods
     }
   },
-  watch: {
-    'currentIndex' (newVal) {
-      this._followScroll(newVal)
-    }
-  },
-  created () {
+  created() {
     this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee']
     this.getGoods()
   },
   methods: {
-    /**
-     * 获取goods数据
-     */
-    getGoods () {
-      this.$axios.get('/api/goods')
+    // 获取 goods 数据
+    getGoods() {
+      this.$axios
+        .get('/api/goods')
         .then(res => {
           const { data } = res
           if (data.errno === ERR_OK) {
             this.goods = data.data
-            // DOM更新之后再实例化BScroll对象
+
+            // DOM 更新之后再实例化 BScroll 对象
             this.$nextTick(() => {
               this._initScroll()
               this._calculateHeight()
             })
           }
         })
-        .catch(e => console.log(e))
+        .catch(error => console.log(error))
     },
-    selectMenu (index) {
+
+    selectMenu(index) {
       let foodList = this.$refs.foodList
       let el = foodList[index]
       this.foodsScroll.scrollToElement(el, 300)
     },
-    addFood (target) {
-      // target为子组件的传过来的dom对象
+
+    addFood(target) {
+      // target 为子组件的传过来的 dom 对象
       this._drop(target)
     },
-    /**
-     * 调用子组件的抛落方法
-     * @param target
-     */
-    _drop (target) {
+
+    // 调用子组件的抛落方法
+    _drop(target) {
       // 体验优化，异步执行下落动画(这样不会卡)
       this.$nextTick(() => {
         this.$refs.shopCart.drop(target)
       })
     },
-    /**
-     * 初始化滚动
-     * @private
-     */
-    _initScroll () {
+
+    // 初始化滚动
+    _initScroll() {
       this.menuScroll = new BScroll(this.$refs.menuWrapper, {
         click: true
       })
@@ -235,20 +201,19 @@ export default {
         // 激活实时滚动位置
         probeType: 3
       })
+
       // 监听食物栏滚动事件, 并得到滚动时y轴的实时数值
       this.foodsScroll.on('scroll', pos => {
         if (pos.y <= 0) {
-          // -1 点击“精选套装”，“小吃主食”和右边不匹配的bug，是数值精度的误差
-          // 也可修改食物菜单title的高度（26 => 27）来避免这个误差
+          // -1 点击“精选套装”，“小吃主食”和右边不匹配的 bug，是数值精度的误差
+          // 也可修改食物菜单 title 的高度 (26 => 27) 来避免这个误差
           this.scrollY = Math.abs(pos.y - 1)
         }
       })
     },
-    /**
-     * 食品栏高度集合
-     * @private
-     */
-    _calculateHeight () {
+
+    // 食品栏高度集合
+    _calculateHeight() {
       let foodList = this.$refs.foodList
       let height = 0
       this.listHeight.push(height)
@@ -258,166 +223,152 @@ export default {
         this.listHeight.push(height)
       }
     },
-    /**
-     * 选中食物
-     * @param food
-     * @param event
-     */
-    selectFood (food, event) {
+
+    // 选中食物
+    selectFood(food) {
       this.selectedFood = food
-      // 调用子组件方法，使得food组件显示出来
+      // 调用子组件方法，使得 food 组件显示出来
       this.$refs.food.show()
-    },
-    /**
-     * 滚动到指定菜单
-     * @param index
-     * @private
-     */
-    _followScroll (index) {
-      let menuList = this.$refs.menuList
-      let el = menuList[index]
-      console.log(el)
-      this.menuScroll.scrollToElement(el, 300, 0, -100)
     }
   }
 }
 </script>
 
 <style lang="stylus" scoped>
-  @import "../../assets/styles/mixin.styl"
-  .goods
-    display flex
-    position absolute
-    top 170px
-    bottom 46px
-    width 100%
-    overflow hidden
-    /*菜单栏*/
+@import '../../assets/styles/mixin.styl'
 
-    .menu-wrapper
-      // 等分 缩放 占位空间
-      flex 0 0 80px
-      width 80px
-      background #f3f5f7
+.goods
+  display: flex
+  position: absolute
+  top: 170px
+  bottom: 46px
+  width: 100%
+  overflow: hidden
 
-      .menu-item
-        // 表格布局
-        display table
-        height 54px
-        width 56px
-        // 水平居中
-        padding 0 12px
-        line-height 14px
-        // 活动样式
+  /* 菜单栏 */
+  .menu-wrapper
+    // 等分 缩放 占位空间
+    flex: 0 0 80px
+    width: 80px
+    background: #f3f5f7
 
-        &.current
-          position relative
-          z-index 10
-          margin-top -1px
-          background #fff
-          font-weight 700
+    .menu-item
+      // 表格布局
+      display: table
+      height: 54px
+      width: 56px
+      // 水平居中
+      padding: 0 12px
+      line-height: 14px
 
-          .text
-            border-none()
-
-        .icon
-          display inline-block
-          vertical-align top
-          width 12px
-          height 12px
-          margin-right 2px
-          background-size 12px 12px
-          background-repeat no-repeat
-
-          &.decrease
-            bg-image('decrease_3')
-
-          &.discount
-            bg-image('discount_3')
-
-          &.guarantee
-            bg-image('guarantee_3')
-
-          &.invoice
-            bg-image('invoice_3')
-
-          &.special
-            bg-image('special_3')
+      // 活动样式
+      &.current
+        position: relative
+        z-index: 10
+        margin-top: -1px
+        background: #fff
+        font-weight: 700
 
         .text
-          display table-cell
-          width 56px
-          vertical-align middle
-          border-1px(rgba(7, 17, 27, 0.1))
-          font-size 12px
-
-    /*食物*/
-
-    .foods-wrapper
-      flex 1
-
-      .title
-        padding-left 14px
-        height 26px
-        line-height 26px
-        border-left 2px solid #d9dde1
-        font-size 12px
-        color rgb(147, 153, 159)
-        background #f3f5f7
-
-      .food-item
-        display flex
-        margin 18px
-        padding-bottom 18px
-        border-1px(rgba(7, 17, 27, 0.1))
-
-        &:last-child
           border-none()
-          margin-bottom 0
 
-        .icon
-          flex 0 0 57px
-          margin-right 10px
+      .icon
+        display: inline-block
+        vertical-align: top
+        width: 12px
+        height: 12px
+        margin-right: 2px
+        background-size: 12px 12px
+        background-repeat: no-repeat
 
-        .content
-          flex 1
+        &.decrease
+          bg-image('decrease_3')
 
-          .name
-            margin 2px 0 8px 0
-            height 14px
-            line-height 14px
-            font-size 14px
-            color rgb(7, 17, 27)
+        &.discount
+          bg-image('discount_3')
 
-          .desc, .extra
-            line-height 10px
-            font-size 10px
-            color rgb(147, 153, 159)
+        &.guarantee
+          bg-image('guarantee_3')
 
-          .desc
-            margin-bottom 8px
-            line-height 12px
+        &.invoice
+          bg-image('invoice_3')
 
-          .extra
-            .count
-              margin-right 12px
+        &.special
+          bg-image('special_3')
 
-          .price
-            font-weight 700
-            line-height 24px
+      .text
+        display: table-cell
+        width: 56px
+        vertical-align: middle
+        border-1px(rgba(7, 17, 27, 0.1))
+        font-size: 12px
 
-            .now
-              margin-right 8px
-              font-size 14px
-              color rgb(240, 20, 20)
+  /* 食物 */
+  .foods-wrapper
+    flex: 1
 
-            .old
-              text-decoration line-through
-              font-size 10px
-              color rgb(147, 153, 159)
+    .title
+      padding-left: 14px
+      height: 26px
+      line-height: 26px
+      border-left: 2px solid #d9dde1
+      font-size: 12px
+      color: rgb(147, 153, 159)
+      background: #f3f5f7
 
-          .cart-control-wrapper
-            position absolute
-            right 0
-            bottom 12px
+    .food-item
+      display: flex
+      margin: 18px
+      padding-bottom: 18px
+      border-1px(rgba(7, 17, 27, 0.1))
+
+      &:last-child
+        border-none()
+        margin-bottom: 0
+
+      .icon
+        flex: 0 0 57px
+        margin-right: 10px
+
+      .content
+        flex: 1
+
+        .name
+          margin: 2px 0 8px 0
+          height: 14px
+          line-height: 14px
+          font-size: 14px
+          color: rgb(7, 17, 27)
+
+        .desc, .extra
+          line-height: 10px
+          font-size: 10px
+          color: rgb(147, 153, 159)
+
+        .desc
+          margin-bottom: 8px
+          line-height: 12px
+
+        .extra
+          .count
+            margin-right: 12px
+
+        .price
+          font-weight: 700
+          line-height: 24px
+
+          .now
+            margin-right: 8px
+            font-size: 14px
+            color: rgb(240, 20, 20)
+
+          .old
+            text-decoration: line-through
+            font-size: 10px
+            color: rgb(147, 153, 159)
+
+        .cart-control-wrapper
+          position: absolute
+          right: 0
+          bottom: 12px
 </style>

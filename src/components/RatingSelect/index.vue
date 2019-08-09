@@ -1,50 +1,42 @@
 <template>
-  <div class="rating-select">
+  <div class="ratingselect">
     <!--评价类型-->
     <div class="rating-type border-1px">
       <span
         class="block positive"
         :class="{ active: selectType === 2 }"
-        @click="select(2)"
+        @click="select(2, $event)"
       >
-        {{ desc.all }}
-        <span class="count">
-          {{ ratings.length }}
-        </span>
+        {{ desc.all }}<span class="count">{{ ratings.length }}</span>
       </span>
       <span
         class="block positive"
         :class="{ active: selectType === 0 }"
-        @click="select(0)"
+        @click="select(0, $event)"
       >
         {{ desc.positive }}
-        <span class="count">
-          {{ positives.length }}
-        </span>
+        <span class="count">{{ positives.length }}</span>
       </span>
       <span
         class="block negative"
         :class="{ active: selectType === 1 }"
-        @click="select(1)"
+        @click="select(1, $event)"
       >
-        {{ desc.negative }}
-        <span class="count">
-          {{ negatives.length }}
-        </span>
+        {{ desc.negative }}<span class="count">{{ negatives.length }}</span>
       </span>
     </div>
-
     <!--切换（是否只看有内容的评价）-->
     <div class="switch" :class="{ on: onlyContent }" @click="toggleContent">
-      <span class="icon-check_circle" />
-      <span class="text">
-        只看有内容的评价
-      </span>
+      <span class="icon-check_circle"></span>
+      <span class="text">只看有内容的评价</span>
     </div>
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { Vue, Component, Prop, Emit } from 'vue-property-decorator'
+import { FoodRating, Rating } from '@/types'
+
 // 正面评价
 const POSITIVE = 0
 // 负面评价
@@ -52,75 +44,45 @@ const NEGATIVE = 1
 // 全部评价
 const ALL = 2
 
-export default {
-  props: {
-    ratings: {
-      type: Array,
-      default() {
-        return []
-      }
-    },
+const descDefault = {
+  all: '全部',
+  positive: '满意',
+  negative: '不满意'
+}
 
-    // 评价类型
-    selectType: {
-      type: Number,
-      // 默认是全部
-      default: ALL
-    },
+@Component
+export default class RatingSelect extends Vue {
+  @Prop({ default: () => [] }) ratings!: Array<FoodRating | Rating>
+  @Prop({ default: ALL }) selectType!: number
+  @Prop({ default: false }) onlyContent!: boolean
+  @Prop({ default: () => descDefault }) desc!: object
 
-    // 是否只看有内容的评价
-    onlyContent: {
-      type: Boolean,
-      default: false
-    },
-
-    // 评价类型描述
-    desc: {
-      type: Object,
-      default() {
-        return {
-          all: '全部',
-          positive: '满意',
-          negative: '不满意'
-        }
-      }
-    }
-  },
-  computed: {
+  get positives() {
     // 筛选推荐评价
-    positives() {
-      return this.ratings.filter(rating => {
-        return rating.rateType === POSITIVE
-      })
-    },
-
-    // 筛选吐槽评价
-    negatives() {
-      return this.ratings.filter(rating => {
-        return rating.rateType === NEGATIVE
-      })
-    }
-  },
-  methods: {
-    // 选中
-    select(type) {
-      // 给引用的父组件派发 select 事件，传入类型参数
-      this.$emit('select', type)
-    },
-
-    // 切换
-    toggleContent() {
-      // 给引用的父组件派发 toggle 事件
-      this.$emit('toggle')
-    }
+    return this.ratings.filter(rating => {
+      return rating.rateType === POSITIVE
+    })
   }
+
+  get negatives() {
+    // 筛选吐槽评价
+    return this.ratings.filter(rating => {
+      return rating.rateType === NEGATIVE
+    })
+  }
+
+  @Emit('select')
+  select(type: number) {}
+
+  @Emit('toggle')
+  toggleContent() {}
 }
 </script>
 
 <style lang="stylus" scoped>
-@import '../assets/styles/mixin.styl'
+@import '~@/assets/styles/mixin.styl'
 
-.rating-select
+.ratingselect
   .rating-type
     // 左右间隙需要用margin，不然会影响下边框线
     padding: 18px 0

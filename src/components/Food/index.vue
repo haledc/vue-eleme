@@ -1,112 +1,93 @@
 <template>
-  <Transition name="move">
-    <div v-show="showFlag" ref="food" class="food">
+  <transition name="move">
+    <div class="food" v-show="showFlag" ref="food">
       <div class="food-content">
         <!--头图-->
         <div class="image-header">
-          <img :src="food.image" alt="image" />
+          <img :src="food.image" />
           <div class="back" @click="hide">
-            <i class="icon-arrow_lift" />
+            <i class="icon-arrow_lift"></i>
           </div>
         </div>
-
         <!--商品内容-->
         <div class="content">
-          <h1 class="title">
-            {{ food.name }}
-          </h1>
+          <h1 class="title">{{ food.name }}</h1>
           <div class="detail">
-            <span class="sell-count"> 月售{{ food.sellCount }}份 </span>
-            <span class="rating"> 好评率{{ food.rating }} </span>
+            <span class="sell-count">月售{{ food.sellCount }}份</span>
+            <span class="rating">好评率{{ food.rating }}</span>
           </div>
           <div class="price">
-            <span class="now"> ￥{{ food.price }} </span>
-            <span v-show="food.oldPrice" class="old">
-              ￥{{ food.oldPrice }}
-            </span>
+            <span class="now">￥{{ food.price }}</span
+            ><span class="old" v-show="food.oldPrice"
+              >￥{{ food.oldPrice }}</span
+            >
           </div>
-          <div class="cart-control-wrapper">
-            <CartControl :food="food" @add="addFood" />
+          <div class="cartcontrol-wrapper">
+            <cart-control @add="addFood" :food="food" />
           </div>
-          <Transition name="fade">
+          <transition name="fade">
             <div
-              v-show="!food.count || food.count === 0"
               class="buy"
+              v-show="!food.count || food.count === 0"
               @click.stop.prevent="addFirst"
             >
               加入购物车
             </div>
-          </Transition>
+          </transition>
         </div>
-
         <!--分割线组件-->
-        <Split v-show="food.info" />
-
+        <split v-show="food.info" />
         <!--商品信息-->
-        <div v-show="food.info" class="info">
-          <div class="title">
-            商品信息
-          </div>
-          <div class="text">
-            {{ food.info }}
-          </div>
+        <div class="info" v-show="food.info">
+          <div class="title">商品信息</div>
+          <div class="text">{{ food.info }}</div>
         </div>
-
         <!--分割线组件-->
-        <Split />
-
+        <split />
         <!--商品评价-->
         <div class="rating">
-          <h1 class="title">
-            商品评价
-          </h1>
-          <RatingSelect
-            :select-type="selectType"
-            :only-content="onlyContent"
-            :desc="desc"
-            :ratings="food.ratings"
+          <h1 class="title">商品评价</h1>
+          <rating-select
             @select="selectRating"
             @toggle="toggleContent"
+            :selectType="selectType"
+            :onlyContent="onlyContent"
+            :desc="desc"
+            :ratings="food.ratings"
           />
-
           <!--商品评价列表-->
           <div class="rating-wrapper">
             <ul v-show="food.ratings && food.ratings.length">
               <li
-                v-for="rating in food.ratings"
-                v-show="needShow(rating.rateType, rating.text)"
-                :key="rating.username"
+                v-for="(rating, index) in food.ratings"
+                :key="index"
                 class="rating-item border-1px"
+                v-show="needShow(rating.rateType, rating.text)"
               >
                 <div class="user">
-                  <span class="name">
-                    {{ rating.username }}
-                  </span>
+                  <span class="name">{{ rating.username }}</span>
                   <img
                     class="avatar"
                     width="12"
                     height="12"
                     :src="rating.avatar"
-                    alt="avatar"
                   />
                 </div>
-                <div class="time">
-                  {{ rating.rateTime | formatRatingDate }}
-                </div>
+                <div class="time">{{ rating.rateTime | formatRatingDate }}</div>
                 <p class="text">
                   <span
                     :class="{
                       'icon-thumb_up': rating.rateType === 0,
                       'icon-thumb_down': rating.rateType === 1
                     }"
-                  />
-                  {{ rating.text }}
+                  ></span
+                  >{{ rating.text }}
                 </p>
               </li>
             </ul>
             <div
-              v-show="!food.ratings || !food.ratings.length"
               class="no-rating"
+              v-show="!food.ratings || !food.ratings.length"
             >
               暂无评价
             </div>
@@ -114,132 +95,111 @@
         </div>
       </div>
     </div>
-  </Transition>
+  </transition>
 </template>
 
-<script>
+<script lang="ts">
+import { Vue, Component, Prop, Emit } from 'vue-property-decorator'
 import BScroll from 'better-scroll'
-import CartControl from './CartControl'
-import Split from './Split'
-import RatingSelect from './RatingSelect'
-import { formatDate } from '../assets/utils'
+import vue from 'vue'
+import CartControl from '@/components/CartControl/index.vue'
+import Split from '@/components/Split/index.vue'
+import RatingSelect from '@/components/RatingSelect/index.vue'
+import { formatDate } from '@/assets/helper'
+import { Food as FoodInterface } from '@/types'
 
-// 默认是全部评价
 const ALL = 2
 
-export default {
+@Component({
   components: {
     CartControl,
     Split,
     RatingSelect
   },
   filters: {
-    // 评论时间格式化
-    formatRatingDate(time) {
-      let date = new Date(time)
+    formatRatingDate(time: number) {
+      const date = new Date(time)
       return formatDate(date, 'yyyy-MM-dd hh:mm')
     }
-  },
-  props: {
-    food: {
-      type: Object,
-      required: true
-    }
-  },
-  data() {
-    return {
-      showFlag: false,
-      selectType: ALL,
-      onlyContent: true,
-      desc: {
-        all: '全部',
-        positive: '推荐',
-        negative: '吐槽'
-      }
-    }
-  },
-  methods: {
-    // 显示
-    show() {
-      // 初始化状态
-      this.showFlag = true
-      this.selectType = ALL
-      this.onlyContent = true
+  }
+})
+export default class Food extends Vue {
+  @Prop() food!: FoodInterface
 
-      // DOM 更新后实例化 BScroll 对象
-      this.$nextTick(() => {
-        if (!this.scroll) {
-          this.scroll = new BScroll(this.$refs.food, {
-            click: true
-          })
-        } else {
-          this.scroll.refresh()
-        }
-      })
-    },
+  showFlag: boolean = false
+  selectType: number = ALL
+  onlyContent: boolean = true
+  desc = {
+    all: '全部',
+    positive: '推荐',
+    negative: '吐槽'
+  }
+  scroll!: BScroll
+  $refs!: {
+    food: HTMLElement
+  }
 
-    // 隐藏
-    hide() {
-      this.showFlag = false
-    },
-
-    // 增加购物数量为 1
-    addFirst(event) {
-      // 给父组件派发 add 事件，传入 target 参数
-      this.$emit('add', event.target)
-      this.$set(this.food, 'count', 1)
-    },
-
-    /**
-     * 显示评论内容， 通过评论类型和评论内容来确定是否显示该条评论
-     * @param type 关联类型
-     * @param text 关联内容
-     * @return {boolean}
-     */
-    needShow(type, text) {
-      if (this.onlyContent && !text) {
-        return false
-      }
-      if (this.selectType === ALL) {
-        return true
+  show() {
+    // 初始化状态
+    this.showFlag = true
+    this.selectType = ALL
+    this.onlyContent = true
+    // DOM更新后实例化BScroll对象
+    this.$nextTick(() => {
+      if (!this.scroll) {
+        this.scroll = new BScroll(this.$refs.food, {
+          click: true
+        })
       } else {
-        // 判断评论的类型是否和选定的类型一致，一致为 true 即显示,否则为 false 即不显示
-        return type === this.selectType
+        this.scroll.refresh()
       }
-    },
+    })
+  }
 
-    addFood(target) {
-      this.$emit('add', target)
-    },
+  hide() {
+    this.showFlag = false
+  }
 
-    /**
-     * 选中评价类型
-     * @param type 子组件 ratingselect 派发的事件参数
-     */
-    selectRating(type) {
-      this.selectType = type
+  @Emit('add')
+  addFirst(event: Event) {
+    this.$set(this.food, 'count', 1)
+  }
 
-      // 异步刷新 scroll
-      this.$nextTick(() => {
-        this.scroll.refresh()
-      })
-    },
-
-    // 切换是否只看有内容的评价
-    toggleContent() {
-      this.onlyContent = !this.onlyContent
-
-      // 异步刷新 scroll
-      this.$nextTick(() => {
-        this.scroll.refresh()
-      })
+  needShow(type: number, text: string) {
+    if (this.onlyContent && !text) {
+      return false
     }
+    if (this.selectType === ALL) {
+      return true
+    } else {
+      // 判断评论的类型是否和选定的类型一致，一致为true即显示,否则为false即不显示
+      return type === this.selectType
+    }
+  }
+
+  @Emit('add')
+  addFood(event: Event) {}
+
+  selectRating(type: number) {
+    this.selectType = type
+    // 异步刷新scroll
+    this.$nextTick(() => {
+      this.scroll.refresh()
+    })
+  }
+
+  toggleContent() {
+    this.onlyContent = !this.onlyContent
+    // 异步刷新scroll
+    this.$nextTick(() => {
+      this.scroll.refresh()
+    })
   }
 }
 </script>
 
 <style lang="stylus" scoped>
-@import '../assets/styles/mixin.styl'
+@import '~@/assets/styles/mixin.styl'
 
 .food
   position: fixed
@@ -322,7 +282,7 @@ export default {
         font-size: 10px
         color: rgb(147, 153, 159)
 
-    .cart-control-wrapper
+    .cartcontrol-wrapper
       position: absolute
       right: 12px
       bottom: 12px

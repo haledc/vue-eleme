@@ -2,57 +2,57 @@
   <div class="star" :class="starType">
     <span
       v-for="(itemClass, index) in itemClasses"
-      :key="index"
-      class="star-item"
       :class="itemClass"
-    />
+      class="star-item"
+      :key="index"
+    ></span>
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { Vue, Component, Prop } from 'vue-property-decorator'
+
+// 星星长度
 const LENGTH = 5
+// 星星状态
 const CLS_ON = 'on'
 const CLS_HALF = 'half'
 const CLS_OFF = 'off'
 
-export default {
-  props: {
-    size: {
-      type: Number,
-      required: true
-    },
-    score: {
-      type: Number,
-      required: true
-    }
-  },
-  computed: {
-    starType() {
-      return 'star-' + this.size
-    },
+@Component
+export default class Star extends Vue {
+  @Prop(Number) size!: number
+  @Prop(Number) score!: number
 
-    itemClasses() {
-      let result = []
-      let score = Math.floor(this.score * 2) / 2
-      let hasDecimal = score % 1 !== 0
-      let integer = Math.floor(score)
-      for (let i = 0; i < integer; i++) {
-        result.push(CLS_ON)
-      }
-      if (hasDecimal) {
-        result.push(CLS_HALF)
-      }
-      while (result.length < LENGTH) {
-        result.push(CLS_OFF)
-      }
-      return result
+  get starType() {
+    return 'star-' + this.size
+  }
+
+  get itemClasses() {
+    const result = []
+    // floor向下取整
+    const score = Math.floor(this.score * 2) / 2
+    // 是否有小数
+    const hasDecimal = score % 1 !== 0
+    // 整数
+    const integer = Math.floor(score)
+    for (let i = 0; i < integer; i++) {
+      result.push(CLS_ON)
     }
+    if (hasDecimal) {
+      result.push(CLS_HALF)
+    }
+    // 条件循环
+    while (result.length < LENGTH) {
+      result.push(CLS_OFF)
+    }
+    return result
   }
 }
 </script>
 
 <style lang="stylus" scoped>
-@import '../../assets/styles/mixin.styl'
+@import '~@/assets/styles/mixin.styl'
 
 .star
   font-size: 0

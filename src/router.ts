@@ -14,18 +14,20 @@ export default new Router({
     {
       path: '/goods',
       name: 'goods',
-      component: () => import(/* webpackChunkName: "goods" */ './views/Goods')
+      component: () =>
+        import(/* webpackChunkName: "goods" */ './views/Goods/index.vue')
     },
     {
       path: '/ratings',
       name: 'ratings',
       component: () =>
-        import(/* webpackChunkName: "ratings" */ './views/Ratings')
+        import(/* webpackChunkName: "ratings" */ './views/Ratings/index.vue')
     },
     {
       path: '/seller',
       name: 'seller',
-      component: () => import(/* webpackChunkName: "seller" */ './views/Seller')
+      component: () =>
+        import(/* webpackChunkName: "seller" */ './views/Seller/index.vue')
     }
   ]
 })

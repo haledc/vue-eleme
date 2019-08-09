@@ -1,43 +1,35 @@
 <template>
   <ul v-if="supports" :class="classType">
     <li
+      class="support-item border-1px"
       v-for="(item, index) in supports"
       :key="index"
-      class="support-item border-1px"
     >
-      <span class="icon" :class="classMap[supports[index].type]" />
-      <span class="text">
-        {{ supports[index].description }}
-      </span>
+      <span class="icon" :class="classMap[supports[index].type]"></span>
+      <span class="text">{{ supports[index].description }}</span>
     </li>
   </ul>
 </template>
 
-<script>
-export default {
-  props: {
-    supports: {
-      type: Array,
-      required: true
-    },
-    size: {
-      type: Number,
-      required: true
-    }
-  },
-  computed: {
-    classType() {
-      return `supports-${this.size}`
-    }
-  },
-  created() {
-    this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee']
+<script lang="ts">
+import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Support } from '@/types'
+
+@Component
+export default class Supports extends Vue {
+  @Prop(Array) supports!: Support[]
+  @Prop(Number) size!: number
+
+  classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee']
+
+  get classType() {
+    return `supports-${this.size}`
   }
 }
 </script>
 
 <style lang="stylus" scoped>
-@import '../../assets/styles/mixin.styl'
+@import '~@/assets/styles/mixin.styl'
 
 .supports-4
   .support-item

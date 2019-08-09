@@ -4,132 +4,104 @@
     <div class="content-wrapper">
       <!--左边大图-->
       <div class="avatar">
-        <img width="64" height="64" :src="seller.avatar" alt="left-img" />
+        <img width="64" height="64" :src="seller.avatar" />
       </div>
-
       <!--右边内容-->
       <div class="content">
         <div class="title">
-          <span class="brand" />
-          <span class="name">
-            {{ seller.name }}
-          </span>
+          <span class="brand"></span>
+          <span class="name">{{ seller.name }}</span>
         </div>
         <div class="description">
           {{ seller.description }}/{{ seller.deliveryTime }}分钟送达
         </div>
         <Supports v-if="seller.supports" :size="1" :supports="supportsFirst" />
       </div>
-
       <!--优惠信息数-->
       <div v-if="seller.supports" class="support-count" @click="showDetail">
-        <span class="count"> {{ seller.supports.length }}个 </span>
-        <i class="icon-keyboard_arrow_right" />
+        <span class="count">{{ seller.supports.length }}个</span>
+        <i class="icon-keyboard_arrow_right"></i>
       </div>
     </div>
-
     <!--公告栏-->
     <div class="bulletin-wrapper" @click="showDetail">
-      <span class="bulletin-title" /><span class="bulletin-text">
-        {{ seller.bulletin }}
-      </span>
-      <i class="icon-keyboard_arrow_right" />
+      <span class="bulletin-title"></span
+      ><span class="bulletin-text">{{ seller.bulletin }}</span>
+      <i class="icon-keyboard_arrow_right"></i>
     </div>
-
     <!--背景图片-->
     <div class="background">
-      <img :src="seller.avatar" width="100%" height="100%" alt="avatar-img" />
+      <img :src="seller.avatar" width="100%" height="100%" />
     </div>
-
     <!--详情弹层-->
-    <Transition name="fade">
+    <transition name="fade">
       <div v-show="detailShow" class="detail">
         <!--内容-->
         <div class="detail-wrapper clearfix">
           <div class="detail-main">
-            <h1 class="name">
-              {{ seller.name }}
-            </h1>
+            <h1 class="name">{{ seller.name }}</h1>
             <div class="star-wrapper">
-              <Star v-if="seller.score" :size="48" :score="seller.score" />
+              <Star :size="48" :score="seller.score" />
             </div>
             <div class="title">
-              <div class="line" />
-              <div class="text">
-                优惠信息
-              </div>
-              <div class="line" />
+              <div class="line"></div>
+              <div class="text">优惠信息</div>
+              <div class="line"></div>
             </div>
-            <Supports
-              v-if="seller.supports"
-              :size="2"
-              :supports="seller.supports"
-            />
+            <supports :size="2" :supports="seller.supports" />
             <div class="title">
-              <div class="line" />
-              <div class="text">
-                商家公告
-              </div>
-              <div class="line" />
+              <div class="line"></div>
+              <div class="text">商家公告</div>
+              <div class="line"></div>
             </div>
             <div class="bulletin">
-              <p class="content">
-                {{ seller.bulletin }}
-              </p>
+              <p class="content">{{ seller.bulletin }}</p>
             </div>
           </div>
         </div>
         <!--关闭按钮-->
         <div class="detail-close" @click="hideDetail">
-          <i class="icon-close" />
+          <i class="icon-close"></i>
         </div>
       </div>
-    </Transition>
+    </transition>
   </div>
 </template>
 
-<script>
-import Star from '../Star'
-import Supports from '../Supports'
+<script lang="ts">
+import { Vue, Component, Prop } from 'vue-property-decorator'
+import Star from '@/components/Star/index.vue'
+import Supports from '@/components/Supports/index.vue'
+import { Seller } from '@/types'
 
-export default {
+@Component({
   components: {
     Star,
     Supports
-  },
-  props: {
-    seller: {
-      type: Object,
-      default: function() {
-        return {}
-      }
-    }
-  },
-  data() {
-    return {
-      detailShow: false,
-      classMap: []
-    }
-  },
-  computed: {
-    supportsFirst() {
-      return this.seller.supports.slice(0, 1)
-    }
-  },
-  methods: {
-    showDetail() {
-      this.detailShow = true
-    },
+  }
+})
+export default class Header extends Vue {
+  @Prop({ default: () => {} }) seller!: Seller
 
-    hideDetail() {
-      this.detailShow = false
-    }
+  detailShow: boolean = false
+  classMap: string[] = []
+
+  get supportsFirst() {
+    return this.seller.supports.slice(0, 1)
+  }
+
+  showDetail() {
+    this.detailShow = true
+  }
+
+  hideDetail() {
+    this.detailShow = false
   }
 }
 </script>
 
 <style lang="stylus" scoped>
-@import '../../assets/styles/mixin.styl'
+@import '~@/assets/styles/mixin.styl'
 
 .header
   position: relative

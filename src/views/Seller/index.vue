@@ -1,86 +1,77 @@
 <template>
-  <div ref="seller" class="seller">
+  <div class="seller" ref="seller">
     <div class="seller-content">
       <!--综合描述-->
       <div class="overview">
-        <h1 class="title">
-          {{ seller.name }}
-        </h1>
+        <h1 class="title">{{ seller.name }}</h1>
         <div class="desc border-1px">
-          <Star v-if="seller.score" :size="36" :score="seller.score" />
-          <span class="text"> ({{ seller.ratingCount }}) </span>
-          <span class="text"> 月售{{ seller.sellCount }}单 </span>
+          <star :size="36" :score="seller.score" />
+          <span class="text">({{ seller.ratingCount }})</span>
+          <span class="text">月售{{ seller.sellCount }}单</span>
         </div>
         <ul class="remark">
           <li class="block">
             <h2>起送价</h2>
             <div class="content">
-              <span class="stress"> {{ seller.minPrice }} </span>元
+              <span class="stress">{{ seller.minPrice }}</span
+              >元
             </div>
           </li>
           <li class="block">
             <h2>商家配送</h2>
             <div class="content">
-              <span class="stress"> {{ seller.deliveryPrice }} </span>元
+              <span class="stress">{{ seller.deliveryPrice }}</span
+              >元
             </div>
           </li>
           <li class="block">
             <h2>平均配送时间</h2>
             <div class="content">
-              <span class="stress"> {{ seller.deliveryTime }} </span>分钟
+              <span class="stress">{{ seller.deliveryTime }}</span
+              >分钟
             </div>
           </li>
         </ul>
         <!--收藏-->
         <div class="favorite" @click="toggleFavorite">
-          <span class="icon-favorite" :class="{ active: favorite }" />
-          <span class="text">
-            {{ favoriteText }}
-          </span>
+          <span class="icon-favorite" :class="{ active: favorite }"></span>
+          <span class="text">{{ favoriteText }}</span>
         </div>
       </div>
-      <Split />
+      <split />
       <!--公告和活动-->
       <div class="bulletin">
-        <h1 class="title">
-          公告与活动
-        </h1>
+        <h1 class="title">公告与活动</h1>
         <div class="content-wrapper border-1px">
-          <p class="content">
-            {{ seller.bulletin }}
-          </p>
+          <p class="content">{{ seller.bulletin }}</p>
         </div>
-        <Supports
-          v-if="seller.supports"
-          :size="4"
-          :supports="seller.supports"
-        />
+        <supports :size="4" :supports="seller.supports" />
       </div>
-      <Split />
+      <split />
       <!--商家实景-->
       <div class="pics">
-        <h1 class="title">
-          商家实景
-        </h1>
-        <div ref="picWrapper" class="pic-wrapper">
-          <ul ref="picList" class="pic-list">
-            <li v-for="pic in seller.pics" :key="pic" class="pic-item">
-              <img :src="pic" width="120" height="90" alt="pic" />
+        <h1 class="title">商家实景</h1>
+        <div class="pic-wrapper" ref="picWrapper">
+          <ul class="pic-list" ref="picList">
+            <li
+              class="pic-item"
+              v-for="(pic, index) in seller.pics"
+              :key="index"
+            >
+              <img :src="pic" width="120" height="90" />
             </li>
           </ul>
         </div>
       </div>
-      <Split />
+      <split />
       <!--商家信息-->
       <div class="info">
-        <h1 class="title border-1px">
-          商家信息
-        </h1>
+        <h1 class="title border-1px">商家信息</h1>
         <ul>
           <li
-            v-for="info in seller.infos"
-            :key="info"
             class="info-item border-1px"
+            v-for="(info, index) in seller.infos"
+            :key="index"
           >
             {{ info }}
           </li>
@@ -90,106 +81,103 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 import BScroll from 'better-scroll'
-import Star from '../components/Star'
-import Split from '../components/Split'
-import Supports from '../components/Supports'
-import { saveToLocal, loadFromLocal } from '../assets/utils'
+import Star from '@/components/Star/index.vue'
+import Split from '@/components/Split/index.vue'
+import Supports from '@/components/Supports/index.vue'
+import { loadFromLocal, saveToLocal } from '@/assets/helper'
+import { Seller as SellerInterface } from '@/types'
 
-export default {
+@Component({
   components: {
     Star,
     Split,
     Supports
-  },
-  props: {
-    seller: {
-      type: Object,
-      required: true
-    }
-  },
-  data() {
-    return {
-      //  立即执行函数获取缓存，收藏默认为 false
-      favorite: (() => {
-        return loadFromLocal(this.seller.id, 'favorite', false)
-      })()
-    }
-  },
-  computed: {
-    favoriteText() {
-      return this.favorite ? '已收藏' : '收藏'
-    }
-  },
-  watch: {
-    // 监听 seller 的变化
-    seller() {
-      this.init()
-    }
-  },
+  }
+})
+export default class Seller extends Vue {
+  @Prop() seller!: SellerInterface
+
+  favorite: boolean = (() => {
+    return loadFromLocal(this.seller.id as number, 'favorite', false)
+  })()
+
+  scroll!: BScroll
+  picScroll!: BScroll
+  $refs!: {
+    seller: HTMLElement
+    picWrapper: HTMLElement
+    picList: HTMLElement
+  }
+
+  get favoriteText(): string {
+    return this.favorite ? '已收藏' : '收藏'
+  }
+
   created() {
-    this.init()
-  },
-  methods: {
-    init() {
-      this.$nextTick(() => {
-        this._initScroll()
-        this._initPics()
+    this.$nextTick(() => {
+      this._initScroll()
+      this._initPics()
+    })
+  }
+
+  @Watch('seller')
+  init() {
+    this.$nextTick(() => {
+      this._initScroll()
+      this._initPics()
+    })
+  }
+
+  toggleFavorite() {
+    this.favorite = !this.favorite
+    // 把结果保存到缓存中
+    saveToLocal(this.seller.id as number, 'favorite', this.favorite)
+  }
+
+  _initScroll() {
+    if (!this.scroll) {
+      this.scroll = new BScroll(this.$refs.seller, {
+        click: true
       })
-    },
+    } else {
+      this.scroll.refresh()
+    }
+  }
 
-    // 切换收藏
-    toggleFavorite() {
-      this.favorite = !this.favorite
-      // 把结果保存到缓存中
-      saveToLocal(this.seller.id, 'favorite', this.favorite)
-    },
-
-    // 初始化纵向滚动
-    _initScroll() {
-      if (!this.scroll) {
-        this.scroll = new BScroll(this.$refs.seller, {
-          click: true
-        })
-      } else {
-        this.scroll.refresh()
-      }
-    },
-
-    // 初始化实景图片 横向滚动
-    _initPics() {
-      if (this.seller.pics) {
-        let picWidth = 120
-        let margin = 6
-        // 计算图片 list 的总宽度
-        let width = (picWidth + margin) * this.seller.pics.length - margin
-        // 设置图片 list 宽度（list 的宽度大于 wrapper 的宽度才能滚动）
-        this.$refs.picList.style.width = width + 'px'
-        this.$nextTick(() => {
-          if (!this.picScroll) {
-            this.picScroll = new BScroll(this.$refs.picWrapper, {
-              // 开启横向滚动，默认是 false
-              scrollX: true,
-              // 设置在横向滚动时保留原生的纵向滚动
-              eventPassthrough: 'vertical'
-            })
-          } else {
-            this.picScroll.refresh()
-          }
-        })
-      }
+  _initPics() {
+    if (this.seller.pics) {
+      const picWidth = 120
+      const margin = 6
+      // 计算图片list的总宽度
+      const width = (picWidth + margin) * this.seller.pics.length - margin
+      // 设置图片list宽度（list的宽度大于wrapper的宽度才能滚动）
+      this.$refs.picList.style.width = width + 'px'
+      this.$nextTick(() => {
+        if (!this.picScroll) {
+          this.picScroll = new BScroll(this.$refs.picWrapper, {
+            // 开启横向滚动，默认是false
+            scrollX: true,
+            // 设置在横向滚动时保留原生的纵向滚动
+            eventPassthrough: 'vertical'
+          })
+        } else {
+          this.picScroll.refresh()
+        }
+      })
     }
   }
 }
 </script>
 
 <style lang="stylus" scoped>
-@import '../assets/styles/mixin.styl'
+@import '~@/assets/styles/mixin.styl'
 
 .seller
   position: absolute
-  top: 174px
+  top: 170px
   bottom: 0
   left: 0
   width: 100%

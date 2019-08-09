@@ -1,22 +1,24 @@
 // 1px 下边框配置
 border-1px($color)
-  position relative
+  position: relative
+
   &::after
-    display block
-    position absolute
-    left 0
-    bottom 0
-    width 100%
-    border-top 1px solid $color
-    content ' '
+    display: block
+    position: absolute
+    left: 0
+    bottom: 0
+    width: 100%
+    border-top: 1px solid $color
+    content: ' '
 
 // 取消1px下边框配置
 border-none()
   &::after
-    display none
+    display: none
 
 // 图片2x 和 3x 全局配置
 bg-image($url)
-  background-image url($url + '@2x.png')
+  background-image: url($url + '@2x.png')
+
   @media (-webkit-min-device-pixel-ratio: 3), (min-device-pixel-ratio: 3)
-    background-image url($url + '@3x.png')
+    background-image: url($url + '@3x.png')

@@ -1,61 +1,53 @@
 <template>
-  <div class="cart-control">
+  <div class="cartcontrol">
     <!--减少购买数量-->
-    <Transition name="move">
+    <transition name="move">
       <!--过渡-透明和平移层-->
       <div
-        v-show="food.count > 0"
         class="cart-decrease"
         @click.stop.prevent="decreaseCart"
+        v-show="food.count > 0"
       >
         <!--过渡-滚动层-->
-        <span class="inner icon-remove_circle_outline" />
+        <span class="inner icon-remove_circle_outline"></span>
       </div>
-    </Transition>
-
-    <!--购买的数量-->
-    <div v-show="food.count > 0" class="cart-count">
+    </transition>
+    <!--购买数量-->
+    <div class="cart-count" v-show="food.count > 0">
       {{ food.count }}
     </div>
-
     <!--增加购买数量-->
-    <div class="cart-add icon-add_circle" @click.stop.prevent="addCart" />
+    <div class="cart-add icon-add_circle" @click.stop.prevent="addCart"></div>
   </div>
 </template>
 
-<script>
-export default {
-  props: {
-    food: {
-      type: Object,
-      required: true
+<script lang="ts">
+import { Vue, Component, Prop, Emit } from 'vue-property-decorator'
+import { Food } from '@/types'
+
+@Component
+export default class CartControl extends Vue {
+  @Prop() food!: Food
+
+  @Emit('add')
+  addCart() {
+    if (!this.food.count) {
+      this.$set(this.food, 'count', 1)
+    } else {
+      this.food.count++
     }
-  },
-  methods: {
-    // 增加购买数量
-    addCart(event) {
-      if (!this.food.count) {
-        this.$set(this.food, 'count', 1)
-      } else {
-        this.food.count++
-      }
+  }
 
-      // 给父组件派发事件，传入DOM对象
-      this.$emit('add', event.target)
-    },
-
-    // 减少购买数量
-    decreaseCart() {
-      if (this.food.count) {
-        this.food.count--
-      }
+  decreaseCart() {
+    if (this.food.count) {
+      this.food.count--
     }
   }
 }
 </script>
 
 <style lang="stylus" scoped>
-.cart-control
+.cartcontrol
   font-size: 0
 
   .cart-decrease

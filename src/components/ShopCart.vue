@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="shop-cart">
-      <!--购物车折叠列表-->
+      <!-- 购物车折叠列表 -->
       <div class="content" @click="toggleList">
         <div class="content-left">
           <div class="logo-wrapper">
@@ -9,7 +9,7 @@
               <i
                 class="icon-shopping_cart"
                 :class="{ highlight: totalCount > 0 }"
-              />
+              ></i>
             </div>
             <div v-show="totalCount > 0" class="num">
               {{ totalCount }}
@@ -27,7 +27,7 @@
         </div>
       </div>
 
-      <!--购物车小球控制层-->
+      <!-- 购物车小球控制层 -->
       <div class="ball-container">
         <div v-for="(ball, index) in balls" :key="index">
           <Transition
@@ -36,16 +36,16 @@
             @enter="dropping"
             @after-enter="afterDrop"
           >
-            <!--Y轴方向-->
+            <!-- Y 轴方向 -->
             <div v-show="ball.show" class="ball">
-              <!--X轴方向-->
-              <div class="inner inner-hook" />
+              <!-- X 轴方向 -->
+              <div class="inner inner-hook"></div>
             </div>
           </Transition>
         </div>
       </div>
 
-      <!--购物车展开列表-->
+      <!-- 购物车展开列表 -->
       <Transition name="fold">
         <div v-show="listShow" class="shopcart-list">
           <div class="list-header">
@@ -79,9 +79,9 @@
       </Transition>
     </div>
 
-    <!--购物车展开列表背景层-->
+    <!-- 购物车展开列表背景层 -->
     <Transition name="fade">
-      <div v-show="listShow" class="list-mask" @click="hideList" />
+      <div v-show="listShow" class="list-mask" @click="hideList"></div>
     </Transition>
   </div>
 </template>
@@ -251,17 +251,17 @@ export default {
       while (count--) {
         let ball = this.balls[count]
         if (ball.show) {
-          // 获取加号DOM矩形对象
+          // 获取加号 DOM 矩形对象
           let rect = ball.el.getBoundingClientRect()
-          // 加号和购物车x轴差值 = 加号DOM和左边屏幕的距离 - 小球左侧偏移（落点位置）
+          // 加号和购物车 X 轴差值 = 加号 DOM 和左边屏幕的距离 - 小球左侧偏移（落点位置）
           let x = rect.left - 32
-          // 加号和购物车y轴差值（负值） = 屏幕高度 - 加号DOM和页面顶部的距离 - 小球底部偏移（落点位置）
+          // 加号和购物车 Y 轴差值（负值） = 屏幕高度 - 加号 DOM 和页面顶部的距离 - 小球底部偏移（落点位置）
           let y = -(window.innerHeight - rect.top - 22)
           el.style.display = ''
-          // y轴移动的距离 纵向动画
+          // Y 轴移动的距离 纵向动画
           el.style.webkitTransform = `translate3d(0, ${y}px, 0)`
           el.style.transform = `translate3d(0, ${y}px, 0)`
-          // x轴移动的距离 横向动画
+          // X 轴移动的距离 横向动画
           let inner = el.getElementsByClassName('inner-hook')[0]
           inner.style.webkitTransform = `translate3d(${x}px, 0, 0)`
           inner.style.transform = `translate3d(${x}px, 0, 0)`
@@ -269,7 +269,7 @@ export default {
       }
     },
 
-    // 小球抛落过程；抛落前状态 -> 原始状态（重置回来）
+    // 小球抛落过程. 抛落前状态 -> 原始状态（重置回来）
     dropping(el, done) {
       // 主动触发浏览器重绘 ★
       /* eslint-disable no-unused-vars */
@@ -285,7 +285,7 @@ export default {
       })
     },
 
-    // 小球抛落后；把抛落的小球的取出来，并把 show 重新设置为 false，然后隐藏 DOM
+    // 小球抛落后. 把抛落的小球的取出来，并把 show 重新设置为 false，然后隐藏 DOM
     afterDrop(el) {
       let ball = this.dropBalls.shift()
       if (ball) {
@@ -297,210 +297,247 @@ export default {
 }
 </script>
 
-<style lang="stylus" scoped>
-@import '../assets/styles/mixin.styl'
+<style lang="scss" scoped>
+@import '../assets/styles/mixin.scss';
 
-/* 购物车 */
-.shop-cart
-  position: fixed
-  left: 0
-  bottom: 0
-  z-index: 50
-  width: 100%
-  height: 48px
+// 购物车
+.shop-cart {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  z-index: 50;
+  width: 100%;
+  height: 48px;
 
   /* 购物车折叠列表 */
-  .content
-    display: flex
-    background: #141d27
-    font-size: 0
-    color: rgba(255, 255, 255, 0.4)
+  .content {
+    display: flex;
+    background: #141d27;
+    font-size: 0;
+    color: rgba(255, 255, 255, 0.4);
 
-    .content-left
-      flex: 1
+    .content-left {
+      flex: 1;
 
-      .logo-wrapper
-        display: inline-block
-        vertical-align: top
-        position: relative
-        top: -10px
-        margin: 0 12px
-        padding: 6px
-        width: 56px
-        height: 56px
-        box-sizing: border-box
-        border-radius: 50%
-        background: #141d27
+      .logo-wrapper {
+        display: inline-block;
+        vertical-align: top;
+        position: relative;
+        top: -10px;
+        margin: 0 12px;
+        padding: 6px;
+        width: 56px;
+        height: 56px;
+        box-sizing: border-box;
+        border-radius: 50%;
+        background: #141d27;
 
-        .logo
-          width: 100%
-          height: 100%
-          border-radius: 50%
-          text-align: center
-          background: #2b343c
+        .logo {
+          width: 100%;
+          height: 100%;
+          border-radius: 50%;
+          text-align: center;
+          background: #2b343c;
 
-          &.highlight
-            background: rgb(0, 160, 220)
+          &.highlight {
+            background: rgb(0, 160, 220);
+          }
 
-          .icon-shopping_cart
-            line-height: 44px
-            font-size: 24px
-            color: #80858a
+          .icon-shopping_cart {
+            line-height: 44px;
+            font-size: 24px;
+            color: #80858a;
 
-            &.highlight
-              color: #fff
+            &.highlight {
+              color: #fff;
+            }
+          }
+        }
 
-        .num
-          position: absolute
-          top: 0
-          right: 0
-          width: 24px
-          height: 16px
-          line-height: 16px
-          text-align: center
-          border-radius: 16px
-          font-size: 9px
-          font-weight: 700
-          color: #fff
-          background: rgb(240, 20, 20)
-          box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4)
+        .num {
+          position: absolute;
+          top: 0;
+          right: 0;
+          width: 24px;
+          height: 16px;
+          line-height: 16px;
+          text-align: center;
+          border-radius: 16px;
+          font-size: 9px;
+          font-weight: 700;
+          color: #fff;
+          background: rgb(240, 20, 20);
+          box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4);
+        }
+      }
 
-      .price
-        display: inline-block
-        vertical-align: top
-        margin-top: 12px
-        line-height: 24px
-        padding-right: 12px
-        box-sizing: border-box
-        border-right: 1px solid rgba(255, 255, 255, 0.1)
-        font-size: 16px
-        font-weight: 700
+      .price {
+        display: inline-block;
+        vertical-align: top;
+        margin-top: 12px;
+        line-height: 24px;
+        padding-right: 12px;
+        box-sizing: border-box;
+        border-right: 1px solid rgba(255, 255, 255, 0.1);
+        font-size: 16px;
+        font-weight: 700;
 
-        &.highlight
-          color: #fff
+        &.highlight {
+          color: #fff;
+        }
+      }
 
-      .desc
-        display: inline-block
-        vertical-align: top
-        margin: 12px 0 0 12px
-        line-height: 24px
-        font-size: 10px
+      .desc {
+        display: inline-block;
+        vertical-align: top;
+        margin: 12px 0 0 12px;
+        line-height: 24px;
+        font-size: 10px;
+      }
+    }
 
-    .content-right
-      flex: 0 0 105px
-      width: 105px
+    .content-right {
+      flex: 0 0 105px;
+      width: 105px;
 
-      .pay
-        height: 48px
-        line-height: 48px
-        text-align: center
-        font-size: 12px
-        font-weight: 700
+      .pay {
+        height: 48px;
+        line-height: 48px;
+        text-align: center;
+        font-size: 12px;
+        font-weight: 700;
 
-        &.not-enough
-          background: #2b333b
+        &.not-enough {
+          background: #2b333b;
+        }
 
-        &.enough
-          background: #00b43c
-          color: #fff
+        &.enough {
+          background: #00b43c;
+          color: #fff;
+        }
+      }
+    }
+  }
 
   /* 小球 */
-  .ball-container
+  .ball-container {
     // 小球落点位置
-    .ball
-      position: fixed
-      left: 32px
-      bottom: 22px
-      z-index: 200
+    .ball {
+      position: fixed;
+      left: 32px;
+      bottom: 22px;
+      z-index: 200;
       // 贝塞尔曲线
-      transition: all 0.4s cubic-bezier(0.49, -0.29, 0.75, 0.41)
+      transition: all 0.4s cubic-bezier(0.49, -0.29, 0.75, 0.41);
 
-      .inner
-        width: 16px
-        height: 16px
-        border-radius: 50%
-        background: rgb(0, 160, 220)
-        transition: all 0.4s linear
+      .inner {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: rgb(0, 160, 220);
+        transition: all 0.4s linear;
+      }
+    }
+  }
 
-  /* 购物车展开列表 */
-  .shopcart-list
-    position: absolute
-    left: 0
-    top: 0
-    z-index: -1
-    width: 100%
-    // y轴向上移动100%（自身）
-    transform: translate3d(0, -100%, 0)
+  // 购物车展开列表
+  .shopcart-list {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: -1;
+    width: 100%;
+    // y 轴向上移动 100%（自身）
+    transform: translate3d(0, -100%, 0);
 
-    &.fold-enter-active, &.fold-leave-active
-      transition: all 0.5s
+    &.fold-enter-active,
+    &.fold-leave-active {
+      transition: all 0.5s;
+    }
 
-    &.fold-enter, &.fold-leave-to
-      transform: translate3d(0, 0, 0)
+    &.fold-enter,
+    &.fold-leave-to {
+      transform: translate3d(0, 0, 0);
+    }
 
-    .list-header
-      height: 40px
-      line-height: 40px
-      padding: 0 18px
-      background: #f3f5f7
-      border-bottom: 1px solid rgba(7, 17, 27, 0.1)
+    .list-header {
+      height: 40px;
+      line-height: 40px;
+      padding: 0 18px;
+      background: #f3f5f7;
+      border-bottom: 1px solid rgba(7, 17, 27, 0.1);
 
-      .title
-        float: left
-        font-size: 14px
-        color: rgb(7, 17, 27)
+      .title {
+        float: left;
+        font-size: 14px;
+        color: rgb(7, 17, 27);
+      }
 
-      .empty
-        float: right
-        font-size: 12px
-        color: rgb(0, 160, 220)
+      .empty {
+        float: right;
+        font-size: 12px;
+        color: rgb(0, 160, 220);
+      }
+    }
 
-    .list-content
-      padding: 0 18px
-      max-height: 217px
-      overflow: hidden
-      background: #fff
+    .list-content {
+      padding: 0 18px;
+      max-height: 217px;
+      overflow: hidden;
+      background: #fff;
 
-      .food
-        position: relative
-        padding: 12px 0
-        box-sizing: border-box
-        border-1px(rgba(7, 17, 27, 0.1))
+      .food {
+        position: relative;
+        padding: 12px 0;
+        box-sizing: border-box;
+        @include border-1px(rgba(7, 17, 27, 0.1));
 
-        .name
-          line-height: 24px
-          font-size: 14px
-          color: rgb(7, 17, 27)
+        .name {
+          line-height: 24px;
+          font-size: 14px;
+          color: rgb(7, 17, 27);
+        }
 
-        .price
-          position: absolute
-          right: 90px
-          bottom: 12px
-          line-height: 24px
-          font-size: 14px
-          font-weight: 700
-          color: rgb(240, 20, 20)
+        .price {
+          position: absolute;
+          right: 90px;
+          bottom: 12px;
+          line-height: 24px;
+          font-size: 14px;
+          font-weight: 700;
+          color: rgb(240, 20, 20);
+        }
 
-        .cartcontrol-wrapper
-          position: absolute
-          right: 0
-          bottom: 6px
+        .cartcontrol-wrapper {
+          position: absolute;
+          right: 0;
+          bottom: 6px;
+        }
+      }
+    }
+  }
+}
 
 /* 购物车展开列表背景层 */
-.list-mask
-  position: fixed
-  top: 0
-  left: 0
-  width: 100%
-  height: 100%
-  z-index: 40
-  backdrop-filter: blur(10px) // 模糊 iphone手机可看到效果
-  background: rgba(7, 17, 27, 0.6)
+.list-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 40;
+  backdrop-filter: blur(10px); // 模糊 iphone手机可看到效果
+  background: rgba(7, 17, 27, 0.6);
 
-  &.fade-enter-active, &.fade-leave-active
-    transition: all 0.5s
+  &.fade-enter-active,
+  &.fade-leave-active {
+    transition: all 0.5s;
+  }
 
-  &.fade-enter, &.fade-leave-to
-    opacity: 0
-    background: rgba(7, 17, 27, 0)
+  &.fade-enter,
+  &.fade-leave-to {
+    opacity: 0;
+    background: rgba(7, 17, 27, 0);
+  }
+}
 </style>

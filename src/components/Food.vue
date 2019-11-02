@@ -2,15 +2,15 @@
   <Transition name="move">
     <div v-show="showFlag" ref="food" class="food">
       <div class="food-content">
-        <!--头图-->
+        <!-- 头图 -->
         <div class="image-header">
           <img :src="food.image" alt="image" />
           <div class="back" @click="hide">
-            <i class="icon-arrow_lift" />
+            <i class="icon-arrow_lift"></i>
           </div>
         </div>
 
-        <!--商品内容-->
+        <!-- 商品内容 -->
         <div class="content">
           <h1 class="title">
             {{ food.name }}
@@ -39,10 +39,10 @@
           </Transition>
         </div>
 
-        <!--分割线组件-->
+        <!-- 分割线组件 -->
         <Split v-show="food.info" />
 
-        <!--商品信息-->
+        <!-- 商品信息 -->
         <div v-show="food.info" class="info">
           <div class="title">
             商品信息
@@ -52,10 +52,10 @@
           </div>
         </div>
 
-        <!--分割线组件-->
+        <!-- 分割线组件 -->
         <Split />
 
-        <!--商品评价-->
+        <!-- 商品评价 -->
         <div class="rating">
           <h1 class="title">
             商品评价
@@ -69,7 +69,7 @@
             @toggle="toggleContent"
           />
 
-          <!--商品评价列表-->
+          <!-- 商品评价列表 -->
           <div class="rating-wrapper">
             <ul v-show="food.ratings && food.ratings.length">
               <li
@@ -99,7 +99,7 @@
                       'icon-thumb_up': rating.rateType === 0,
                       'icon-thumb_down': rating.rateType === 1
                     }"
-                  />
+                  ></span>
                   {{ rating.text }}
                 </p>
               </li>
@@ -161,7 +161,7 @@ export default {
   methods: {
     // 显示
     show() {
-      // 初始化状态
+      // 显示的初始状态
       this.showFlag = true
       this.selectType = ALL
       this.onlyContent = true
@@ -192,8 +192,8 @@ export default {
 
     /**
      * 显示评论内容， 通过评论类型和评论内容来确定是否显示该条评论
-     * @param type 关联类型
-     * @param text 关联内容
+     * @param {String} type 关联类型
+     * @param {String} text 关联内容
      * @return {boolean}
      */
     needShow(type, text) {
@@ -238,191 +238,232 @@ export default {
 }
 </script>
 
-<style lang="stylus" scoped>
-@import '../assets/styles/mixin.styl'
+<style lang="scss" scoped>
+@import '../assets/styles/mixin.scss';
 
-.food
-  position: fixed
-  left: 0
-  top: 0
-  bottom: 48px
-  z-index: 30
-  width: 100%
-  background: #fff
+.food {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 48px;
+  z-index: 30;
+  width: 100%;
+  background: #fff;
 
-  &.move-enter-active, &.move-leave-active
-    transition: all 0.2s linear
+  &.move-enter-active,
+  &.move-leave-active {
+    transition: all 0.2s linear;
+  }
 
-  &.move-enter, &.move-leave-to
-    transform: translate3d(100%, 0, 0)
+  &.move-enter,
+  &.move-leave-to {
+    transform: translate3d(100%, 0, 0);
+  }
 
   /* 头图 */
-  .image-header
-    position: relative
-    width: 100%
+  .image-header {
+    position: relative;
+    width: 100%;
     // 高度设为0
-    height: 0
+    height: 0;
     // 设置和宽度一样100% 宽高相等
-    padding-top: 100%
+    padding-top: 100%;
 
-    img
-      position: absolute
-      top: 0
-      left: 0
-      width: 100%
-      height: 100%
+    img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
 
-    .back
-      position: absolute
-      top: 10px
-      left: 0
+    .back {
+      position: absolute;
+      top: 10px;
+      left: 0;
 
-      .icon-arrow_lift
-        display: block
-        padding: 10px
-        font-size: 20px
-        color: #fff
+      .icon-arrow_lift {
+        display: block;
+        padding: 10px;
+        font-size: 20px;
+        color: #fff;
+      }
+    }
+  }
 
   /* 商品内容 */
-  .content
-    position: relative
-    padding: 18px
+  .content {
+    position: relative;
+    padding: 18px;
 
-    .title
-      line-height: 14px
-      margin-bottom: 8px
-      font-size: 14px
-      font-weight: 700
-      color: rgb(7, 17, 27)
+    .title {
+      line-height: 14px;
+      margin-bottom: 8px;
+      font-size: 14px;
+      font-weight: 700;
+      color: rgb(7, 17, 27);
+    }
 
-    .detail
-      margin-bottom: 18px
-      line-height: 10px
-      height: 10px
-      font-size: 0
+    .detail {
+      margin-bottom: 18px;
+      line-height: 10px;
+      height: 10px;
+      font-size: 0;
 
-      .sell-count, .rating
-        font-size: 10px
-        color: rgb(147, 153, 159)
+      .sell-count,
+      .rating {
+        font-size: 10px;
+        color: rgb(147, 153, 159);
+      }
 
-      .sell-count
-        margin-right: 12px
+      .sell-count {
+        margin-right: 12px;
+      }
+    }
 
-    .price
-      font-weight: 700
-      line-height: 24px
+    .price {
+      font-weight: 700;
+      line-height: 24px;
 
-      .now
-        margin-right: 8px
-        font-size: 14px
-        color: rgb(240, 20, 20)
+      .now {
+        margin-right: 8px;
+        font-size: 14px;
+        color: rgb(240, 20, 20);
+      }
 
-      .old
-        text-decoration: line-through
-        font-size: 10px
-        color: rgb(147, 153, 159)
+      .old {
+        text-decoration: line-through;
+        font-size: 10px;
+        color: rgb(147, 153, 159);
+      }
+    }
 
-    .cart-control-wrapper
-      position: absolute
-      right: 12px
-      bottom: 12px
+    .cart-control-wrapper {
+      position: absolute;
+      right: 12px;
+      bottom: 12px;
+    }
 
-    .buy
-      position: absolute
-      right: 18px
-      bottom: 18px
-      z-index: 10
-      height: 24px
-      line-height: 24px
-      padding: 0 12px
-      box-sizing: border-box
-      border-radius: 12px
-      font-size: 10px
-      color: #fff
-      background: rgb(0, 160, 220)
+    .buy {
+      position: absolute;
+      right: 18px;
+      bottom: 18px;
+      z-index: 10;
+      height: 24px;
+      line-height: 24px;
+      padding: 0 12px;
+      box-sizing: border-box;
+      border-radius: 12px;
+      font-size: 10px;
+      color: #fff;
+      background: rgb(0, 160, 220);
 
-      &.fade-enter-active, &.fade-leave-active
-        transition: all 0.2s
+      &.fade-enter-active,
+      &.fade-leave-active {
+        transition: all 0.2s;
+      }
 
-      &.fade-enter, &.fade-leave-to
-        opacity: 0
-        z-index: -1
+      &.fade-enter,
+      &.fade-leave-to {
+        opacity: 0;
+        z-index: -1;
+      }
+    }
+  }
 
   /* 商品信息 */
-  .info
-    padding: 18px
+  .info {
+    padding: 18px;
 
-    .title
-      line-height: 14px
-      margin-bottom: 6px
-      font-size: 14px
-      color: rgb(7, 17, 27)
+    .title {
+      line-height: 14px;
+      margin-bottom: 6px;
+      font-size: 14px;
+      color: rgb(7, 17, 27);
+    }
 
-    .text
-      line-height: 24px
-      padding: 0 8px
-      font-size: 12px
-      color: rgb(77, 85, 93)
+    .text {
+      line-height: 24px;
+      padding: 0 8px;
+      font-size: 12px;
+      color: rgb(77, 85, 93);
+    }
+  }
 
   /* 商品评价 */
-  .rating
-    padding-top: 18px
+  .rating {
+    padding-top: 18px;
 
-    .title
-      line-height: 14px
-      margin-left: 18px
-      font-size: 14px
-      color: rgb(7, 17, 27)
+    .title {
+      line-height: 14px;
+      margin-left: 18px;
+      font-size: 14px;
+      color: rgb(7, 17, 27);
+    }
 
-    .rating-wrapper
-      padding: 0 18px
+    .rating-wrapper {
+      padding: 0 18px;
 
-      .rating-item
-        position: relative
-        padding: 16px 0
-        border-1px(rgba(7, 17, 27, 0.1))
+      .rating-item {
+        position: relative;
+        padding: 16px 0;
+        @include border-1px(rgba(7, 17, 27, 0.1));
 
-        .user
-          position: absolute
-          right: 0
-          top: 16px
-          line-height: 12px
-          font-size: 0
+        .user {
+          position: absolute;
+          right: 0;
+          top: 16px;
+          line-height: 12px;
+          font-size: 0;
 
-          .name
-            display: inline-block
-            margin-right: 6px
-            vertical-align: top
-            font-size: 10px
-            color: rgb(147, 153, 159)
+          .name {
+            display: inline-block;
+            margin-right: 6px;
+            vertical-align: top;
+            font-size: 10px;
+            color: rgb(147, 153, 159);
+          }
 
-          .avatar
-            border-radius: 50%
+          .avatar {
+            border-radius: 50%;
+          }
+        }
 
-        .time
-          margin-bottom: 6px
-          line-height: 12px
-          font-size: 10px
-          color: rgb(147, 153, 159)
+        .time {
+          margin-bottom: 6px;
+          line-height: 12px;
+          font-size: 10px;
+          color: rgb(147, 153, 159);
+        }
 
-        .text
-          line-height: 16px
-          font-size: 12px
-          color: rgb(7, 17, 27)
+        .text {
+          line-height: 16px;
+          font-size: 12px;
+          color: rgb(7, 17, 27);
 
-          .icon-thumb_up, .icon-thumb_down
-            margin-right: 4px
-            line-height: 16px
-            font-size: 12px
+          .icon-thumb_up,
+          .icon-thumb_down {
+            margin-right: 4px;
+            line-height: 16px;
+            font-size: 12px;
+          }
 
-          .icon-thumb_up
-            color: rgb(0, 160, 220)
+          .icon-thumb_up {
+            color: rgb(0, 160, 220);
+          }
 
-          .icon-thumb_down
-            color: rgb(147, 153, 159)
+          .icon-thumb_down {
+            color: rgb(147, 153, 159);
+          }
+        }
+      }
 
-      .no-rating
-        padding: 16px 0
-        font-size: 12px
-        color: rgb(147, 153, 159)
+      .no-rating {
+        padding: 16px 0;
+        font-size: 12px;
+        color: rgb(147, 153, 159);
+      }
+    }
+  }
+}
 </style>

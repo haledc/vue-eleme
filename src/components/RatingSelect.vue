@@ -1,6 +1,6 @@
 <template>
   <div class="rating-select">
-    <!--评价类型-->
+    <!-- 评价类型 -->
     <div class="rating-type border-1px">
       <span
         class="block positive"
@@ -34,9 +34,9 @@
       </span>
     </div>
 
-    <!--切换（是否只看有内容的评价）-->
+    <!-- 切换（是否只看有内容的评价） -->
     <div class="switch" :class="{ on: onlyContent }" @click="toggleContent">
-      <span class="icon-check_circle" />
+      <span class="icon-check_circle"></span>
       <span class="text">
         只看有内容的评价
       </span>
@@ -117,64 +117,78 @@ export default {
 }
 </script>
 
-<style lang="stylus" scoped>
-@import '../assets/styles/mixin.styl'
+<style lang="scss" scoped>
+@import '../assets/styles/mixin.scss';
 
-.rating-select
-  .rating-type
+.rating-select {
+  .rating-type {
     // 左右间隙需要用margin，不然会影响下边框线
-    padding: 18px 0
-    margin: 0 18px
-    border-1px(rgba(7, 17, 27, 0.1))
-    font-size: 0
+    padding: 18px 0;
+    margin: 0 18px;
+    @include border-1px(rgba(7, 17, 27, 0.1));
+    font-size: 0;
 
-    .block
-      display: inline-block
-      padding: 8px 12px
-      line-height: 16px
-      margin-right: 8px
-      border-radius: 1px
-      font-size: 12px
-      color: rgb(77, 85, 93)
+    .block {
+      display: inline-block;
+      padding: 8px 12px;
+      line-height: 16px;
+      margin-right: 8px;
+      border-radius: 1px;
+      font-size: 12px;
+      color: rgb(77, 85, 93);
 
-      &.active
-        color: #fff
+      &.active {
+        color: #fff;
+      }
 
-      .count
-        margin-left: 2px
-        font-size: 8px
+      .count {
+        margin-left: 2px;
+        font-size: 8px;
+      }
 
-      &.positive
-        background: rgba(0, 160, 220, 0.2)
+      &.positive {
+        background: rgba(0, 160, 220, 0.2);
 
-        &.active
-          background: rgb(0, 160, 220)
+        &.active {
+          background: rgb(0, 160, 220);
+        }
+      }
 
-      &.negative
-        background: rgba(77, 85, 93, 0.2)
+      &.negative {
+        background: rgba(77, 85, 93, 0.2);
 
-        &.active
-          background: rgb(77, 85, 93)
+        &.active {
+          background: rgb(77, 85, 93);
+        }
+      }
+    }
+  }
 
-  .switch
-    padding: 12px 18px
-    line-height: 24px
-    border-bottom: 1px solid rgba(7, 17, 27, 0.1)
-    color: rgb(147, 153, 159)
-    font-size: 0
+  .switch {
+    padding: 12px 18px;
+    line-height: 24px;
+    border-bottom: 1px solid rgba(7, 17, 27, 0.1);
+    color: rgb(147, 153, 159);
+    font-size: 0;
 
-    &.on
-      .icon-check_circle
-        color: #00c850
+    &.on {
+      .icon-check_circle {
+        color: #00c850;
+      }
+    }
 
-    .icon-check_circle
-      display: inline-block
-      vertical-align: top
-      margin-right: 4px
-      font-size: 24px
+    .icon-check_circle {
+      display: inline-block;
+      vertical-align: top;
+      margin-right: 4px;
+      font-size: 24px;
+    }
 
-    .text
-      display: inline-block
-      vertical-align: top
-      font-size: 12px
+    .text {
+      display: inline-block;
+      vertical-align: top;
+      font-size: 12px;
+    }
+  }
+}
 </style>

@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import Goods from './views/Goods'
 
 Vue.use(Router)
 
@@ -14,7 +15,7 @@ export default new Router({
     {
       path: '/goods',
       name: 'goods',
-      component: () => import(/* webpackChunkName: "goods" */ './views/Goods')
+      component: Goods
     },
     {
       path: '/ratings',

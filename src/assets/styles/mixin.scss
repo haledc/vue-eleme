@@ -13,14 +13,14 @@
   }
 }
 
-// 取消1px下边框配置
-@mixin border-none() {
+// 取消 1px 下边框配置
+@mixin border-none {
   &::after {
     display: none;
   }
 }
 
-// 图片2x 和 3x 全局配置
+// 图片 2x 和 3x 全局配置
 @mixin bg-image($url) {
   background-image: url($url+'@2x.png');
 

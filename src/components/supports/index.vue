@@ -46,7 +46,7 @@ export default {
     font-size: 0;
 
     &:last-child {
-      @include border-none();
+      @include border-none;
     }
 
     .icon {

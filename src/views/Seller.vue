@@ -365,7 +365,7 @@ export default {
       font-size: 12px;
 
       &:last-child {
-        @include border-none();
+        @include border-none;
       }
     }
   }

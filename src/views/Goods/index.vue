@@ -267,7 +267,7 @@ export default {
         font-weight: 700;
 
         .text {
-          @include border-none();
+          @include border-none;
         }
       }
 
@@ -332,7 +332,7 @@ export default {
       @include border-1px(rgba(7, 17, 27, 0.1));
 
       &:last-child {
-        @include border-none();
+        @include border-none;
         margin-bottom: 0;
       }
 

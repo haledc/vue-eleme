@@ -52,7 +52,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../../assets/styles/mixin.scss';
+@import '@/assets/styles/mixin.scss';
 
 .star {
   font-size: 0;

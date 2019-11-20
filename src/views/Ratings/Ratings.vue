@@ -123,20 +123,17 @@ export default class Ratings extends Vue {
   }
 
   getRatings() {
-    this.$axios
-      .get('api/ratings')
-      .then((res: AxiosResponse) => {
-        const { data } = res
-        if (data.errno === ERR_OK) {
-          this.ratings = data.data
-          this.$nextTick(() => {
-            this.scroll = new BScroll(this.$refs.ratings, {
-              click: true
-            })
+    this.$axios.get('api/ratings').then((res: AxiosResponse) => {
+      const { data } = res
+      if (data.errno === ERR_OK) {
+        this.ratings = data.data
+        this.$nextTick(() => {
+          this.scroll = new BScroll(this.$refs.ratings, {
+            click: true
           })
-        }
-      })
-      .catch(e => console.log(e))
+        })
+      }
+    })
   }
 
   needShow(type: number, text: string) {

@@ -149,20 +149,17 @@ export default class Goods extends Vue {
   }
 
   getGoods() {
-    this.$axios
-      .get('/api/goods')
-      .then((res: AxiosResponse) => {
-        const { data } = res
-        if (data.errno === ERR_OK) {
-          this.goods = data.data
-          // DOM 更新之后再实例化 BScroll 对象
-          this.$nextTick(() => {
-            this._initScroll()
-            this._calculateHeight()
-          })
-        }
-      })
-      .catch(e => console.log(e))
+    this.$axios.get('/api/goods').then((res: AxiosResponse) => {
+      const { data } = res
+      if (data.errno === ERR_OK) {
+        this.goods = data.data
+        // DOM 更新之后再实例化 BScroll 对象
+        this.$nextTick(() => {
+          this._initScroll()
+          this._calculateHeight()
+        })
+      }
+    })
   }
 
   selectMenu(index: number) {

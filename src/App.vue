@@ -45,7 +45,6 @@ export default class App extends Vue {
           this.seller = Object.assign({}, this.seller, data.data)
         }
       })
-      .catch(error => console.log(error))
   }
 }
 </script>

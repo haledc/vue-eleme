@@ -1,9 +1,9 @@
-export interface Support {
+export interface ISupport {
   type: number
   description: string
 }
 
-export interface Seller {
+export interface ISeller {
   name: string
   description: string
   deliveryTimer: number
@@ -16,22 +16,14 @@ export interface Seller {
   ratingCount: number
   sellCount: number
   bulletin: string
-  supports: [Support]
+  supports: ISupport[]
   avatar: string
-  pics: [string]
-  infos: [string]
+  pics: string[]
+  infos: string[]
   id?: number
 }
 
-export interface SellerResponse {
-  status: number
-  data: {
-    errno: number
-    data: Seller
-  }
-}
-
-export interface FoodRating {
+export interface IFoodRating {
   username: string
   rateTime: number
   rateType: number
@@ -39,7 +31,7 @@ export interface FoodRating {
   avatar: string
 }
 
-export interface Food {
+export interface IFood {
   name: string
   price: number
   oldPrice: string
@@ -47,27 +39,19 @@ export interface Food {
   sellCount: number
   rating: number
   info: string
-  ratings: [FoodRating]
+  ratings: IFoodRating[]
   icon: string
   image: string
   count: number
 }
 
-export interface Good {
+export interface IGoods {
   name: string
   type: number
-  foods: [Food]
+  foods: IFood[]
 }
 
-export interface GoodsResponse {
-  status: number
-  data: {
-    errno: number
-    data: [Good]
-  }
-}
-
-export interface Rating {
+export interface IRatings {
   username: string
   rateTime: number
   deliveryTime: number
@@ -75,13 +59,5 @@ export interface Rating {
   rateType: number
   text: string
   avatar: string
-  recommend: [string]
-}
-
-export interface RatingResponse {
-  status: number
-  data: {
-    errno: number
-    data: [Rating]
-  }
+  recommend: string[]
 }

@@ -4,7 +4,7 @@ import router from './router'
 import './registerServiceWorker'
 import axios from 'axios'
 
-import './assets/styles/index.styl'
+import './assets/styles/index.scss'
 
 Vue.config.productionTip = false
 Vue.prototype.$axios = axios

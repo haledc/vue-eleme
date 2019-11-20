@@ -8,11 +8,11 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import Tab from './components/Tab/index.vue'
-import Header from './components/Header/index.vue'
-import { urlParse } from './assets/helper'
-import { Seller, SellerResponse } from '@/types'
-import { AxiosInstance } from 'axios'
+import Tab from '@/components/Tab'
+import Header from '@/components/Header'
+import { urlParse } from '@/utils'
+import { ISeller } from '@/types'
+import { AxiosStatic, AxiosResponse } from 'axios'
 
 const ERR_OK = 0
 
@@ -30,7 +30,7 @@ export default class App extends Vue {
     })()
   }
 
-  $axios!: AxiosInstance
+  $axios!: AxiosStatic
 
   created() {
     this.getSeller()
@@ -39,15 +39,13 @@ export default class App extends Vue {
   getSeller() {
     this.$axios
       .get('api/seller?id=' + this.seller.id)
-      .then((res: SellerResponse) => {
+      .then((res: AxiosResponse) => {
         const { data } = res
         if (data.errno === ERR_OK) {
           this.seller = Object.assign({}, this.seller, data.data)
         }
       })
-      .catch(e => console.log(e))
+      .catch(error => console.log(error))
   }
 }
 </script>
-
-<style lang="stylus"></style>

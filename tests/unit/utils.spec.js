@@ -1,4 +1,4 @@
-import { formatDate } from '../../src/assets/utils'
+import { formatDate } from '../../src/utils'
 
 describe('utils', () => {
   test('formatDate', () => {

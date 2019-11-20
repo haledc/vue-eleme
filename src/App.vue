@@ -11,7 +11,7 @@
 <script>
 import Header from './components/Header'
 import Tab from './components/Tab'
-import { urlParse } from './assets/utils'
+import { urlParse } from './utils'
 
 const ERR_OK = 0
 

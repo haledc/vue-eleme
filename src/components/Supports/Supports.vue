@@ -37,7 +37,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/styles/mixin.scss';
+@import '@/assets/styles/mixins.scss';
 
 .supports-4 {
   .support-item {

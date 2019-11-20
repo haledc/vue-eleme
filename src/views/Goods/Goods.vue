@@ -232,7 +232,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/styles/mixin.scss';
+@import '@/assets/styles/mixins.scss';
 
 .goods {
   display: flex;
@@ -244,7 +244,7 @@ export default {
 
   /* 菜单栏 */
   .menu-wrapper {
-    // 等分 缩放 占位空间
+    // 放大 缩小 占位
     flex: 0 0 80px;
     width: 80px;
     background: #f3f5f7;

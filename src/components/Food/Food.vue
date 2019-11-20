@@ -119,10 +119,10 @@
 
 <script>
 import BScroll from 'better-scroll'
-import CartControl from './CartControl'
-import Split from './Split'
-import RatingSelect from './RatingSelect'
-import { formatDate } from '../assets/utils'
+import CartControl from '../CartControl'
+import Split from '../Split'
+import RatingSelect from '../RatingSelect'
+import { formatDate } from '../../utils'
 
 // 默认是全部评价
 const ALL = 2
@@ -239,7 +239,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/styles/mixin.scss';
+@import '@/assets/styles/mixins.scss';
 
 .food {
   position: fixed;

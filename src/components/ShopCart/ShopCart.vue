@@ -88,7 +88,7 @@
 
 <script>
 import BScroll from 'better-scroll'
-import CartControl from './CartControl'
+import CartControl from '../CartControl'
 
 export default {
   components: {
@@ -298,7 +298,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/styles/mixin.scss';
+@import '@/assets/styles/mixins.scss';
 
 // 购物车
 .shop-cart {

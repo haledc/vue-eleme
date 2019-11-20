@@ -112,10 +112,10 @@
 
 <script>
 import BScroll from 'better-scroll'
-import Star from '../components/Star'
-import RatingSelect from '../components/RatingSelect'
-import Split from '../components/Split'
-import { formatDate } from '../assets/utils'
+import Star from '../../components/Star'
+import RatingSelect from '../../components/RatingSelect'
+import Split from '../../components/Split'
+import { formatDate } from '../../utils'
 
 const ALL = 2
 const ERR_OK = 0
@@ -197,7 +197,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/styles/mixin.scss';
+@import '@/assets/styles/mixins.scss';
 
 .ratings {
   position: absolute;

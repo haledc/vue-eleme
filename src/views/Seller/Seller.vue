@@ -92,10 +92,10 @@
 
 <script>
 import BScroll from 'better-scroll'
-import Star from '../components/Star'
-import Split from '../components/Split'
-import Supports from '../components/Supports'
-import { saveToLocal, loadFromLocal } from '../assets/utils'
+import Star from '../../components/Star'
+import Split from '../../components/Split'
+import Supports from '../../components/Supports'
+import { saveToLocal, loadFromLocal } from '../../utils'
 
 export default {
   components: {
@@ -185,7 +185,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/styles/mixin.scss';
+@import '@/assets/styles/mixins.scss';
 
 .seller {
   position: absolute;
@@ -233,7 +233,7 @@ export default {
       padding-top: 18px;
 
       .block {
-        // flex 3等分
+        // flex 三等分
         flex: 1;
         text-align: center;
         border-right: 1px solid rgba(7, 17, 27, 0.1);

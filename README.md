@@ -22,13 +22,9 @@ node prod.server.js
 
 ### 版本信息
 
-- [vue-cli4 版本](https://github.com/haledc/vue-elm/tree/master)
+- [Vue2 版本](https://github.com/haledc/vue-elm/tree/vue2)
 
-- [vue-cli3 版本](https://github.com/haledc/vue-elm/tree/vue-cli3)
-
-- [vue-cli3 + Typescript 版本](https://github.com/haledc/vue-elm/tree/vue-cli3-ts)
-
-- [vue-cli2 版本](https://github.com/haledc/vue-elm/tree/vue-cli2)
+- [Vue2 + Typescript 版本](https://github.com/haledc/vue-elm/tree/vue2-ts)
 
 ### 说明
 

@@ -87,7 +87,7 @@ import BScroll from 'better-scroll'
 import ShopCart from '@/components/ShopCart'
 import CartControl from '@/components/CartControl'
 import Food from '@/components/Food'
-import { ISeller, IGoods } from '@/types'
+import { ISeller, IGoods, IFood } from '@/types'
 import { AxiosStatic, AxiosResponse } from 'axios'
 
 const ERR_OK = 0
@@ -133,11 +133,11 @@ export default class Goods extends Vue {
   }
 
   get selectFoods() {
-    const foods: Food[] = []
+    const foods: IFood[] = []
     this.goods.forEach(good => {
-      good.foods.forEach(food => {
+      good.foods.forEach((food: IFood) => {
         if (food.count) {
-          foods.push(food as any)
+          foods.push(food)
         }
       })
     })

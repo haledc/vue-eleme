@@ -42,7 +42,7 @@ export interface IFood {
   ratings: IFoodRating[]
   icon: string
   image: string
-  count: number
+  count?: number
 }
 
 export interface IGoods {

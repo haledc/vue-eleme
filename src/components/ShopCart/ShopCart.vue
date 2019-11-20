@@ -121,7 +121,7 @@ export default class Shopcart extends Vue {
   get totalPrice() {
     let total: number = 0
     this.selectFoods.forEach((food: IFood) => {
-      total += food.price * food.count
+      total += food.price * food.count!
     })
     return total
   }
@@ -129,7 +129,7 @@ export default class Shopcart extends Vue {
   get totalCount() {
     let count: number = 0
     this.selectFoods.forEach((food: IFood) => {
-      count += food.count
+      count += food.count!
     })
     return count
   }

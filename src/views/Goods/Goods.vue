@@ -5,7 +5,7 @@
       <div ref="menuWrapper" class="menu-wrapper">
         <ul>
           <li
-            v-for="(item, index) in goods"
+            v-for="(item, index) in state.goods"
             :key="index"
             ref="menuList"
             class="menu-item"
@@ -28,7 +28,7 @@
       <div ref="foodsWrapper" class="foods-wrapper">
         <ul>
           <li
-            v-for="item in goods"
+            v-for="item in state.goods"
             :key="item.name"
             ref="foodList"
             class="food-list"
@@ -88,12 +88,13 @@
     </div>
 
     <!-- 食物详情页 -->
-    <Food ref="food" :food="selectedFood" @add="addFood" />
+    <Food ref="food" :food="state.selectedFood" @add="addFood" />
   </div>
 </template>
 
 <script>
-import BScroll from 'better-scroll'
+import { reactive, computed } from '@vue/composition-api'
+import { createScroll } from '../../utils'
 import ShopCart from '../../components/ShopCart'
 import CartControl from '../../components/CartControl'
 import Food from '../../components/Food'
@@ -112,32 +113,31 @@ export default {
       required: true
     }
   },
-  data() {
-    return {
+  setup(props, { root, refs }) {
+    const state = reactive({
       goods: [],
       listHeight: [],
       scrollY: 0,
       selectedFood: {},
       classMap: []
-    }
-  },
-  computed: {
-    // 当前索引（菜单索引，食物索引）
-    currentIndex() {
-      for (let i = 0; i < this.listHeight.length; i++) {
-        let height1 = this.listHeight[i]
-        let height2 = this.listHeight[i + 1]
-        if (!height2 || (this.scrollY >= height1 && this.scrollY < height2)) {
+    })
+
+    const classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee']
+
+    const currentIndex = computed(() => {
+      for (let i = 0; i < state.listHeight.length; i++) {
+        let height1 = state.listHeight[i]
+        let height2 = state.listHeight[i + 1]
+        if (!height2 || (state.scrollY >= height1 && state.scrollY < height2)) {
           return i
         }
       }
       return 0
-    },
+    })
 
-    // 选中具体食物对象计算属性，并传递给购物车组件
-    selectFoods() {
+    const selectFoods = computed(() => {
       let foods = []
-      this.goods.forEach(good => {
+      state.goods.forEach(good => {
         good.foods.forEach(food => {
           if (food.count) {
             foods.push(food)
@@ -145,87 +145,77 @@ export default {
         })
       })
       return foods
-    }
-  },
-  created() {
-    this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee']
-    this.getGoods()
-  },
-  methods: {
-    // 获取 goods 数据
-    getGoods() {
-      this.$axios.get('/api/goods').then(res => {
-        const { data } = res
-        if (data.errno === ERR_OK) {
-          this.goods = data.data
+    })
 
-          // DOM 更新之后再实例化 BScroll 对象
-          this.$nextTick(() => {
-            this._initScroll()
-            this._calculateHeight()
-          })
-        }
-      })
-    },
+    // eslint-disable-next-line
+    let menuScroll, foodsScroll
 
-    selectMenu(index) {
-      let foodList = this.$refs.foodList
-      let el = foodList[index]
-      this.foodsScroll.scrollToElement(el, 300)
-    },
-
-    addFood(target) {
-      // target 为子组件的传过来的 dom 对象
-      this._drop(target)
-    },
-
-    // 调用子组件的抛落方法
-    _drop(target) {
-      // 体验优化，异步执行下落动画(这样不会卡)
-      this.$nextTick(() => {
-        this.$refs.shopCart.drop(target)
-      })
-    },
-
-    // 初始化滚动
-    _initScroll() {
-      this.menuScroll = new BScroll(this.$refs.menuWrapper, {
-        click: true
-      })
-      this.foodsScroll = new BScroll(this.$refs.foodsWrapper, {
-        // 激活点击事件
+    const initScroll = () => {
+      menuScroll = createScroll(refs.menuWrapper, { click: true })
+      foodsScroll = createScroll(refs.foodsWrapper, {
         click: true,
-        // 激活实时滚动位置
         probeType: 3
       })
 
-      // 监听食物栏滚动事件, 并得到滚动时 y 轴的实时数值
-      this.foodsScroll.on('scroll', pos => {
+      foodsScroll.on('scroll', pos => {
         if (pos.y <= 0) {
-          // -1 点击“精选套装”，“小吃主食”和右边不匹配的 bug，是数值精度的误差
-          // 也可修改食物菜单 title 的高度 (26 => 27) 来避免这个误差
-          this.scrollY = Math.abs(pos.y - 1)
+          state.scrollY = Math.abs(pos.y - 1)
         }
       })
-    },
+    }
 
-    // 食品栏高度集合
-    _calculateHeight() {
-      let foodList = this.$refs.foodList
+    const calculateHeight = () => {
+      const foodList = refs.foodList
       let height = 0
-      this.listHeight.push(height)
+      state.listHeight.push(height)
       for (let i = 0; i < foodList.length; i++) {
         let item = foodList[i]
         height += item.clientHeight
-        this.listHeight.push(height)
+        state.listHeight.push(height)
       }
-    },
+    }
 
-    // 选中食物
-    selectFood(food) {
-      this.selectedFood = food
-      // 调用子组件方法，使得 food 组件显示出来
-      this.$refs.food.show()
+    const getGoods = () =>
+      root.$axios.get('/api/goods').then(res => {
+        const { data } = res
+        if (data.errno === ERR_OK) {
+          state.goods = data.data
+          root.$nextTick(() => {
+            initScroll()
+            calculateHeight()
+          })
+        }
+      })
+
+    getGoods()
+
+    const selectMenu = index => {
+      let foodList = refs.foodList
+      let el = foodList[index]
+      foodsScroll.scrollToElement(el, 300)
+    }
+
+    const drop = target => {
+      root.$nextTick(() => {
+        refs.shopCart.drop(target)
+      })
+    }
+
+    const addFood = target => drop(target)
+
+    const selectFood = food => {
+      state.selectedFood = food
+      refs.food.show()
+    }
+
+    return {
+      state,
+      classMap,
+      currentIndex,
+      selectFoods,
+      selectMenu,
+      addFood,
+      selectFood
     }
   }
 }

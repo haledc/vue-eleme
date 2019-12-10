@@ -1,6 +1,6 @@
 <template>
   <Transition name="move">
-    <div v-show="showFlag" ref="food" class="food">
+    <div v-show="state.showFlag" ref="food" class="food">
       <div class="food-content">
         <!-- 头图 -->
         <div class="image-header">
@@ -61,8 +61,8 @@
             商品评价
           </h1>
           <RatingSelect
-            :select-type="selectType"
-            :only-content="onlyContent"
+            :select-type="_state.selectType"
+            :only-content="_state.onlyContent"
             :desc="desc"
             :ratings="food.ratings"
             @select="selectRating"
@@ -118,14 +118,11 @@
 </template>
 
 <script>
-import BScroll from 'better-scroll'
+import { reactive } from '@vue/composition-api'
 import CartControl from '../CartControl'
 import Split from '../Split'
 import RatingSelect from '../RatingSelect'
-import { formatDate } from '../../utils'
-
-// 默认是全部评价
-const ALL = 2
+import { formatDate, createScroll, refreshScroll, useRating } from '../../utils'
 
 export default {
   components: {
@@ -146,93 +143,55 @@ export default {
       required: true
     }
   },
-  data() {
-    return {
-      showFlag: false,
-      selectType: ALL,
-      onlyContent: true,
-      desc: {
-        all: '全部',
-        positive: '推荐',
-        negative: '吐槽'
+  setup(props, { root, emit, refs }) {
+    const desc = {
+      all: '全部',
+      positive: '推荐',
+      negative: '吐槽'
+    }
+    const state = reactive({
+      showFlag: false
+    })
+
+    let scroll
+
+    const show = () => {
+      state.showFlag = true
+
+      if (!scroll) {
+        scroll = createScroll(refs.food, { click: true })
+      } else {
+        root.$nextTick(() => {
+          refreshScroll(scroll)
+        })
       }
     }
-  },
-  methods: {
-    // 显示
-    show() {
-      // 显示的初始状态
-      this.showFlag = true
-      this.selectType = ALL
-      this.onlyContent = true
 
-      // DOM 更新后实例化 BScroll 对象
-      this.$nextTick(() => {
-        if (!this.scroll) {
-          this.scroll = new BScroll(this.$refs.food, {
-            click: true
-          })
-        } else {
-          this.scroll.refresh()
-        }
-      })
-    },
+    const hide = () => (state.showFlag = false)
 
-    // 隐藏
-    hide() {
-      this.showFlag = false
-    },
+    const addFirst = event => {
+      emit('add', event.target)
+      root.$set(props.food, 'count', 1)
+    }
 
-    // 增加购物数量为 1
-    addFirst(event) {
-      // 给父组件派发 add 事件，传入 target 参数
-      this.$emit('add', event.target)
-      this.$set(this.food, 'count', 1)
-    },
+    const addFood = target => emit('add', target)
 
-    /**
-     * 显示评论内容， 通过评论类型和评论内容来确定是否显示该条评论
-     * @param {String} type 关联类型
-     * @param {String} text 关联内容
-     * @return {boolean}
-     */
-    needShow(type, text) {
-      if (this.onlyContent && !text) {
-        return false
-      }
-      if (this.selectType === ALL) {
-        return true
-      } else {
-        // 判断评论的类型是否和选定的类型一致，一致为 true 即显示,否则为 false 即不显示
-        return type === this.selectType
-      }
-    },
+    const { _state, needShow, selectRating, toggleContent } = useRating(
+      root,
+      scroll
+    )
 
-    addFood(target) {
-      this.$emit('add', target)
-    },
-
-    /**
-     * 选中评价类型
-     * @param type 子组件 ratingselect 派发的事件参数
-     */
-    selectRating(type) {
-      this.selectType = type
-
-      // 异步刷新 scroll
-      this.$nextTick(() => {
-        this.scroll.refresh()
-      })
-    },
-
-    // 切换是否只看有内容的评价
-    toggleContent() {
-      this.onlyContent = !this.onlyContent
-
-      // 异步刷新 scroll
-      this.$nextTick(() => {
-        this.scroll.refresh()
-      })
+    return {
+      state,
+      _state,
+      desc,
+      show,
+      hide,
+      addFirst,
+      needShow,
+      addFood,
+      selectRating,
+      toggleContent
     }
   }
 }

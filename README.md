@@ -24,6 +24,8 @@ node prod.server.js
 
 - [Vue2 版本](https://github.com/haledc/vue-elm/tree/vue2)
 
+- [Vue2 + @vue/composition-api 版本](https://github.com/haledc/vue-elm/tree/vue2-composition-api)
+
 - [Vue2 + Typescript 版本](https://github.com/haledc/vue-elm/tree/vue2-ts)
 
 ### 说明

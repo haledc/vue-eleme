@@ -2,7 +2,7 @@
   <div>
     <div class="shop-cart">
       <!-- 购物车折叠列表 -->
-      <div class="content" @click="toggleList">
+      <div class="content" @click="toggleListShow">
         <div class="content-left">
           <div class="logo-wrapper">
             <div class="logo" :class="{ highlight: totalCount > 0 }">
@@ -29,7 +29,7 @@
 
       <!-- 购物车小球控制层 -->
       <div class="ball-container">
-        <div v-for="(ball, index) in balls" :key="index">
+        <div v-for="(ball, index) in state.balls" :key="index">
           <Transition
             name="drop"
             @before-enter="beforeDrop"
@@ -87,8 +87,9 @@
 </template>
 
 <script>
-import BScroll from 'better-scroll'
+import { reactive, computed, watch } from '@vue/composition-api'
 import CartControl from '../CartControl'
+import { createScroll, refreshScroll } from '../../utils'
 
 export default {
   components: {
@@ -101,197 +102,166 @@ export default {
         return []
       }
     },
-
     deliveryPrice: {
       type: Number,
       default: 0
     },
-
     minPrice: {
       type: Number,
       default: 0
     }
   },
-  data() {
-    return {
-      // 小球集合
+  setup(props, { root, refs }) {
+    const state = reactive({
       balls: [
-        {
-          show: false
-        },
-        {
-          show: false
-        },
-        {
-          show: false
-        },
-        {
-          show: false
-        },
-        {
-          show: false
-        }
+        { show: false },
+        { show: false },
+        { show: false },
+        { show: false },
+        { show: false }
       ],
-      dropBalls: [], // 下落小球集合
-      fold: true // 购物车折叠状态，默认是 true
-    }
-  },
-  computed: {
-    // 计算购买总额
-    totalPrice() {
+      dropBalls: [],
+      fold: true
+    })
+
+    const totalPrice = computed(() => {
       let total = 0
-      this.selectFoods.forEach(food => {
+      props.selectFoods.forEach(food => {
         total += food.price * food.count
       })
       return total
-    },
+    })
 
-    // 计算购买总数
-    totalCount() {
+    const totalCount = computed(() => {
       let count = 0
-      this.selectFoods.forEach(food => {
+      props.selectFoods.forEach(food => {
         count += food.count
       })
       return count
-    },
+    })
 
-    // 起送价格，计算起送差价，价格够了显示去结算
-    payDesc() {
-      if (this.totalPrice === 0) {
-        return `￥${this.minPrice}元起送`
-      } else if (this.totalPrice < this.minPrice) {
-        let diff = this.minPrice - this.totalPrice
-        return `还差￥${diff}元起送`
-      } else {
-        return '去结算'
-      }
-    },
+    const payDesc = computed(() =>
+      totalPrice.value === 0
+        ? `￥${props.minPrice}元起送`
+        : totalPrice.value < props.minPrice
+        ? `还差￥${props.minPrice - totalPrice.value}元起送`
+        : '去结算'
+    )
 
-    // 根据购买金额切换结算处样式
-    payClass() {
-      if (this.totalPrice < this.minPrice) {
-        return 'not-enough'
-      } else {
-        return 'enough'
-      }
-    },
+    const payClass = computed(() =>
+      totalPrice.value < props.minPrice ? 'not-enough' : 'enough'
+    )
 
-    // 购物车折叠列表控制, 和 fold 相斥
-    listShow() {
-      if (!this.totalCount) {
-        return false
+    const listShow = computed(() => {
+      if (!totalCount.value) return false
+      return !state.fold
+    })
+
+    let scroll
+
+    watch(
+      // 插件：不能监听计算属性 listShow
+      () => state.fold,
+      newVal => {
+        if (!newVal) {
+          root.$nextTick(() => {
+            if (!scroll) {
+              scroll = createScroll(refs.listContent, { click: true })
+            } else {
+              refreshScroll(scroll)
+            }
+          })
+        }
       }
-      return !this.fold
-    }
-  },
-  watch: {
-    // 折叠列表为 true 时，创建或者更新滚动对象
-    listShow(newVal) {
-      if (newVal) {
-        this.$nextTick(() => {
-          if (!this.scroll) {
-            this.scroll = new BScroll(this.$refs.listContent, {
-              click: true
-            })
-          } else {
-            this.scroll.refresh()
-          }
-        })
-      }
-    }
-  },
-  methods: {
-    // 小球抛落方法
-    drop(el) {
-      for (let i = 0; i < this.balls.length; i++) {
-        let ball = this.balls[i]
+    )
+
+    const drop = el => {
+      for (let i = 0; i < state.balls.length; i++) {
+        const ball = state.balls[i]
         if (!ball.show) {
           ball.show = true
           ball.el = el
-          this.dropBalls.push(ball)
+          state.dropBalls.push(ball)
           return
         }
       }
-    },
+    }
 
-    // 来回折叠列表
-    toggleList() {
-      if (!this.totalCount) {
-        return
-      }
-      // 取反
-      this.fold = !this.fold
-    },
+    const toggleListShow = () => {
+      if (!totalCount.value) return
+      state.fold = !state.fold
+    }
 
-    // 清空列表商品
-    empty() {
-      this.selectFoods.forEach(food => {
-        food.count = 0
-      })
-    },
+    const empty = () => {
+      props.selectFoods.forEach(food => (food.count = 0))
+      state.fold = true
+    }
 
-    // 折叠列表
-    hideList() {
-      this.fold = true
-    },
+    const hideList = () => (state.fold = true)
 
-    pay() {
-      if (this.totalPrice < this.minPrice) {
-        return
-      }
-      window.alert(`支付${this.totalPrice + 4}元`)
-    },
-    addFood(target) {
-      this.drop(target)
-    },
+    const pay = () => {
+      if (totalPrice.value < props.minPrice) return
+      window.alert(`支付${totalPrice.value + 4}元`)
+    }
 
-    // 小球抛落前
-    beforeDrop(el) {
-      let count = this.balls.length
-      while (count--) {
-        let ball = this.balls[count]
+    const addFood = target => drop(target)
+
+    const beforeDrop = el => {
+      let len = state.balls.length
+      while (len--) {
+        const ball = state.balls[len]
         if (ball.show) {
-          // 获取加号 DOM 矩形对象
-          let rect = ball.el.getBoundingClientRect()
-          // 加号和购物车 X 轴差值 = 加号 DOM 和左边屏幕的距离 - 小球左侧偏移（落点位置）
-          let x = rect.left - 32
-          // 加号和购物车 Y 轴差值（负值） = 屏幕高度 - 加号 DOM 和页面顶部的距离 - 小球底部偏移（落点位置）
-          let y = -(window.innerHeight - rect.top - 22)
+          const rect = ball.el.getBoundingClientRect()
+          const x = rect.left - 32
+          const y = -(window.innerHeight - rect.top - 22)
           el.style.display = ''
-          // Y 轴移动的距离 纵向动画
           el.style.webkitTransform = `translate3d(0, ${y}px, 0)`
           el.style.transform = `translate3d(0, ${y}px, 0)`
-          // X 轴移动的距离 横向动画
-          let inner = el.getElementsByClassName('inner-hook')[0]
+          const inner = el.getElementsByClassName('inner-hook')[0]
           inner.style.webkitTransform = `translate3d(${x}px, 0, 0)`
           inner.style.transform = `translate3d(${x}px, 0, 0)`
         }
       }
-    },
+    }
 
-    // 小球抛落过程. 抛落前状态 -> 原始状态（重置回来）
-    dropping(el, done) {
-      // 主动触发浏览器重绘 ★
-      /* eslint-disable no-unused-vars */
+    // 插件：小球动画有点卡，不流畅
+    const dropping = (el, done) => {
+      // eslint-disable-next-line
       let rf = el.offsetHeight
-      this.$nextTick(() => {
+      root.$nextTick(() => {
         el.style.webkitTransform = 'translate3d(0, 0, 0)'
         el.style.transform = 'translate3d(0, 0, 0)'
-        let inner = el.getElementsByClassName('inner-hook')[0]
-        inner.style.webkitTransform = 'translate3d(0, 0, 0)'
-        inner.style.transform = 'translate3d(0, 0, 0)'
-        // 监听过渡完成事件，调用done函数跳转到 afterDrop 中去
+        const inner = el.getElementsByClassName('inner-hook')[0]
+        inner.style.webkitTransform = `translate3d(0, 0, 0)`
+        inner.style.transform = `translate3d(0, 0, 0)`
         el.addEventListener('transitionend', done)
       })
-    },
+    }
 
-    // 小球抛落后. 把抛落的小球的取出来，并把 show 重新设置为 false，然后隐藏 DOM
-    afterDrop(el) {
-      let ball = this.dropBalls.shift()
+    const afterDrop = el => {
+      const ball = state.dropBalls.shift()
       if (ball) {
         ball.show = false
         el.style.display = 'none'
       }
+    }
+
+    return {
+      state,
+      totalPrice,
+      totalCount,
+      payDesc,
+      payClass,
+      listShow,
+      drop,
+      toggleListShow,
+      empty,
+      hideList,
+      pay,
+      addFood,
+      beforeDrop,
+      dropping,
+      afterDrop
     }
   }
 }

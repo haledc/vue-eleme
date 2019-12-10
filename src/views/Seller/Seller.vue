@@ -33,7 +33,10 @@
         </ul>
         <!-- 收藏按钮 -->
         <div class="favorite" @click="toggleFavorite">
-          <span class="icon-favorite" :class="{ active: favorite }"></span>
+          <span
+            class="icon-favorite"
+            :class="{ active: state.favorite }"
+          ></span>
           <span class="text">
             {{ favoriteText }}
           </span>
@@ -91,11 +94,16 @@
 </template>
 
 <script>
-import BScroll from 'better-scroll'
+import { reactive, computed, watch } from '@vue/composition-api'
 import Star from '../../components/Star'
 import Split from '../../components/Split'
 import Supports from '../../components/Supports'
-import { saveToLocal, loadFromLocal } from '../../utils'
+import {
+  saveToLocal,
+  loadFromLocal,
+  createScroll,
+  refreshScroll
+} from '../../utils'
 
 export default {
   components: {
@@ -109,76 +117,63 @@ export default {
       required: true
     }
   },
-  data() {
-    return {
-      //  立即执行函数获取缓存，收藏默认为 false
-      favorite: (() => {
-        return loadFromLocal(this.seller.id, 'favorite', false)
-      })()
-    }
-  },
-  computed: {
-    favoriteText() {
-      return this.favorite ? '已收藏' : '收藏'
-    }
-  },
-  watch: {
-    // 监听 seller 的变化
-    seller() {
-      this.init()
-    }
-  },
-  created() {
-    this.init()
-  },
-  methods: {
-    init() {
-      this.$nextTick(() => {
-        this._initScroll()
-        this._initPics()
-      })
-    },
+  setup(props, { root, refs }) {
+    const getFavoriteStatus = () =>
+      loadFromLocal(props.seller.id, 'favorite', false)
 
-    // 切换收藏
-    toggleFavorite() {
-      this.favorite = !this.favorite
-      // 把结果保存到缓存中
-      saveToLocal(this.seller.id, 'favorite', this.favorite)
-    },
+    const state = reactive({
+      favorite: getFavoriteStatus()
+    })
 
-    // 初始化纵向滚动
-    _initScroll() {
-      if (!this.scroll) {
-        this.scroll = new BScroll(this.$refs.seller, {
-          click: true
-        })
+    const favoriteText = computed(() => (state.favorite ? '已收藏' : '收藏'))
+
+    let scroll, picScroll
+
+    const initScroll = () => {
+      if (!scroll) {
+        scroll = createScroll(refs.seller, { click: true })
       } else {
-        this.scroll.refresh()
+        refreshScroll(scroll)
       }
-    },
+    }
 
-    // 初始化实景图片 横向滚动
-    _initPics() {
-      if (this.seller.pics) {
-        let picWidth = 120
-        let margin = 6
-        // 计算图片 list 的总宽度
-        let width = (picWidth + margin) * this.seller.pics.length - margin
-        // 设置图片 list 宽度（list 的宽度大于 wrapper 的宽度才能滚动）
-        this.$refs.picList.style.width = width + 'px'
-        this.$nextTick(() => {
-          if (!this.picScroll) {
-            this.picScroll = new BScroll(this.$refs.picWrapper, {
-              // 开启横向滚动，默认是 false
+    const initPicScroll = () => {
+      if (props.seller.pics) {
+        const picWidth = 120,
+          margin = 6
+        const width = (picWidth + margin) * props.seller.pics.length - margin
+        refs.picList.style.width = width + 'px'
+        root.$nextTick(() => {
+          if (!picScroll) {
+            picScroll = createScroll(refs.picWrapper, {
               scrollX: true,
-              // 设置在横向滚动时保留原生的纵向滚动
               eventPassthrough: 'vertical'
             })
           } else {
-            this.picScroll.refresh()
+            refreshScroll(picScroll)
           }
         })
       }
+    }
+
+    const init = () => {
+      root.$nextTick(() => {
+        initScroll()
+        initPicScroll()
+      })
+    }
+
+    const toggleFavorite = () => {
+      state.favorite = !state.favorite
+      saveToLocal(props.seller.id, 'favorite', state.favorite)
+    }
+
+    watch(() => props.seller, () => init())
+
+    return {
+      state,
+      favoriteText,
+      toggleFavorite
     }
   }
 }

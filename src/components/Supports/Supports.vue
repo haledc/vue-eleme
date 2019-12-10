@@ -14,6 +14,7 @@
 </template>
 
 <script>
+import { computed } from '@vue/composition-api'
 export default {
   props: {
     supports: {
@@ -25,13 +26,14 @@ export default {
       required: true
     }
   },
-  computed: {
-    classType() {
-      return `supports-${this.size}`
+  setup(props) {
+    const classType = computed(() => `supports-${props.size}`)
+    const classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee']
+
+    return {
+      classType,
+      classMap
     }
-  },
-  created() {
-    this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee']
   }
 }
 </script>

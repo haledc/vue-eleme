@@ -10,6 +10,8 @@
 </template>
 
 <script>
+import { computed } from '@vue/composition-api'
+
 const LENGTH = 5
 const CLS_ON = 'on'
 const CLS_HALF = 'half'
@@ -26,14 +28,11 @@ export default {
       required: true
     }
   },
-  computed: {
-    starType() {
-      return 'star-' + this.size
-    },
-
-    itemClasses() {
+  setup(props) {
+    const starType = computed(() => 'star-' + props.size)
+    const itemClasses = computed(() => {
       let result = []
-      let score = Math.floor(this.score * 2) / 2
+      let score = Math.floor(props.score * 2) / 2
       let hasDecimal = score % 1 !== 0
       let integer = Math.floor(score)
       for (let i = 0; i < integer; i++) {
@@ -46,6 +45,11 @@ export default {
         result.push(CLS_OFF)
       }
       return result
+    })
+
+    return {
+      starType,
+      itemClasses
     }
   }
 }

@@ -16,14 +16,13 @@
 
 <script>
 export default {
-  data() {
-    return {
-      routerContent: [
-        { to: '/goods', text: '商品' },
-        { to: '/ratings', text: '评论' },
-        { to: '/seller', text: '商家' }
-      ]
-    }
+  setup() {
+    const routerContent = [
+      { to: '/goods', text: '商品' },
+      { to: '/ratings', text: '评论' },
+      { to: '/seller', text: '商家' }
+    ]
+    return { routerContent }
   }
 }
 </script>

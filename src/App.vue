@@ -1,14 +1,16 @@
 <template>
   <div id="app">
-    <Header :seller="seller" />
+    <Header :seller="state.seller" />
     <Tab />
     <KeepAlive>
-      <RouterView :seller="seller" />
+      <RouterView :seller="state.seller" />
     </KeepAlive>
   </div>
 </template>
 
 <script>
+import { reactive } from '@vue/composition-api'
+
 import Header from './components/Header'
 import Tab from './components/Tab'
 import { urlParse } from './utils'
@@ -20,28 +22,30 @@ export default {
     Header,
     Tab
   },
-  data() {
-    return {
-      seller: {
-        id: (() => {
-          let queryParamObj = urlParse()
-          return queryParamObj.id
-        })()
-      }
+  setup(_, { root }) {
+    const getId = () => {
+      const queryParamObj = urlParse()
+      return queryParamObj.id
     }
-  },
-  created() {
-    this.getSeller()
-  },
-  methods: {
-    // 获取 seller 数据
-    getSeller() {
-      this.$axios.get(`/api/seller?id=${this.seller.id}`).then(res => {
+
+    const state = reactive({
+      seller: {
+        id: getId()
+      }
+    })
+
+    const getSeller = () =>
+      root.$axios.get(`/api/seller?id=${state.seller.id}`).then(res => {
         const { data } = res
         if (data.errno === ERR_OK) {
-          this.seller = Object.assign({}, this.seller, data.data)
+          state.seller = Object.assign({}, state.seller, data.data)
         }
       })
+
+    getSeller()
+
+    return {
+      state
     }
   }
 }

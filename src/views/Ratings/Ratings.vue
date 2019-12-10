@@ -56,9 +56,9 @@
 
       <!-- 评论类型条 -->
       <RatingSelect
-        :select-type="selectType"
-        :only-content="onlyContent"
-        :ratings="ratings"
+        :select-type="_state.selectType"
+        :only-content="_state.onlyContent"
+        :ratings="state.ratings"
         @select="selectRating"
         @toggle="toggleContent"
       />
@@ -67,7 +67,7 @@
       <div class="ratings-wrapper">
         <ul>
           <li
-            v-for="(rating, index) in ratings"
+            v-for="(rating, index) in state.ratings"
             v-show="needShow(rating.rateType, rating.text)"
             :key="index"
             class="rating-item border-1px"
@@ -111,13 +111,12 @@
 </template>
 
 <script>
-import BScroll from 'better-scroll'
+import { reactive } from '@vue/composition-api'
 import Star from '../../components/Star'
 import RatingSelect from '../../components/RatingSelect'
 import Split from '../../components/Split'
-import { formatDate } from '../../utils'
+import { formatDate, createScroll, useRating } from '../../utils'
 
-const ALL = 2
 const ERR_OK = 0
 
 export default {
@@ -139,58 +138,37 @@ export default {
       required: true
     }
   },
-  data() {
-    return {
-      ratings: [],
-      selectType: ALL,
-      onlyContent: true
-    }
-  },
-  created() {
-    this.getRatings()
-  },
-  methods: {
-    // 获取 ratings 数据
-    getRatings() {
-      this.$axios.get('/api/ratings').then(res => {
+  setup(props, { root, refs }) {
+    const state = reactive({
+      ratings: []
+    })
+
+    let scroll
+
+    const getRatings = () =>
+      root.$axios.get('/api/ratings').then(res => {
         const { data } = res
         if (data.errno === ERR_OK) {
-          this.ratings = data.data
-          this.$nextTick(() => {
-            this.scroll = new BScroll(this.$refs.ratings, {
-              click: true
-            })
+          state.ratings = data.data
+          root.$nextTick(() => {
+            scroll = createScroll(refs.ratings, { click: true })
           })
         }
       })
-    },
 
-    // 是否显示评论内容
-    needShow(type, text) {
-      if (this.onlyContent && !text) {
-        return false
-      }
-      if (this.selectType === ALL) {
-        return true
-      } else {
-        return type === this.selectType
-      }
-    },
+    getRatings()
 
-    // 选择评论类型
-    selectRating(type) {
-      this.selectType = type
-      this.$nextTick(() => {
-        this.scroll.refresh()
-      })
-    },
+    const { _state, needShow, selectRating, toggleContent } = useRating(
+      root,
+      scroll
+    )
 
-    // 切换是否只看有内容的评价
-    toggleContent() {
-      this.onlyContent = !this.onlyContent
-      this.$nextTick(() => {
-        this.scroll.refresh()
-      })
+    return {
+      state,
+      _state,
+      needShow,
+      selectRating,
+      toggleContent
     }
   }
 }

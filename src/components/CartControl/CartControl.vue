@@ -31,24 +31,25 @@ export default {
       required: true
     }
   },
-  methods: {
-    // 增加购买数量
-    addCart(event) {
-      if (!this.food.count) {
-        this.$set(this.food, 'count', 1) // $set
+  setup(props, { root, emit }) {
+    const addCart = event => {
+      if (!props.food.count) {
+        root.$set(props.food, 'count', 1) // $set
       } else {
-        this.food.count++
+        props.food.count++
       }
 
-      // 派发事件，传入 DOM 对象
-      this.$emit('add', event.target)
-    },
-
-    // 减少购买数量
-    decreaseCart() {
-      if (this.food.count) {
-        this.food.count--
+      emit('add', event.target)
+    }
+    const decreaseCart = () => {
+      if (props.food.count) {
+        props.food.count--
       }
+    }
+
+    return {
+      addCart,
+      decreaseCart
     }
   }
 }

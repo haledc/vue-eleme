@@ -44,7 +44,7 @@
 
     <!-- 详情弹层 -->
     <Transition name="fade">
-      <div v-show="detailShow" class="detail">
+      <div v-show="state.detailShow" class="detail">
         <!-- 内容 -->
         <div class="detail-wrapper clearfix">
           <div class="detail-main">
@@ -90,6 +90,7 @@
 </template>
 
 <script>
+import { reactive, computed } from '@vue/composition-api'
 import Star from '../Star'
 import Supports from '../Supports'
 
@@ -106,24 +107,21 @@ export default {
       }
     }
   },
-  data() {
-    return {
-      detailShow: false,
-      classMap: []
-    }
-  },
-  computed: {
-    supportsFirst() {
-      return this.seller.supports.slice(0, 1)
-    }
-  },
-  methods: {
-    showDetail() {
-      this.detailShow = true
-    },
+  setup(props) {
+    const state = reactive({
+      detailShow: false
+    })
 
-    hideDetail() {
-      this.detailShow = false
+    const supportsFirst = computed(() => props.seller.supports.slice(0, 1))
+
+    const showDetail = () => (state.detailShow = true)
+    const hideDetail = () => (state.detailShow = false)
+
+    return {
+      state,
+      supportsFirst,
+      showDetail,
+      hideDetail
     }
   }
 }

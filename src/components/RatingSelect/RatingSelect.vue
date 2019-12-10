@@ -45,11 +45,9 @@
 </template>
 
 <script>
-// 正面评价
+import { computed } from '@vue/composition-api'
 const POSITIVE = 0
-// 负面评价
 const NEGATIVE = 1
-// 全部评价
 const ALL = 2
 
 export default {
@@ -60,21 +58,15 @@ export default {
         return []
       }
     },
-
-    // 评价类型
     selectType: {
       type: Number,
-      // 默认是全部
       default: ALL
     },
-
-    // 是否只看有内容的评价
     onlyContent: {
       type: Boolean,
       default: false
     },
 
-    // 评价类型描述
     desc: {
       type: Object,
       default() {
@@ -86,32 +78,21 @@ export default {
       }
     }
   },
-  computed: {
-    // 筛选推荐评价
-    positives() {
-      return this.ratings.filter(rating => {
-        return rating.rateType === POSITIVE
-      })
-    },
+  setup(props, { emit }) {
+    const getTypeRate = type =>
+      props.ratings.filter(rating => rating.rateType === type)
 
-    // 筛选吐槽评价
-    negatives() {
-      return this.ratings.filter(rating => {
-        return rating.rateType === NEGATIVE
-      })
-    }
-  },
-  methods: {
-    // 选中
-    select(type) {
-      // 给引用的父组件派发 select 事件，传入类型参数
-      this.$emit('select', type)
-    },
+    const positives = computed(() => getTypeRate(POSITIVE))
+    const negatives = computed(() => getTypeRate(NEGATIVE))
 
-    // 切换
-    toggleContent() {
-      // 给引用的父组件派发 toggle 事件
-      this.$emit('toggle')
+    const select = type => emit('select', type)
+    const toggleContent = () => emit('toggle')
+
+    return {
+      positives,
+      negatives,
+      select,
+      toggleContent
     }
   }
 }

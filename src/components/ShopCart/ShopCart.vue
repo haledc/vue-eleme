@@ -175,7 +175,7 @@ export default {
       }
     )
 
-    const drop = el => {
+    function drop(el) {
       for (let i = 0; i < state.balls.length; i++) {
         const ball = state.balls[i]
         if (!ball.show) {
@@ -187,26 +187,30 @@ export default {
       }
     }
 
-    const toggleListShow = () => {
+    function toggleListShow() {
       if (!totalCount.value) return
       state.fold = !state.fold
     }
 
-    const empty = () => {
+    function empty() {
       props.selectFoods.forEach(food => (food.count = 0))
       state.fold = true
     }
 
-    const hideList = () => (state.fold = true)
+    function hideList() {
+      state.fold = true
+    }
 
-    const pay = () => {
+    function pay() {
       if (totalPrice.value < props.minPrice) return
       window.alert(`支付${totalPrice.value + 4}元`)
     }
 
-    const addFood = target => drop(target)
+    function addFood(target) {
+      drop(target)
+    }
 
-    const beforeDrop = el => {
+    function beforeDrop(el) {
       let len = state.balls.length
       while (len--) {
         const ball = state.balls[len]
@@ -225,7 +229,7 @@ export default {
     }
 
     // 插件：小球动画有点卡，不流畅
-    const dropping = (el, done) => {
+    function dropping(el, done) {
       // eslint-disable-next-line
       let rf = el.offsetHeight
       root.$nextTick(() => {
@@ -238,7 +242,7 @@ export default {
       })
     }
 
-    const afterDrop = el => {
+    function afterDrop(el) {
       const ball = state.dropBalls.shift()
       if (ball) {
         ball.show = false

@@ -32,16 +32,17 @@ export default {
     }
   },
   setup(props, { root, emit }) {
-    const addCart = event => {
+    function addCart(event) {
       if (!props.food.count) {
-        root.$set(props.food, 'count', 1) // $set
+        root.$set(props.food, 'count', 1)
       } else {
         props.food.count++
       }
 
       emit('add', event.target)
     }
-    const decreaseCart = () => {
+
+    function decreaseCart() {
       if (props.food.count) {
         props.food.count--
       }

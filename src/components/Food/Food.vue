@@ -131,7 +131,6 @@ export default {
     RatingSelect
   },
   filters: {
-    // 评论时间格式化
     formatRatingDate(time) {
       let date = new Date(time)
       return formatDate(date, 'yyyy-MM-dd hh:mm')
@@ -149,13 +148,14 @@ export default {
       positive: '推荐',
       negative: '吐槽'
     }
+
     const state = reactive({
       showFlag: false
     })
 
     let scroll
 
-    const show = () => {
+    function show() {
       state.showFlag = true
 
       if (!scroll) {
@@ -167,14 +167,18 @@ export default {
       }
     }
 
-    const hide = () => (state.showFlag = false)
+    function hide() {
+      state.showFlag = false
+    }
 
-    const addFirst = event => {
+    function addFirst(event) {
       emit('add', event.target)
       root.$set(props.food, 'count', 1)
     }
 
-    const addFood = target => emit('add', target)
+    function addFood(target) {
+      emit('add', target)
+    }
 
     const { _state, needShow, selectRating, toggleContent } = useRating(
       root,

@@ -126,7 +126,6 @@ export default {
     Split
   },
   filters: {
-    // 评论时间格式化
     formatRatingDate(time) {
       let date = new Date(time)
       return formatDate(date, 'yyyy-MM-dd hh:mm')
@@ -145,7 +144,7 @@ export default {
 
     let scroll
 
-    const getRatings = () =>
+    function getRatings() {
       root.$axios.get('/api/ratings').then(res => {
         const { data } = res
         if (data.errno === ERR_OK) {
@@ -155,6 +154,7 @@ export default {
           })
         }
       })
+    }
 
     getRatings()
 

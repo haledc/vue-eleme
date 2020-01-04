@@ -17,13 +17,8 @@ export function urlParse() {
 }
 
 export function formatDate(date, fmt) {
-  if (/(y+)/.test(fmt)) {
-    fmt = fmt.replace(
-      RegExp.$1,
-      (date.getFullYear() + '').substr(4 - RegExp.$1.length)
-    )
-  }
   let obj = {
+    'y+': date.getFullYear(),
     'M+': date.getMonth() + 1,
     'd+': date.getDate(),
     'h+': date.getHours(),
@@ -33,7 +28,7 @@ export function formatDate(date, fmt) {
   for (const key in obj) {
     if (new RegExp(`(${key})`).test(fmt)) {
       const str = obj[key] + ''
-      fmt = fmt.replace(RegExp.$1, padLeftZero(str))
+      fmt = fmt.replace(RegExp.$1, key !== 'y+' ? padLeftZero(str) : str)
     }
   }
   return fmt

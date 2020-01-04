@@ -28,6 +28,7 @@ export default {
   },
   setup(props) {
     const classType = computed(() => `supports-${props.size}`)
+
     const classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee']
 
     return {

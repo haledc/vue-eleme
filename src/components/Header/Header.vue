@@ -114,8 +114,13 @@ export default {
 
     const supportsFirst = computed(() => props.seller.supports.slice(0, 1))
 
-    const showDetail = () => (state.detailShow = true)
-    const hideDetail = () => (state.detailShow = false)
+    function showDetail() {
+      state.detailShow = true
+    }
+
+    function hideDetail() {
+      state.detailShow = false
+    }
 
     return {
       state,

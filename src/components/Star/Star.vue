@@ -30,6 +30,7 @@ export default {
   },
   setup(props) {
     const starType = computed(() => 'star-' + props.size)
+
     const itemClasses = computed(() => {
       let result = []
       let score = Math.floor(props.score * 2) / 2

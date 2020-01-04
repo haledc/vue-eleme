@@ -118,18 +118,28 @@ export default {
     }
   },
   setup(props, { root, refs }) {
-    const getFavoriteStatus = () =>
-      loadFromLocal(props.seller.id, 'favorite', false)
-
     const state = reactive({
       favorite: getFavoriteStatus()
     })
 
+    function getFavoriteStatus() {
+      return loadFromLocal(props.seller.id, 'favorite', false)
+    }
+
     const favoriteText = computed(() => (state.favorite ? '已收藏' : '收藏'))
+
+    watch(() => props.seller, () => init())
 
     let scroll, picScroll
 
-    const initScroll = () => {
+    function init() {
+      root.$nextTick(() => {
+        initScroll()
+        initPicScroll()
+      })
+    }
+
+    function initScroll() {
       if (!scroll) {
         scroll = createScroll(refs.seller, { click: true })
       } else {
@@ -137,7 +147,7 @@ export default {
       }
     }
 
-    const initPicScroll = () => {
+    function initPicScroll() {
       if (props.seller.pics) {
         const picWidth = 120,
           margin = 6
@@ -156,19 +166,10 @@ export default {
       }
     }
 
-    const init = () => {
-      root.$nextTick(() => {
-        initScroll()
-        initPicScroll()
-      })
-    }
-
-    const toggleFavorite = () => {
+    function toggleFavorite() {
       state.favorite = !state.favorite
       saveToLocal(props.seller.id, 'favorite', state.favorite)
     }
-
-    watch(() => props.seller, () => init())
 
     return {
       state,

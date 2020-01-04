@@ -23,24 +23,25 @@ export default {
     Tab
   },
   setup(_, { root }) {
-    const getId = () => {
-      const queryParamObj = urlParse()
-      return queryParamObj.id
-    }
-
     const state = reactive({
       seller: {
         id: getId()
       }
     })
 
-    const getSeller = () =>
+    function getId() {
+      const queryParamObj = urlParse()
+      return queryParamObj.id
+    }
+
+    function getSeller() {
       root.$axios.get(`/api/seller?id=${state.seller.id}`).then(res => {
         const { data } = res
         if (data.errno === ERR_OK) {
           state.seller = Object.assign({}, state.seller, data.data)
         }
       })
+    }
 
     getSeller()
 

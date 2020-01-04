@@ -66,7 +66,6 @@ export default {
       type: Boolean,
       default: false
     },
-
     desc: {
       type: Object,
       default() {
@@ -79,14 +78,20 @@ export default {
     }
   },
   setup(props, { emit }) {
-    const getTypeRate = type =>
-      props.ratings.filter(rating => rating.rateType === type)
-
     const positives = computed(() => getTypeRate(POSITIVE))
     const negatives = computed(() => getTypeRate(NEGATIVE))
 
-    const select = type => emit('select', type)
-    const toggleContent = () => emit('toggle')
+    function getTypeRate(type) {
+      return props.ratings.filter(rating => rating.rateType === type)
+    }
+
+    function select(type) {
+      emit('select', type)
+    }
+
+    function toggleContent() {
+      emit('toggle')
+    }
 
     return {
       positives,

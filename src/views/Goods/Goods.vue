@@ -150,7 +150,7 @@ export default {
     // eslint-disable-next-line
     let menuScroll, foodsScroll
 
-    const initScroll = () => {
+    function initScroll() {
       menuScroll = createScroll(refs.menuWrapper, { click: true })
       foodsScroll = createScroll(refs.foodsWrapper, {
         click: true,
@@ -164,7 +164,7 @@ export default {
       })
     }
 
-    const calculateHeight = () => {
+    function calculateHeight() {
       const foodList = refs.foodList
       let height = 0
       state.listHeight.push(height)
@@ -175,7 +175,7 @@ export default {
       }
     }
 
-    const getGoods = () =>
+    function getGoods() {
       root.$axios.get('/api/goods').then(res => {
         const { data } = res
         if (data.errno === ERR_OK) {
@@ -186,24 +186,27 @@ export default {
           })
         }
       })
+    }
 
     getGoods()
 
-    const selectMenu = index => {
+    function selectMenu(index) {
       let foodList = refs.foodList
       let el = foodList[index]
       foodsScroll.scrollToElement(el, 300)
     }
 
-    const drop = target => {
+    function drop(target) {
       root.$nextTick(() => {
         refs.shopCart.drop(target)
       })
     }
 
-    const addFood = target => drop(target)
+    function addFood(target) {
+      drop(target)
+    }
 
-    const selectFood = food => {
+    function selectFood(food) {
       state.selectedFood = food
       refs.food.show()
     }

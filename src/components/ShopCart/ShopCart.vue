@@ -124,21 +124,13 @@ export default {
       fold: true
     })
 
-    const totalPrice = computed(() => {
-      let total = 0
-      props.selectFoods.forEach(food => {
-        total += food.price * food.count
-      })
-      return total
-    })
+    const totalPrice = computed(() =>
+      props.selectFoods.reduce((acc, food) => acc + food.price * food.count, 0)
+    )
 
-    const totalCount = computed(() => {
-      let count = 0
-      props.selectFoods.forEach(food => {
-        count += food.count
-      })
-      return count
-    })
+    const totalCount = computed(() =>
+      props.selectFoods.reduce((acc, food) => acc + food.count, 0)
+    )
 
     const payDesc = computed(() =>
       totalPrice.value === 0

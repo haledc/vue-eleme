@@ -135,17 +135,9 @@ export default {
       return 0
     })
 
-    const selectFoods = computed(() => {
-      let foods = []
-      state.goods.forEach(good => {
-        good.foods.forEach(food => {
-          if (food.count) {
-            foods.push(food)
-          }
-        })
-      })
-      return foods
-    })
+    const selectFoods = computed(() =>
+      state.goods.flatMap(good => good.foods.filter(food => food.count > 0))
+    )
 
     // eslint-disable-next-line
     let menuScroll, foodsScroll
@@ -166,13 +158,10 @@ export default {
 
     function calculateHeight() {
       const foodList = refs.foodList
-      let height = 0
-      state.listHeight.push(height)
-      for (let i = 0; i < foodList.length; i++) {
-        let item = foodList[i]
-        height += item.clientHeight
-        state.listHeight.push(height)
-      }
+      state.listHeight = foodList.reduce(
+        (acc, food, index) => acc.concat(acc[index] + food.clientHeight),
+        [0]
+      )
     }
 
     function getGoods() {

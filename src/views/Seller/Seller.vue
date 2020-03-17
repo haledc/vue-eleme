@@ -128,7 +128,10 @@ export default {
 
     const favoriteText = computed(() => (state.favorite ? '已收藏' : '收藏'))
 
-    watch(() => props.seller, () => init())
+    watch(
+      () => props.seller,
+      () => init()
+    )
 
     let scroll, picScroll
 

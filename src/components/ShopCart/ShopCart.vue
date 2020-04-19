@@ -36,9 +36,7 @@
             @enter="dropping"
             @after-enter="afterDrop"
           >
-            <!-- Y 轴方向 -->
             <div v-show="ball.show" class="ball">
-              <!-- X 轴方向 -->
               <div class="inner inner-hook"></div>
             </div>
           </Transition>
@@ -56,7 +54,7 @@
               清空
             </span>
           </div>
-          <div ref="listContent" class="list-content">
+          <div ref="listContentRef" class="list-content">
             <ul>
               <li
                 v-for="food in selectFoods"
@@ -87,9 +85,9 @@
 </template>
 
 <script>
-import { reactive, computed, watch } from '@vue/composition-api'
+import { reactive, computed, watch, nextTick, ref } from 'vue'
 import CartControl from '../CartControl'
-import { createScroll, refreshScroll } from '../../utils'
+import { createScroll, refreshScroll } from '../../util'
 
 export default {
   components: {
@@ -111,7 +109,7 @@ export default {
       default: 0
     }
   },
-  setup(props, { root, refs }) {
+  setup(props) {
     const state = reactive({
       balls: [
         { show: false },
@@ -123,6 +121,8 @@ export default {
       dropBalls: [],
       fold: true
     })
+
+    const listContentRef = ref(null)
 
     const totalPrice = computed(() =>
       props.selectFoods.reduce((acc, food) => acc + food.price * food.count, 0)
@@ -156,9 +156,9 @@ export default {
       () => state.fold,
       newVal => {
         if (!newVal) {
-          root.$nextTick(() => {
+          nextTick(() => {
             if (!scroll) {
-              scroll = createScroll(refs.listContent, { click: true })
+              scroll = createScroll(listContentRef, { click: true })
             } else {
               refreshScroll(scroll)
             }
@@ -224,7 +224,7 @@ export default {
     function dropping(el, done) {
       // eslint-disable-next-line
       let rf = el.offsetHeight
-      root.$nextTick(() => {
+      nextTick(() => {
         el.style.webkitTransform = 'translate3d(0, 0, 0)'
         el.style.transform = 'translate3d(0, 0, 0)'
         const inner = el.getElementsByClassName('inner-hook')[0]

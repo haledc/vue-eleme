@@ -2,12 +2,12 @@
   <div>
     <div class="goods">
       <!-- 菜单栏 -->
-      <div ref="menuWrapper" class="menu-wrapper">
+      <div ref="menuWrapperRef" class="menu-wrapper">
         <ul>
           <li
             v-for="(item, index) in state.goods"
             :key="index"
-            ref="menuList"
+            ref="menuListRef"
             class="menu-item"
             :class="{ current: currentIndex === index }"
             @click="selectMenu(index)"
@@ -25,12 +25,12 @@
       </div>
 
       <!-- 食物栏 -->
-      <div ref="foodsWrapper" class="foods-wrapper">
+      <div ref="foodsWrapperRef" class="foods-wrapper">
         <ul>
           <li
             v-for="item in state.goods"
             :key="item.name"
-            ref="foodList"
+            ref="foodListRef"
             class="food-list"
           >
             <!-- 食物菜单 -->
@@ -57,8 +57,8 @@
                     {{ food.description }}
                   </p>
                   <div class="extra">
-                    <span class="count"> 月售{{ food.sellCount }}份 </span
-                    ><span> 好评率{{ food.rating }}% </span>
+                    <span class="count"> 月售{{ food.sellCount }}份 </span>
+                    <span> 好评率{{ food.rating }}% </span>
                   </div>
                   <div class="price">
                     <span class="now"> ￥{{ food.price }} </span>
@@ -80,7 +80,7 @@
 
       <!-- 购物车 -->
       <ShopCart
-        ref="shopCart"
+        ref="shopCartRef"
         :select-foods="selectFoods"
         :delivery-price="seller.deliveryPrice"
         :min-price="seller.minPrice"
@@ -88,13 +88,14 @@
     </div>
 
     <!-- 食物详情页 -->
-    <Food ref="food" :food="state.selectedFood" @add="addFood" />
+    <Food ref="foodRef" :food="state.selectedFood" @add="addFood" />
   </div>
 </template>
 
 <script>
-import { reactive, computed } from '@vue/composition-api'
-import { createScroll } from '../../utils'
+import { reactive, computed, ref, nextTick } from 'vue'
+import axios from 'axios'
+import { createScroll } from '../../util'
 import ShopCart from '../../components/ShopCart'
 import CartControl from '../../components/CartControl'
 import Food from '../../components/Food'
@@ -113,7 +114,7 @@ export default {
       required: true
     }
   },
-  setup(props, { root, refs }) {
+  setup(props) {
     const state = reactive({
       goods: [],
       listHeight: [],
@@ -121,6 +122,12 @@ export default {
       selectedFood: {},
       classMap: []
     })
+
+    const menuWrapperRef = ref(null)
+    const menuListRef = ref(null)
+    const foodsWrapperRef = ref(null)
+    const foodListRef = ref(null)
+    const shopCartRef = ref(null)
 
     const classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee']
 
@@ -143,8 +150,8 @@ export default {
     let menuScroll, foodsScroll
 
     function initScroll() {
-      menuScroll = createScroll(refs.menuWrapper, { click: true })
-      foodsScroll = createScroll(refs.foodsWrapper, {
+      menuScroll = createScroll(menuWrapperRef, { click: true })
+      foodsScroll = createScroll(foodsWrapperRef, {
         click: true,
         probeType: 3
       })
@@ -157,19 +164,18 @@ export default {
     }
 
     function calculateHeight() {
-      const foodList = refs.foodList
-      state.listHeight = foodList.reduce(
+      state.listHeight = foodListRef.reduce(
         (acc, food, index) => acc.concat(acc[index] + food.clientHeight),
         [0]
       )
     }
 
     function getGoods() {
-      root.$axios.get('/api/goods').then(res => {
+      axios.get('/api/goods').then(res => {
         const { data } = res
         if (data.errno === ERR_OK) {
           state.goods = data.data
-          root.$nextTick(() => {
+          nextTick(() => {
             initScroll()
             calculateHeight()
           })
@@ -180,14 +186,13 @@ export default {
     getGoods()
 
     function selectMenu(index) {
-      let foodList = refs.foodList
-      let el = foodList[index]
+      let el = foodListRef[index]
       foodsScroll.scrollToElement(el, 300)
     }
 
     function drop(target) {
-      root.$nextTick(() => {
-        refs.shopCart.drop(target)
+      nextTick(() => {
+        shopCartRef.drop(target)
       })
     }
 
@@ -197,7 +202,7 @@ export default {
 
     function selectFood(food) {
       state.selectedFood = food
-      refs.food.show()
+      foodRef.show()
     }
 
     return {

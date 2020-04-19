@@ -1,6 +1,6 @@
 <template>
   <Transition name="move">
-    <div v-show="state.showFlag" ref="food" class="food">
+    <div v-show="state.showFlag" ref="foodRef" class="food">
       <div class="food-content">
         <!-- 头图 -->
         <div class="image-header">
@@ -61,8 +61,8 @@
             商品评价
           </h1>
           <RatingSelect
-            :select-type="_state.selectType"
-            :only-content="_state.onlyContent"
+            :select-type="ratingState.selectType"
+            :only-content="ratingState.onlyContent"
             :desc="desc"
             :ratings="food.ratings"
             @select="selectRating"
@@ -91,7 +91,7 @@
                   />
                 </div>
                 <div class="time">
-                  {{ rating.rateTime | formatRatingDate }}
+                  {{ formatRatingDate(rating.rateTime) }}
                 </div>
                 <p class="text">
                   <span
@@ -118,11 +118,12 @@
 </template>
 
 <script>
-import { reactive } from '@vue/composition-api'
+import { reactive, ref, nextTick } from 'vue'
 import CartControl from '../CartControl'
 import Split from '../Split'
 import RatingSelect from '../RatingSelect'
-import { formatDate, createScroll, refreshScroll, useRating } from '../../utils'
+import { formatDate, createScroll, refreshScroll } from '../../util'
+import { useRating } from '../../hooks/ratings'
 
 export default {
   components: {
@@ -130,24 +131,20 @@ export default {
     Split,
     RatingSelect
   },
-  filters: {
-    formatRatingDate(time) {
-      let date = new Date(time)
-      return formatDate(date, 'yyyy-MM-dd hh:mm')
-    }
-  },
   props: {
     food: {
       type: Object,
       required: true
     }
   },
-  setup(props, { root, emit, refs }) {
+  setup(props, { emit }) {
     const desc = {
       all: '全部',
       positive: '推荐',
       negative: '吐槽'
     }
+
+    const food = ref(null)
 
     const state = reactive({
       showFlag: false
@@ -159,9 +156,9 @@ export default {
       state.showFlag = true
 
       if (!scroll) {
-        scroll = createScroll(refs.food, { click: true })
+        scroll = createScroll(foodRef, { click: true })
       } else {
-        root.$nextTick(() => {
+        nextTick(() => {
           refreshScroll(scroll)
         })
       }
@@ -173,21 +170,25 @@ export default {
 
     function addFirst(event) {
       emit('add', event.target)
-      root.$set(props.food, 'count', 1)
+      // root.$set(props.food, 'count', 1)
     }
 
     function addFood(target) {
       emit('add', target)
     }
 
-    const { _state, needShow, selectRating, toggleContent } = useRating(
-      root,
+    function formatRatingDate(time) {
+      let date = new Date(time)
+      return formatDate(date, 'yyyy-MM-dd hh:mm')
+    }
+
+    const { ratingState, needShow, selectRating, toggleContent } = useRating(
       scroll
     )
 
     return {
       state,
-      _state,
+      ratingState,
       desc,
       show,
       hide,
@@ -195,7 +196,8 @@ export default {
       needShow,
       addFood,
       selectRating,
-      toggleContent
+      toggleContent,
+      formatRatingDate
     }
   }
 }

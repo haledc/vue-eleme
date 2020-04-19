@@ -22,15 +22,17 @@ node prod.server.js
 
 ### 版本信息
 
+- [Vue3 版本](https://github.com/haledc/vue-elm/tree/vue3)
+
 - [Vue2 版本](https://github.com/haledc/vue-elm/tree/vue2)
 
-- [Vue2 + @vue/composition-api 版本](https://github.com/haledc/vue-elm/tree/vue2-composition-api)
+- [Vue2 + TS 版本](https://github.com/haledc/vue-elm/tree/vue2-ts)
 
-- [Vue2 + Typescript 版本](https://github.com/haledc/vue-elm/tree/vue2-ts)
+* [Vue2 + @vue/composition-api 版本](https://github.com/haledc/vue-elm/tree/vue2-composition-api)
 
 ### 说明
 
-- 项目资源来源于[慕课网-Vue.js 高仿饿了么外卖 APP](https://coding.imooc.com/class/74.html)，~~慕课网项目教学用的`vue 1.0`~~(目前课程已更新到 v2.5 版本)
+- 项目资源来源于[慕课网-Vue.js 高仿饿了么外卖 APP](https://coding.imooc.com/class/74.html)，~~慕课网项目教学用的`vue 1.0`~~(目前课程已更新到 v2.6 版本)
 
 - Vue 启蒙课，这里更新到了最新的 v2.6 版本和使用 typescript 重构，文件结构也有所变化
 

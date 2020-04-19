@@ -9,11 +9,12 @@
 </template>
 
 <script>
-import { reactive } from '@vue/composition-api'
+import { reactive } from 'vue'
+import axios from 'axios'
 
 import Header from './components/Header'
 import Tab from './components/Tab'
-import { urlParse } from './utils'
+import { urlParse } from './util'
 
 const ERR_OK = 0
 
@@ -22,7 +23,7 @@ export default {
     Header,
     Tab
   },
-  setup(_, { root }) {
+  setup() {
     const state = reactive({
       seller: {
         id: getId()
@@ -35,7 +36,7 @@ export default {
     }
 
     function getSeller() {
-      root.$axios.get(`/api/seller?id=${state.seller.id}`).then(res => {
+      axios.get(`/api/seller?id=${state.seller.id}`).then(res => {
         const { data } = res
         if (data.errno === ERR_OK) {
           state.seller = Object.assign({}, state.seller, data.data)

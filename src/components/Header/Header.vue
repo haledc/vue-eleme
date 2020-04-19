@@ -30,8 +30,8 @@
 
     <!-- 公告栏 -->
     <div class="bulletin-wrapper" @click="showDetail">
-      <span class="bulletin-title"></span
-      ><span class="bulletin-text">
+      <span class="bulletin-title"></span>
+      <span class="bulletin-text">
         {{ seller.bulletin }}
       </span>
       <i class="icon-keyboard_arrow_right"></i>
@@ -90,7 +90,7 @@
 </template>
 
 <script>
-import { reactive, computed } from '@vue/composition-api'
+import { reactive, computed } from 'vue'
 import Star from '../Star'
 import Supports from '../Supports'
 

@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import { computed } from '@vue/composition-api'
+import { computed } from 'vue'
 
 const LENGTH = 5
 const CLS_ON = 'on'

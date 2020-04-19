@@ -2,13 +2,11 @@
   <div class="cart-control">
     <!-- 减少购买数量按钮 -->
     <Transition name="move">
-      <!-- 过渡-透明和平移层 -->
       <div
         v-show="food.count > 0"
         class="cart-decrease"
         @click.stop.prevent="decreaseCart"
       >
-        <!-- 过渡-滚动层 -->
         <span class="inner icon-remove_circle_outline"></span>
       </div>
     </Transition>
@@ -31,14 +29,9 @@ export default {
       required: true
     }
   },
-  setup(props, { root, emit }) {
+  setup(props, { emit }) {
     function addCart(event) {
-      if (!props.food.count) {
-        root.$set(props.food, 'count', 1)
-      } else {
-        props.food.count++
-      }
-
+      props.food.count++
       emit('add', event.target)
     }
 

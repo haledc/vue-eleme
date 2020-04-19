@@ -1,5 +1,5 @@
 <template>
-  <div ref="ratings" class="ratings">
+  <div ref="ratingsRef" class="ratings">
     <div class="ratings-content">
       <!-- 综合评论 -->
       <div class="overview">
@@ -56,8 +56,8 @@
 
       <!-- 评论类型条 -->
       <RatingSelect
-        :select-type="_state.selectType"
-        :only-content="_state.onlyContent"
+        :select-type="ratingState.selectType"
+        :only-content="ratingState.onlyContent"
         :ratings="state.ratings"
         @select="selectRating"
         @toggle="toggleContent"
@@ -100,7 +100,7 @@
                 </span>
               </div>
               <div class="time">
-                {{ rating.rateTime | formatRatingDate }}
+                {{ formatRatingDate(rating.rateTime) }}
               </div>
             </div>
           </li>
@@ -111,11 +111,13 @@
 </template>
 
 <script>
-import { reactive } from '@vue/composition-api'
+import { reactive, ref, nextTick } from 'vue'
+import axios from 'axios'
 import Star from '../../components/Star'
 import RatingSelect from '../../components/RatingSelect'
 import Split from '../../components/Split'
-import { formatDate, createScroll, useRating } from '../../utils'
+import { formatDate, createScroll } from '../../util'
+import { useRating } from '../../hooks/ratings'
 
 const ERR_OK = 0
 
@@ -125,32 +127,27 @@ export default {
     RatingSelect,
     Split
   },
-  filters: {
-    formatRatingDate(time) {
-      let date = new Date(time)
-      return formatDate(date, 'yyyy-MM-dd hh:mm')
-    }
-  },
   props: {
     seller: {
       type: Object,
       required: true
     }
   },
-  setup(props, { root, refs }) {
+  setup(props) {
     const state = reactive({
       ratings: []
     })
+    const ratingsRef = ref(null)
 
     let scroll
 
     function getRatings() {
-      root.$axios.get('/api/ratings').then(res => {
+      axios.get('/api/ratings').then(res => {
         const { data } = res
         if (data.errno === ERR_OK) {
           state.ratings = data.data
-          root.$nextTick(() => {
-            scroll = createScroll(refs.ratings, { click: true })
+          nextTick(() => {
+            scroll = createScroll(ratingsRef, { click: true })
           })
         }
       })
@@ -158,17 +155,22 @@ export default {
 
     getRatings()
 
-    const { _state, needShow, selectRating, toggleContent } = useRating(
-      root,
+    function formatRatingDate(time) {
+      let date = new Date(time)
+      return formatDate(date, 'yyyy-MM-dd hh:mm')
+    }
+
+    const { ratingState, needShow, selectRating, toggleContent } = useRating(
       scroll
     )
 
     return {
       state,
-      _state,
+      ratingState,
       needShow,
       selectRating,
-      toggleContent
+      toggleContent,
+      formatRatingDate
     }
   }
 }

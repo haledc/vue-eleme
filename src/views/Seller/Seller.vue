@@ -1,5 +1,5 @@
 <template>
-  <div ref="seller" class="seller">
+  <div ref="sellerRef" class="seller">
     <div class="seller-content">
       <!-- 综合描述 -->
       <div class="overview">
@@ -65,8 +65,8 @@
         <h1 class="title">
           商家实景
         </h1>
-        <div ref="picWrapper" class="pic-wrapper">
-          <ul ref="picList" class="pic-list">
+        <div ref="picWrapperRef" class="pic-wrapper">
+          <ul ref="picListRef" class="pic-list">
             <li v-for="pic in seller.pics" :key="pic" class="pic-item">
               <img :src="pic" width="120" height="90" alt="pic" />
             </li>
@@ -94,7 +94,7 @@
 </template>
 
 <script>
-import { reactive, computed, watch } from '@vue/composition-api'
+import { reactive, computed, watch, ref, nextTick } from 'vue'
 import Star from '../../components/Star'
 import Split from '../../components/Split'
 import Supports from '../../components/Supports'
@@ -103,7 +103,7 @@ import {
   loadFromLocal,
   createScroll,
   refreshScroll
-} from '../../utils'
+} from '../../util'
 
 export default {
   components: {
@@ -117,10 +117,14 @@ export default {
       required: true
     }
   },
-  setup(props, { root, refs }) {
+  setup(props) {
     const state = reactive({
       favorite: getFavoriteStatus()
     })
+
+    const sellerRef = ref(null)
+    const picWrapperRef = ref(null)
+    const picListRef = ref(null)
 
     function getFavoriteStatus() {
       return loadFromLocal(props.seller.id, 'favorite', false)
@@ -136,7 +140,7 @@ export default {
     let scroll, picScroll
 
     function init() {
-      root.$nextTick(() => {
+      nextTick(() => {
         initScroll()
         initPicScroll()
       })
@@ -144,7 +148,7 @@ export default {
 
     function initScroll() {
       if (!scroll) {
-        scroll = createScroll(refs.seller, { click: true })
+        scroll = createScroll(sellerRef, { click: true })
       } else {
         refreshScroll(scroll)
       }
@@ -152,13 +156,13 @@ export default {
 
     function initPicScroll() {
       if (props.seller.pics) {
-        const picWidth = 120,
-          margin = 6
+        const picWidth = 120
+        const margin = 6
         const width = (picWidth + margin) * props.seller.pics.length - margin
-        refs.picList.style.width = width + 'px'
-        root.$nextTick(() => {
+        picListRef.style.width = width + 'px'
+        nextTick(() => {
           if (!picScroll) {
-            picScroll = createScroll(refs.picWrapper, {
+            picScroll = createScroll(picWrapperRef, {
               scrollX: true,
               eventPassthrough: 'vertical'
             })

@@ -45,7 +45,7 @@
 </template>
 
 <script>
-import { computed } from '@vue/composition-api'
+import { computed } from 'vue'
 const POSITIVE = 0
 const NEGATIVE = 1
 const ALL = 2

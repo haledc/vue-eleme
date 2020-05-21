@@ -10,54 +10,54 @@
 </template>
 
 <script>
-import { computed } from 'vue'
+import { computed } from "vue";
 
-const LENGTH = 5
-const CLS_ON = 'on'
-const CLS_HALF = 'half'
-const CLS_OFF = 'off'
+const LENGTH = 5;
+const CLS_ON = "on";
+const CLS_HALF = "half";
+const CLS_OFF = "off";
 
 export default {
   props: {
     size: {
       type: Number,
-      required: true
+      required: true,
     },
     score: {
       type: Number,
-      required: true
-    }
+      required: true,
+    },
   },
   setup(props) {
-    const starType = computed(() => 'star-' + props.size)
+    const starType = computed(() => "star-" + props.size);
 
     const itemClasses = computed(() => {
-      let result = []
-      let score = Math.floor(props.score * 2) / 2
-      let hasDecimal = score % 1 !== 0
-      let integer = Math.floor(score)
+      let result = [];
+      let score = Math.floor(props.score * 2) / 2;
+      let hasDecimal = score % 1 !== 0;
+      let integer = Math.floor(score);
       for (let i = 0; i < integer; i++) {
-        result.push(CLS_ON)
+        result.push(CLS_ON);
       }
       if (hasDecimal) {
-        result.push(CLS_HALF)
+        result.push(CLS_HALF);
       }
       while (result.length < LENGTH) {
-        result.push(CLS_OFF)
+        result.push(CLS_OFF);
       }
-      return result
-    })
+      return result;
+    });
 
     return {
       starType,
-      itemClasses
-    }
-  }
-}
+      itemClasses,
+    };
+  },
+};
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/styles/mixins.scss';
+@import "@/assets/styles/mixins.scss";
 
 .star {
   font-size: 0;
@@ -81,15 +81,15 @@ export default {
       }
 
       &.on {
-        @include bg-image('star48_on');
+        @include bg-image("star48_on");
       }
 
       &.half {
-        @include bg-image('star48_half');
+        @include bg-image("star48_half");
       }
 
       &.off {
-        @include bg-image('star48_off');
+        @include bg-image("star48_off");
       }
     }
   }
@@ -107,15 +107,15 @@ export default {
       }
 
       &.on {
-        @include bg-image('star36_on');
+        @include bg-image("star36_on");
       }
 
       &.half {
-        @include bg-image('star36_half');
+        @include bg-image("star36_half");
       }
 
       &.off {
-        @include bg-image('star36_off');
+        @include bg-image("star36_off");
       }
     }
   }
@@ -133,15 +133,15 @@ export default {
       }
 
       &.on {
-        @include bg-image('star24_on');
+        @include bg-image("star24_on");
       }
 
       &.half {
-        @include bg-image('star24_half');
+        @include bg-image("star24_half");
       }
 
       &.off {
-        @include bg-image('star24_off');
+        @include bg-image("star24_off");
       }
     }
   }

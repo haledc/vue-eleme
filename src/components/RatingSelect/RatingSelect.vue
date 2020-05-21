@@ -45,66 +45,66 @@
 </template>
 
 <script>
-import { computed } from 'vue'
-const POSITIVE = 0
-const NEGATIVE = 1
-const ALL = 2
+import { computed } from "vue";
+const POSITIVE = 0;
+const NEGATIVE = 1;
+const ALL = 2;
 
 export default {
   props: {
     ratings: {
       type: Array,
       default() {
-        return []
-      }
+        return [];
+      },
     },
     selectType: {
       type: Number,
-      default: ALL
+      default: ALL,
     },
     onlyContent: {
       type: Boolean,
-      default: false
+      default: false,
     },
     desc: {
       type: Object,
       default() {
         return {
-          all: '全部',
-          positive: '满意',
-          negative: '不满意'
-        }
-      }
-    }
+          all: "全部",
+          positive: "满意",
+          negative: "不满意",
+        };
+      },
+    },
   },
   setup(props, { emit }) {
-    const positives = computed(() => getTypeRate(POSITIVE))
-    const negatives = computed(() => getTypeRate(NEGATIVE))
+    const positives = computed(() => getTypeRate(POSITIVE));
+    const negatives = computed(() => getTypeRate(NEGATIVE));
 
     function getTypeRate(type) {
-      return props.ratings.filter(rating => rating.rateType === type)
+      return props.ratings.filter((rating) => rating.rateType === type);
     }
 
     function select(type) {
-      emit('select', type)
+      emit("select", type);
     }
 
     function toggleContent() {
-      emit('toggle')
+      emit("toggle");
     }
 
     return {
       positives,
       negatives,
       select,
-      toggleContent
-    }
-  }
-}
+      toggleContent,
+    };
+  },
+};
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/styles/mixins.scss';
+@import "@/assets/styles/mixins.scss";
 
 .rating-select {
   .rating-type {

@@ -26,27 +26,27 @@ export default {
   props: {
     food: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   setup(props, { emit }) {
     function addCart(event) {
-      props.food.count++
-      emit('add', event.target)
+      props.food.count++;
+      emit("add", event.target);
     }
 
     function decreaseCart() {
       if (props.food.count) {
-        props.food.count--
+        props.food.count--;
       }
     }
 
     return {
       addCart,
-      decreaseCart
-    }
-  }
-}
+      decreaseCart,
+    };
+  },
+};
 </script>
 
 <style lang="scss" scoped>

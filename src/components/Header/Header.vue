@@ -90,50 +90,50 @@
 </template>
 
 <script>
-import { reactive, computed } from 'vue'
-import Star from '../Star'
-import Supports from '../Supports'
+import { reactive, computed } from "vue";
+import Star from "../Star";
+import Supports from "../Supports";
 
 export default {
   components: {
     Star,
-    Supports
+    Supports,
   },
   props: {
     seller: {
       type: Object,
       default: function() {
-        return {}
-      }
-    }
+        return {};
+      },
+    },
   },
   setup(props) {
     const state = reactive({
-      detailShow: false
-    })
+      detailShow: false,
+    });
 
-    const supportsFirst = computed(() => props.seller.supports.slice(0, 1))
+    const supportsFirst = computed(() => props.seller.supports.slice(0, 1));
 
     function showDetail() {
-      state.detailShow = true
+      state.detailShow = true;
     }
 
     function hideDetail() {
-      state.detailShow = false
+      state.detailShow = false;
     }
 
     return {
       state,
       supportsFirst,
       showDetail,
-      hideDetail
-    }
-  }
-}
+      hideDetail,
+    };
+  },
+};
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/styles/mixins.scss';
+@import "@/assets/styles/mixins.scss";
 
 .header {
   position: relative;
@@ -171,7 +171,7 @@ export default {
           vertical-align: top;
           width: 30px;
           height: 18px;
-          @include bg-image('brand');
+          @include bg-image("brand");
           background-size: 30px 18px;
           background-repeat: no-repeat;
         }
@@ -236,7 +236,7 @@ export default {
       margin-top: 7px;
       width: 22px;
       height: 12px;
-      @include bg-image('bulletin');
+      @include bg-image("bulletin");
       background-size: 22px 12px;
       background-repeat: no-repeat;
     }

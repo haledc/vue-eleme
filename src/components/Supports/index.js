@@ -1,1 +1,1 @@
-export { default } from './Supports'
+export { default } from "./Supports";

@@ -93,26 +93,26 @@
 </template>
 
 <script>
-import { reactive, computed, ref, nextTick } from 'vue'
-import axios from 'axios'
-import { createScroll } from '../../util'
-import ShopCart from '../../components/ShopCart'
-import CartControl from '../../components/CartControl'
-import Food from '../../components/Food'
+import { reactive, computed, ref, nextTick, onMounted } from "vue";
+import axios from "axios";
+import { createScroll } from "../../util";
+import ShopCart from "../../components/ShopCart";
+import CartControl from "../../components/CartControl";
+import Food from "../../components/Food";
 
-const ERR_OK = 0
+const ERR_OK = 0;
 
 export default {
   components: {
     ShopCart,
     CartControl,
-    Food
+    Food,
   },
   props: {
     seller: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   setup(props) {
     const state = reactive({
@@ -120,106 +120,129 @@ export default {
       listHeight: [],
       scrollY: 0,
       selectedFood: {},
-      classMap: []
-    })
+      classMap: [],
+    });
 
-    const menuWrapperRef = ref(null)
-    const menuListRef = ref(null)
-    const foodsWrapperRef = ref(null)
-    const foodListRef = ref(null)
-    const shopCartRef = ref(null)
+    const menuWrapperRef = ref(null);
 
-    const classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee']
+    // TODO
+    // ! ref with v-for together do not work properly in vue3-beta14
+    const menuListRef = ref(null);
+    const foodsWrapperRef = ref(null);
+    const foodListRef = ref(null);
+    const shopCartRef = ref(null);
+    const foodRef = ref(null);
+
+    const classMap = [
+      "decrease",
+      "discount",
+      "special",
+      "invoice",
+      "guarantee",
+    ];
 
     const currentIndex = computed(() => {
       for (let i = 0; i < state.listHeight.length; i++) {
-        let height1 = state.listHeight[i]
-        let height2 = state.listHeight[i + 1]
+        let height1 = state.listHeight[i];
+        let height2 = state.listHeight[i + 1];
         if (!height2 || (state.scrollY >= height1 && state.scrollY < height2)) {
-          return i
+          return i;
         }
       }
-      return 0
-    })
+      return 0;
+    });
 
     const selectFoods = computed(() =>
-      state.goods.flatMap(good => good.foods.filter(food => food.count > 0))
-    )
+      state.goods.flatMap((good) => good.foods.filter((food) => food.count > 0))
+    );
 
     // eslint-disable-next-line
-    let menuScroll, foodsScroll
+    let menuScroll, foodsScroll;
 
     function initScroll() {
-      menuScroll = createScroll(menuWrapperRef, { click: true })
-      foodsScroll = createScroll(foodsWrapperRef, {
+      menuScroll = createScroll(menuWrapperRef.value, { click: true });
+      foodsScroll = createScroll(foodsWrapperRef.value, {
         click: true,
-        probeType: 3
-      })
+        probeType: 3,
+      });
 
-      foodsScroll.on('scroll', pos => {
+      foodsScroll.on("scroll", (pos) => {
         if (pos.y <= 0) {
-          state.scrollY = Math.abs(pos.y - 1)
+          state.scrollY = Math.abs(pos.y - 1);
         }
-      })
+      });
     }
 
+    onMounted(() => {
+      initScroll();
+    });
+
     function calculateHeight() {
-      state.listHeight = foodListRef.reduce(
+      state.listHeight = foodList.reduce(
         (acc, food, index) => acc.concat(acc[index] + food.clientHeight),
         [0]
-      )
+      );
     }
 
     function getGoods() {
-      axios.get('/api/goods').then(res => {
-        const { data } = res
+      axios.get("/api/goods").then((res) => {
+        const { data } = res;
         if (data.errno === ERR_OK) {
-          state.goods = data.data
+          state.goods = data.data;
           nextTick(() => {
-            initScroll()
-            calculateHeight()
-          })
+            initScroll();
+            calculateHeight();
+          });
         }
-      })
+      });
     }
 
-    getGoods()
+    getGoods();
 
     function selectMenu(index) {
-      let el = foodListRef[index]
-      foodsScroll.scrollToElement(el, 300)
+      // console.log("index", index);
+      // console.log(foodListRef.value);
+      // TODO
+      let el = foodListRef.value[index];
+      foodsScroll.scrollToElement(el.value, 300);
     }
 
     function drop(target) {
       nextTick(() => {
-        shopCartRef.drop(target)
-      })
+        shopCartRef.value.drop(target);
+      });
     }
 
     function addFood(target) {
-      drop(target)
+      drop(target);
     }
 
     function selectFood(food) {
-      state.selectedFood = food
-      foodRef.show()
+      state.selectedFood = food;
+      foodRef.value.show();
     }
 
     return {
+      menuWrapperRef,
+      menuListRef,
+      foodsWrapperRef,
+      foodListRef,
+      shopCartRef,
+      foodRef,
       state,
       classMap,
       currentIndex,
       selectFoods,
       selectMenu,
       addFood,
-      selectFood
-    }
-  }
-}
+      selectFood,
+    };
+  },
+};
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/styles/mixins.scss';
+@import "@/assets/styles/mixins.scss";
 
 .goods {
   display: flex;
@@ -268,23 +291,23 @@ export default {
         background-repeat: no-repeat;
 
         &.decrease {
-          @include bg-image('decrease_3');
+          @include bg-image("decrease_3");
         }
 
         &.discount {
-          @include bg-image('discount_3');
+          @include bg-image("discount_3");
         }
 
         &.guarantee {
-          @include bg-image('guarantee_3');
+          @include bg-image("guarantee_3");
         }
 
         &.invoice {
-          @include bg-image('invoice_3');
+          @include bg-image("invoice_3");
         }
 
         &.special {
-          @include bg-image('special_3');
+          @include bg-image("special_3");
         }
       }
 

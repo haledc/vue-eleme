@@ -111,73 +111,75 @@
 </template>
 
 <script>
-import { reactive, ref, nextTick } from 'vue'
-import axios from 'axios'
-import Star from '../../components/Star'
-import RatingSelect from '../../components/RatingSelect'
-import Split from '../../components/Split'
-import { formatDate, createScroll } from '../../util'
-import { useRating } from '../../hooks/ratings'
+import { reactive, ref, nextTick } from "vue";
+import axios from "axios";
+import Star from "../../components/Star";
+import RatingSelect from "../../components/RatingSelect";
+import Split from "../../components/Split";
+import { formatDate, createScroll } from "../../util";
+import { useRating } from "../../hooks/ratings";
 
-const ERR_OK = 0
+const ERR_OK = 0;
 
 export default {
   components: {
     Star,
     RatingSelect,
-    Split
+    Split,
   },
   props: {
     seller: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   setup(props) {
     const state = reactive({
-      ratings: []
-    })
-    const ratingsRef = ref(null)
+      ratings: [],
+    });
 
-    let scroll
+    const ratingsRef = ref(null);
+
+    let scroll;
 
     function getRatings() {
-      axios.get('/api/ratings').then(res => {
-        const { data } = res
+      axios.get("/api/ratings").then((res) => {
+        const { data } = res;
         if (data.errno === ERR_OK) {
-          state.ratings = data.data
+          state.ratings = data.data;
           nextTick(() => {
-            scroll = createScroll(ratingsRef, { click: true })
-          })
+            scroll = createScroll(ratingsRef.value, { click: true });
+          });
         }
-      })
+      });
     }
 
-    getRatings()
+    getRatings();
 
     function formatRatingDate(time) {
-      let date = new Date(time)
-      return formatDate(date, 'yyyy-MM-dd hh:mm')
+      let date = new Date(time);
+      return formatDate(date, "yyyy-MM-dd hh:mm");
     }
 
     const { ratingState, needShow, selectRating, toggleContent } = useRating(
       scroll
-    )
+    );
 
     return {
+      ratingsRef,
       state,
       ratingState,
       needShow,
       selectRating,
       toggleContent,
-      formatRatingDate
-    }
-  }
-}
+      formatRatingDate,
+    };
+  },
+};
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/styles/mixins.scss';
+@import "@/assets/styles/mixins.scss";
 
 .ratings {
   position: absolute;

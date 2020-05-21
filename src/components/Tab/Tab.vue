@@ -18,17 +18,19 @@
 export default {
   setup() {
     const routerContent = [
-      { to: '/goods', text: '商品' },
-      { to: '/ratings', text: '评论' },
-      { to: '/seller', text: '商家' }
-    ]
-    return { routerContent }
-  }
-}
+      { to: "/goods", text: "商品" },
+      { to: "/ratings", text: "评论" },
+      { to: "/seller", text: "商家" },
+    ];
+    return {
+      routerContent,
+    };
+  },
+};
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/styles/mixins.scss';
+@import "@/assets/styles/mixins.scss";
 
 .tab {
   display: flex;

@@ -14,33 +14,39 @@
 </template>
 
 <script>
-import { computed } from 'vue'
+import { computed } from "vue";
 export default {
   props: {
     supports: {
       type: Array,
-      required: true
+      required: true,
     },
     size: {
       type: Number,
-      required: true
-    }
+      required: true,
+    },
   },
   setup(props) {
-    const classType = computed(() => `supports-${props.size}`)
+    const classType = computed(() => `supports-${props.size}`);
 
-    const classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee']
+    const classMap = [
+      "decrease",
+      "discount",
+      "special",
+      "invoice",
+      "guarantee",
+    ];
 
     return {
       classType,
-      classMap
-    }
-  }
-}
+      classMap,
+    };
+  },
+};
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/styles/mixins.scss';
+@import "@/assets/styles/mixins.scss";
 
 .supports-4 {
   .support-item {
@@ -62,23 +68,23 @@ export default {
       background-repeat: no-repeat;
 
       &.decrease {
-        @include bg-image('decrease_4');
+        @include bg-image("decrease_4");
       }
 
       &.discount {
-        @include bg-image('discount_4');
+        @include bg-image("discount_4");
       }
 
       &.guarantee {
-        @include bg-image('guarantee_4');
+        @include bg-image("guarantee_4");
       }
 
       &.invoice {
-        @include bg-image('invoice_4');
+        @include bg-image("invoice_4");
       }
 
       &.special {
-        @include bg-image('special_4');
+        @include bg-image("special_4");
       }
     }
 
@@ -113,23 +119,23 @@ export default {
       background-repeat: no-repeat;
 
       &.decrease {
-        @include bg-image('decrease_2');
+        @include bg-image("decrease_2");
       }
 
       &.discount {
-        @include bg-image('discount_2');
+        @include bg-image("discount_2");
       }
 
       &.guarantee {
-        @include bg-image('guarantee_2');
+        @include bg-image("guarantee_2");
       }
 
       &.invoice {
-        @include bg-image('invoice_2');
+        @include bg-image("invoice_2");
       }
 
       &.special {
-        @include bg-image('special_2');
+        @include bg-image("special_2");
       }
     }
 
@@ -152,23 +158,23 @@ export default {
     background-repeat: no-repeat;
 
     &.decrease {
-      @include bg-image('decrease_1');
+      @include bg-image("decrease_1");
     }
 
     &.discount {
-      @include bg-image('discount_1');
+      @include bg-image("discount_1");
     }
 
     &.guarantee {
-      @include bg-image('guarantee_1');
+      @include bg-image("guarantee_1");
     }
 
     &.invoice {
-      @include bg-image('invoice_1');
+      @include bg-image("invoice_1");
     }
 
     &.special {
-      @include bg-image('special_1');
+      @include bg-image("special_1");
     }
   }
 

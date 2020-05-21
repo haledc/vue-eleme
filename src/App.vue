@@ -9,46 +9,46 @@
 </template>
 
 <script>
-import { reactive } from 'vue'
-import axios from 'axios'
+import { reactive } from "vue";
+import axios from "axios";
 
-import Header from './components/Header'
-import Tab from './components/Tab'
-import { urlParse } from './util'
+import Header from "./components/Header";
+import Tab from "./components/Tab";
+import { urlParse } from "./util";
 
-const ERR_OK = 0
+const ERR_OK = 0;
 
 export default {
   components: {
     Header,
-    Tab
+    Tab,
   },
   setup() {
     const state = reactive({
       seller: {
-        id: getId()
-      }
-    })
+        id: getId(),
+      },
+    });
 
     function getId() {
-      const queryParamObj = urlParse()
-      return queryParamObj.id
+      const queryParamObj = urlParse();
+      return queryParamObj.id;
     }
 
     function getSeller() {
-      axios.get(`/api/seller?id=${state.seller.id}`).then(res => {
-        const { data } = res
+      axios.get(`/api/seller?id=${state.seller.id}`).then((res) => {
+        const { data } = res;
         if (data.errno === ERR_OK) {
-          state.seller = Object.assign({}, state.seller, data.data)
+          state.seller = Object.assign({}, state.seller, data.data);
         }
-      })
+      });
     }
 
-    getSeller()
+    getSeller();
 
     return {
-      state
-    }
-  }
-}
+      state,
+    };
+  },
+};
 </script>

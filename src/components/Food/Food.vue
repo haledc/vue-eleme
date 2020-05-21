@@ -97,7 +97,7 @@
                   <span
                     :class="{
                       'icon-thumb_up': rating.rateType === 0,
-                      'icon-thumb_down': rating.rateType === 1
+                      'icon-thumb_down': rating.rateType === 1,
                     }"
                   ></span>
                   {{ rating.text }}
@@ -118,75 +118,76 @@
 </template>
 
 <script>
-import { reactive, ref, nextTick } from 'vue'
-import CartControl from '../CartControl'
-import Split from '../Split'
-import RatingSelect from '../RatingSelect'
-import { formatDate, createScroll, refreshScroll } from '../../util'
-import { useRating } from '../../hooks/ratings'
+import { reactive, ref, nextTick } from "vue";
+import CartControl from "../CartControl";
+import Split from "../Split";
+import RatingSelect from "../RatingSelect";
+import { formatDate, createScroll, refreshScroll } from "../../util";
+import { useRating } from "../../hooks/ratings";
 
 export default {
   components: {
     CartControl,
     Split,
-    RatingSelect
+    RatingSelect,
   },
   props: {
     food: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   setup(props, { emit }) {
     const desc = {
-      all: '全部',
-      positive: '推荐',
-      negative: '吐槽'
-    }
+      all: "全部",
+      positive: "推荐",
+      negative: "吐槽",
+    };
 
-    const food = ref(null)
+    const foodRef = ref(null);
 
     const state = reactive({
-      showFlag: false
-    })
+      showFlag: false,
+    });
 
-    let scroll
+    let scroll;
 
     function show() {
-      state.showFlag = true
+      state.showFlag = true;
 
       if (!scroll) {
-        scroll = createScroll(foodRef, { click: true })
+        scroll = createScroll(foodRef.value, { click: true });
       } else {
         nextTick(() => {
-          refreshScroll(scroll)
-        })
+          refreshScroll(scroll);
+        });
       }
     }
 
     function hide() {
-      state.showFlag = false
+      state.showFlag = false;
     }
 
     function addFirst(event) {
-      emit('add', event.target)
+      emit("add", event.target);
       // root.$set(props.food, 'count', 1)
     }
 
     function addFood(target) {
-      emit('add', target)
+      emit("add", target);
     }
 
     function formatRatingDate(time) {
-      let date = new Date(time)
-      return formatDate(date, 'yyyy-MM-dd hh:mm')
+      let date = new Date(time);
+      return formatDate(date, "yyyy-MM-dd hh:mm");
     }
 
     const { ratingState, needShow, selectRating, toggleContent } = useRating(
       scroll
-    )
+    );
 
     return {
+      foodRef,
       state,
       ratingState,
       desc,
@@ -197,14 +198,14 @@ export default {
       addFood,
       selectRating,
       toggleContent,
-      formatRatingDate
-    }
-  }
-}
+      formatRatingDate,
+    };
+  },
+};
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/styles/mixins.scss';
+@import "@/assets/styles/mixins.scss";
 
 .food {
   position: fixed;

@@ -94,101 +94,104 @@
 </template>
 
 <script>
-import { reactive, computed, watch, ref, nextTick } from 'vue'
-import Star from '../../components/Star'
-import Split from '../../components/Split'
-import Supports from '../../components/Supports'
+import { reactive, computed, watch, ref, nextTick } from "vue";
+import Star from "../../components/Star";
+import Split from "../../components/Split";
+import Supports from "../../components/Supports";
 import {
   saveToLocal,
   loadFromLocal,
   createScroll,
-  refreshScroll
-} from '../../util'
+  refreshScroll,
+} from "../../util";
 
 export default {
   components: {
     Star,
     Split,
-    Supports
+    Supports,
   },
   props: {
     seller: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   setup(props) {
     const state = reactive({
-      favorite: getFavoriteStatus()
-    })
+      favorite: getFavoriteStatus(),
+    });
 
-    const sellerRef = ref(null)
-    const picWrapperRef = ref(null)
-    const picListRef = ref(null)
+    const sellerRef = ref(null);
+    const picWrapperRef = ref(null);
+    const picListRef = ref(null);
 
     function getFavoriteStatus() {
-      return loadFromLocal(props.seller.id, 'favorite', false)
+      return loadFromLocal(props.seller.id, "favorite", false);
     }
 
-    const favoriteText = computed(() => (state.favorite ? '已收藏' : '收藏'))
+    const favoriteText = computed(() => (state.favorite ? "已收藏" : "收藏"));
 
     watch(
       () => props.seller,
       () => init()
-    )
+    );
 
-    let scroll, picScroll
+    let scroll, picScroll;
 
     function init() {
       nextTick(() => {
-        initScroll()
-        initPicScroll()
-      })
+        initScroll();
+        initPicScroll();
+      });
     }
 
     function initScroll() {
       if (!scroll) {
-        scroll = createScroll(sellerRef, { click: true })
+        scroll = createScroll(sellerRef.value, { click: true });
       } else {
-        refreshScroll(scroll)
+        refreshScroll(scroll);
       }
     }
 
     function initPicScroll() {
       if (props.seller.pics) {
-        const picWidth = 120
-        const margin = 6
-        const width = (picWidth + margin) * props.seller.pics.length - margin
-        picListRef.style.width = width + 'px'
+        const picWidth = 120;
+        const margin = 6;
+        const width = (picWidth + margin) * props.seller.pics.length - margin;
+        picListRef.value.style.width = width + "px";
         nextTick(() => {
           if (!picScroll) {
-            picScroll = createScroll(picWrapperRef, {
+            picScroll = createScroll(picWrapperRef.value, {
               scrollX: true,
-              eventPassthrough: 'vertical'
-            })
+              eventPassthrough: "vertical",
+            });
           } else {
-            refreshScroll(picScroll)
+            refreshScroll(picScroll);
           }
-        })
+        });
       }
     }
 
     function toggleFavorite() {
-      state.favorite = !state.favorite
-      saveToLocal(props.seller.id, 'favorite', state.favorite)
+      state.favorite = !state.favorite;
+      saveToLocal(props.seller.id, "favorite", state.favorite);
     }
 
     return {
+      sellerRef,
+      picWrapperRef,
+      picListRef,
       state,
       favoriteText,
-      toggleFavorite
-    }
-  }
-}
+      toggleFavorite,
+    };
+  },
+};
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/styles/mixins.scss';
+@import "@/assets/styles/mixins.scss";
 
 .seller {
   position: absolute;

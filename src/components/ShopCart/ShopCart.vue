@@ -85,29 +85,29 @@
 </template>
 
 <script>
-import { reactive, computed, watch, nextTick, ref } from 'vue'
-import CartControl from '../CartControl'
-import { createScroll, refreshScroll } from '../../util'
+import { reactive, computed, watch, nextTick, ref } from "vue";
+import CartControl from "../CartControl";
+import { createScroll, refreshScroll } from "../../util";
 
 export default {
   components: {
-    CartControl
+    CartControl,
   },
   props: {
     selectFoods: {
       type: Array,
       default() {
-        return []
-      }
+        return [];
+      },
     },
     deliveryPrice: {
       type: Number,
-      default: 0
+      default: 0,
     },
     minPrice: {
       type: Number,
-      default: 0
-    }
+      default: 0,
+    },
   },
   setup(props) {
     const state = reactive({
@@ -116,106 +116,106 @@ export default {
         { show: false },
         { show: false },
         { show: false },
-        { show: false }
+        { show: false },
       ],
       dropBalls: [],
-      fold: true
-    })
+      fold: true,
+    });
 
-    const listContentRef = ref(null)
+    const listContentRef = ref(null);
 
     const totalPrice = computed(() =>
       props.selectFoods.reduce((acc, food) => acc + food.price * food.count, 0)
-    )
+    );
 
     const totalCount = computed(() =>
       props.selectFoods.reduce((acc, food) => acc + food.count, 0)
-    )
+    );
 
     const payDesc = computed(() =>
       totalPrice.value === 0
         ? `￥${props.minPrice}元起送`
         : totalPrice.value < props.minPrice
         ? `还差￥${props.minPrice - totalPrice.value}元起送`
-        : '去结算'
-    )
+        : "去结算"
+    );
 
     const payClass = computed(() =>
-      totalPrice.value < props.minPrice ? 'not-enough' : 'enough'
-    )
+      totalPrice.value < props.minPrice ? "not-enough" : "enough"
+    );
 
     const listShow = computed(() => {
-      if (!totalCount.value) return false
-      return !state.fold
-    })
+      if (!totalCount.value) return false;
+      return !state.fold;
+    });
 
-    let scroll
+    let scroll;
 
     watch(
       // 插件：不能监听计算属性 listShow
       () => state.fold,
-      newVal => {
+      (newVal) => {
         if (!newVal) {
           nextTick(() => {
             if (!scroll) {
-              scroll = createScroll(listContentRef, { click: true })
+              scroll = createScroll(listContentRef.value, { click: true });
             } else {
-              refreshScroll(scroll)
+              refreshScroll(scroll);
             }
-          })
+          });
         }
       }
-    )
+    );
 
     function drop(el) {
       for (let i = 0; i < state.balls.length; i++) {
-        const ball = state.balls[i]
+        const ball = state.balls[i];
         if (!ball.show) {
-          ball.show = true
-          ball.el = el
-          state.dropBalls.push(ball)
-          return
+          ball.show = true;
+          ball.el = el;
+          state.dropBalls.push(ball);
+          return;
         }
       }
     }
 
     function toggleListShow() {
-      if (!totalCount.value) return
-      state.fold = !state.fold
+      if (!totalCount.value) return;
+      state.fold = !state.fold;
     }
 
     function empty() {
-      props.selectFoods.forEach(food => (food.count = 0))
-      state.fold = true
+      props.selectFoods.forEach((food) => (food.count = 0));
+      state.fold = true;
     }
 
     function hideList() {
-      state.fold = true
+      state.fold = true;
     }
 
     function pay() {
-      if (totalPrice.value < props.minPrice) return
-      window.alert(`支付${totalPrice.value + 4}元`)
+      if (totalPrice.value < props.minPrice) return;
+      window.alert(`支付${totalPrice.value + 4}元`);
     }
 
     function addFood(target) {
-      drop(target)
+      drop(target);
     }
 
     function beforeDrop(el) {
-      let len = state.balls.length
+      let len = state.balls.length;
       while (len--) {
-        const ball = state.balls[len]
+        const ball = state.balls[len];
         if (ball.show) {
-          const rect = ball.el.getBoundingClientRect()
-          const x = rect.left - 32
-          const y = -(window.innerHeight - rect.top - 22)
-          el.style.display = ''
-          el.style.webkitTransform = `translate3d(0, ${y}px, 0)`
-          el.style.transform = `translate3d(0, ${y}px, 0)`
-          const inner = el.getElementsByClassName('inner-hook')[0]
-          inner.style.webkitTransform = `translate3d(${x}px, 0, 0)`
-          inner.style.transform = `translate3d(${x}px, 0, 0)`
+          const rect = ball.el.getBoundingClientRect();
+          const x = rect.left - 32;
+          const y = -(window.innerHeight - rect.top - 22);
+          el.style.display = "";
+          el.style.webkitTransform = `translate3d(0, ${y}px, 0)`;
+          el.style.transform = `translate3d(0, ${y}px, 0)`;
+          const inner = el.getElementsByClassName("inner-hook")[0];
+          inner.style.webkitTransform = `translate3d(${x}px, 0, 0)`;
+          inner.style.transform = `translate3d(${x}px, 0, 0)`;
         }
       }
     }
@@ -223,26 +223,27 @@ export default {
     // 插件：小球动画有点卡，不流畅
     function dropping(el, done) {
       // eslint-disable-next-line
-      let rf = el.offsetHeight
+      let rf = el.offsetHeight;
       nextTick(() => {
-        el.style.webkitTransform = 'translate3d(0, 0, 0)'
-        el.style.transform = 'translate3d(0, 0, 0)'
-        const inner = el.getElementsByClassName('inner-hook')[0]
-        inner.style.webkitTransform = `translate3d(0, 0, 0)`
-        inner.style.transform = `translate3d(0, 0, 0)`
-        el.addEventListener('transitionend', done)
-      })
+        el.style.webkitTransform = "translate3d(0, 0, 0)";
+        el.style.transform = "translate3d(0, 0, 0)";
+        const inner = el.getElementsByClassName("inner-hook")[0];
+        inner.style.webkitTransform = `translate3d(0, 0, 0)`;
+        inner.style.transform = `translate3d(0, 0, 0)`;
+        el.addEventListener("transitionend", done);
+      });
     }
 
     function afterDrop(el) {
-      const ball = state.dropBalls.shift()
+      const ball = state.dropBalls.shift();
       if (ball) {
-        ball.show = false
-        el.style.display = 'none'
+        ball.show = false;
+        el.style.display = "none";
       }
     }
 
     return {
+      listContentRef,
       state,
       totalPrice,
       totalCount,
@@ -257,14 +258,14 @@ export default {
       addFood,
       beforeDrop,
       dropping,
-      afterDrop
-    }
-  }
-}
+      afterDrop,
+    };
+  },
+};
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/styles/mixins.scss';
+@import "@/assets/styles/mixins.scss";
 
 // 购物车
 .shop-cart {

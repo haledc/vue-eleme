@@ -1,38 +1,38 @@
-import { reactive, nextTick } from 'vue'
-import { refreshScroll } from '../util'
+import { reactive, nextTick } from "vue";
+import { refreshScroll } from "../util";
 
-const ALL = 2
+const ALL = 2;
 
 export function useRating(scroll) {
   const ratingState = reactive({
     onlyContent: true,
-    selectType: ALL
-  })
+    selectType: ALL,
+  });
 
   const needShow = (type, text) => {
     if (ratingState.onlyContent && !text) {
-      return false
+      return false;
     }
     if (ratingState.selectType === ALL) {
-      return true
+      return true;
     } else {
-      return type === ratingState.selectType
+      return type === ratingState.selectType;
     }
-  }
+  };
 
-  const selectRating = type => {
-    ratingState.selectType = type
+  const selectRating = (type) => {
+    ratingState.selectType = type;
     nextTick(() => {
-      refreshScroll(scroll)
-    })
-  }
+      refreshScroll(scroll);
+    });
+  };
 
   const toggleContent = () => {
-    ratingState.onlyContent = !ratingState.onlyContent
+    ratingState.onlyContent = !ratingState.onlyContent;
     nextTick(() => {
-      refreshScroll(scroll)
-    })
-  }
+      refreshScroll(scroll);
+    });
+  };
 
   return {
     // 插件：使用解构赋值不能响应？？
@@ -41,6 +41,6 @@ export function useRating(scroll) {
     ratingState,
     needShow,
     selectRating,
-    toggleContent
-  }
+    toggleContent,
+  };
 }
